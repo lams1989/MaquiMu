@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Colores principales de MaquiMu -->
+    <color name="colorPrimary">#0D47A1</color>
+    <color name="colorPrimaryVariant">#1565C0</color>
+    <color name="colorAccent">#FF6F00</color>
+    <color name="colorAccentVariant">#FF8F00</color>
+    <color name="textColorPrimary">#424242</color>
+    <color name="textColorSecondary">#757575</color>
+    
+    <!-- Colores de estado -->
+    <color name="statusActive">#4CAF50</color>
+    <color name="statusPending">#FF9800</color>
+    <color name="statusCompleted">#9E9E9E</color>
+    <color name="statusOverdue">#F44336</color>
+    
+    <!-- Colores base -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="background">#FAFAFA</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="error">#B00020</color>
+</resources>
