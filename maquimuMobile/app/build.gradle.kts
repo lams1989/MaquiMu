@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.sena.proyecto"
+    namespace = "com.lams.maquimu"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.sena.proyecto"
+        applicationId = "com.lams.maquimu"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -27,14 +27,22 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "21"
     }
     buildFeatures {
-        viewBinding = true
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.1"
+    }
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
     }
 }
 
