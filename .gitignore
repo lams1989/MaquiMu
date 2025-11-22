@@ -2,7 +2,7 @@
 .vscode/
 
 # Ignorar la carpeta de Ceiba
-.ceiba-metodo/
+.luis-metodo/
 
 # Ignorar la carpeta de Copilot CLI
 copilot-cli/
