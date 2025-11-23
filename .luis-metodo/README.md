@@ -463,14 +463,7 @@ peer-reviewer  *review {número}
 
 ---
 
-## 🚀 **Instalación y Configuración**
-
-### Instalación
-
-```bash
-npm cache clean --force
-npx @luis/metodo-luis@latest install
-```
+## 🚀 **Configuración**
 
 ### Activar Agentes luis
 
