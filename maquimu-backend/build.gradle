@@ -30,6 +30,7 @@ dependencies {
 	
 	// Database
 	runtimeOnly 'com.mysql:mysql-connector-j'
+	testRuntimeOnly 'com.h2database:h2'
 	
 	// Flyway for migrations
 	implementation 'org.flywaydb:flyway-core'
