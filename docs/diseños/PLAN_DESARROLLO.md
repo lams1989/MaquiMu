@@ -27,8 +27,8 @@ Este plan detalla la hoja de ruta para la construcción del sistema MaquiMu, bas
 *   **Objetivo:** Inicializar el proyecto SPA y preparar la estructura de componentes.
 *   **Tecnologías:** Angular 16+, Bootstrap/Tailwind (según maquetación).
 *   **Tareas:**
-    *   [ ] Inicializar proyecto Angular (`maquimu-web`) dentro de `MaquiMuWeb`.
-    *   [ ] Migrar activos estáticos de `MaquiMuWeb/maquetacion` a `assets`.
+    *   [ ] Inicializar proyecto Angular (`maquimu-web`) dentro de `maquimu-frontend`.
+    *   [ ] Migrar activos estáticos de `docs/diseños/maquetacion` a `assets`.
     *   [ ] Configurar enrutamiento base (`app-routing.module.ts`).
     *   [ ] Crear servicios base (`AuthService`, `ApiService`).
 
@@ -36,7 +36,7 @@ Este plan detalla la hoja de ruta para la construcción del sistema MaquiMu, bas
 *   **Objetivo:** Validar y preparar el proyecto existente.
 *   **Tecnologías:** Android SDK, Kotlin/Java, Retrofit.
 *   **Tareas:**
-    *   [ ] Verificar compilación del proyecto en `MaquiMuMobile`.
+    *   [ ] Verificar compilación del proyecto en `maquimu-mobile`.
     *   [ ] Configurar cliente HTTP (Retrofit) para conectar con el Backend local.
 
 ---
@@ -101,5 +101,5 @@ Se implementarán las historias de usuario agrupadas por funcionalidad lógica.
 
 ## 5. Notas Técnicas
 *   **Base de Datos:** Se usará el script existente en `docs/diseños`.
-*   **Maquetación:** Se reutilizará el HTML/CSS de `MaquiMuWeb/maquetacion` adaptándolo a componentes Angular.
-*   **Móvil:** Se continuará el desarrollo sobre la base existente en `MaquiMuMobile`.
+*   **Maquetación:** Se reutilizará el HTML/CSS de `docs/diseños/maquetacion` adaptándolo a componentes Angular.
+*   **Móvil:** Se continuará el desarrollo sobre la base existente en `maquimu-mobile`.
