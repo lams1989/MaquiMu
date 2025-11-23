@@ -1,37 +1,62 @@
+# Arquitectura del Sistema MaquiMu
 
-[cite_start]La pila tecnológica final (Versión 2.0) es [cite: 681-685]:
+## 1. Visión General
 
-* [cite_start]**Backend:** Java 17, Spring Boot 3[cite: 681, 2486].
-* [cite_start]**Frontend (Web):** Angular 16 (SPA)[cite: 682, 2488].
-* [cite_start]**Móvil:** Android (XML Nativo)[cite: 3441]
-> [!NOTE]
-> **Nota:** La implementación del módulo Android se pospondrá hasta que el frontend web y el backend estén finalizados.
-* [cite_start]**Base de Datos:** MySQL 8.0[cite: 683, 2490].
-* [cite_start]**Seguridad:** OAuth 2.0 y HTTPS[cite: 685, 2500].
+La arquitectura de **MaquiMu** sigue un enfoque **Hexagonal (Puertos y Adaptadores)** implementado sobre un proyecto **Multi-módulo con Gradle**. Este diseño busca desacoplar completamente la lógica de negocio (Dominio) de los detalles técnicos (Infraestructura), facilitando la mantenibilidad, el testing y la evolución del sistema.
 
-## 3. Patrones de Diseño
+Además, se aplica el patrón **CQRS (Command Query Responsibility Segregation)** para separar las operaciones de lectura (Consultas) de las de escritura (Comandos), optimizando el rendimiento y la claridad del código.
 
-Dentro de la arquitectura, se aplicarán los siguientes patrones de diseño:
+---
 
-* **Patrón Repositorio (Repository):** Abstrae el acceso a datos. [cite_start]Las interfaces del repositorio (`ClienteRepository`) son los "Puertos" del núcleo, y las implementaciones de Spring Data JPA son los "Adaptadores"[cite: 2675, 2676].
-* [cite_start]**Capa de Servicio (Service Layer):** Implementa los casos de uso (ej. `AlquilerService`) y orquesta la lógica de negocio, coordinando los repositorios[cite: 2678].
-* [cite_start]**DTO (Data Transfer Object):** Se usarán DTOs (ej. `ClienteCreacionDTO`) para la comunicación entre los clientes (web/móvil) y la API REST, evitando exponer las entidades del dominio[cite: 2680, 2681].
+## 2. Estructura de Módulos
 
-## 4. Vista de Componentes
+El backend se divide en tres módulos principales, respetando estrictamente la regla de dependencia:
+`Infraestructura -> Aplicación -> Dominio`.
 
-[cite_start]El sistema se divide en los siguientes componentes lógicos[cite: 2689]:
+### 🟢 Módulo: Dominio (`dominio`)
+**Responsabilidad:** Contener la lógica de negocio pura y las reglas del sistema.
+**Dependencias:** Ninguna (Puro Java).
 
-1.  **Componente Web (Frontend):** Aplicación Angular (SPA) que consume la API REST. [cite_start]Responsable de la UI y UX (Gestión Interna y Portal Cliente)[cite: 2691].
-2.  **Componente API REST (Backend):** Aplicación Spring Boot que expone los endpoints HTTP. [cite_start]Sirve como adaptador primario[cite: 2693].
-3.  [cite_start]**Componente Núcleo de Negocio (Backend):** Lógica de negocio pura (Servicios y Entidades), aislada de la tecnología[cite: 2695].
-4.  [cite_start]**Componente de Persistencia (Backend):** Implementación de los repositorios usando Spring Data JPA para interactuar con MySQL[cite: 2697].
-5.  **Componente Móvil (Android):** Aplicación nativa que consume la misma API REST que el frontend web. [cite_start]Es un cliente enfocado en el autoservicio[cite: 3414, 3424].
+*   **Modelo (`modelo`):** Entidades de dominio y Value Objects.
+*   **Puertos (`puerto`):** Interfaces que definen los contratos para interactuar con el exterior.
+    *   `dao`: Puertos para lectura de datos.
+    *   `repositorio`: Puertos para persistencia y modificación de estado.
+*   **Servicio (`servicio`):** Lógica de negocio que no pertenece a una entidad específica.
 
-## 5. Vista de Despliegue (AWS Cloud-Native)
+### 🟡 Módulo: Aplicación (`aplicacion`)
+**Responsabilidad:** Orquestar los casos de uso del sistema.
+**Dependencias:** `dominio`.
 
-[cite_start]El despliegue se realizará en Amazon Web Services (AWS)[cite: 684]:
+*   **CQRS:**
+    *   **Comandos (`comando`):** Operaciones que modifican el estado (Crear, Actualizar, Eliminar).
+        *   `fabrica`: Construcción de objetos complejos.
+        *   `manejador`: Lógica de ejecución del comando.
+    *   **Consultas (`consulta`):** Operaciones de solo lectura.
+        *   `manejador`: Lógica de ejecución de la consulta.
 
-* [cite_start]**Frontend (Angular):** Alojado como sitio web estático en **Amazon S3** y distribuido globalmente con **Amazon CloudFront (CDN)**[cite: 2729].
-* [cite_start]**Backend (Spring Boot):** Empaquetado en un contenedor **Docker** y desplegado en **Amazon ECS (Elastic Container Service)** para escalabilidad[cite: 2730, 2731].
-* [cite_start]**Base de Datos (MySQL):** Desplegada como un servicio gestionado en **Amazon RDS (Relational Database Service)** para alta disponibilidad y backups automáticos[cite: 683, 2732].
-* **Comunicación:** Toda la comunicación se asegurará mediante HTTPS.
+*   **Lenguaje:** Java 17
+*   **Framework:** Spring Boot 3.x
+*   **Build Tool:** Gradle (Multi-módulo)
+*   **Base de Datos:** MySQL 8.0+
+*   **Migraciones:** Flyway
+*   **Seguridad:** Spring Security + JWT
+
+---
+
+## 4. Diagrama de Flujo de Datos
+
+1.  **Petición HTTP** llega al `Controlador` (Infraestructura).
+2.  El Controlador crea un **Comando/Consulta** (Aplicación).
+3.  El Controlador invoca al **Manejador** correspondiente (Aplicación).
+4.  El Manejador usa el **Dominio** para aplicar reglas de negocio.
+5.  El Manejador usa un **Puerto** (Dominio) para persistir/leer datos.
+6.  El **Adaptador** (Infraestructura) implementa el Puerto y accede a la **Base de Datos**.
+
+---
+
+## 5. Principios Clave
+
+*   **Independencia del Framework:** El dominio no conoce a Spring Boot.
+*   **Independencia de la UI:** La API REST es solo un adaptador más.
+*   **Independencia de la BD:** El dominio define interfaces, la infraestructura implementa el acceso a MySQL.
+*   **Separación de Responsabilidades:** CQRS separa claramente lectura de escritura.

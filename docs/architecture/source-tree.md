@@ -6,102 +6,67 @@
 MaquiMu/
 ├── .luis-metodo/              # Método de desarrollo
 ├── docs/                      # Documentación del proyecto
-├── maquimu-backend/           # Aplicación Backend (Spring Boot)
-├── maquimu-frontend/          # Aplicación Frontend (Angular)
-├── maquimu-mobile/            # Aplicación Móvil (Android)
-└── database/                  # Scripts de base de datos
+├── maquimu-backend/ (Root Project)
+├── build.gradle                          # Configuración Root
+├── settings.gradle                       # Definición de módulos
+├── src/
+│   └── main/
+│       ├── java/com/maquimu/
+│       │   └── MaquimuBackendApplication.java # Main Class
+│       └── resources/
+│           ├── application.yml           # Configuración Global
+│           ├── application-local.yaml    # Configuración Local (DB)
+│           └── db/migration/             # Flyway
+│               ├── DDL/                  # Scripts de Estructura
+│               └── DML/                  # Scripts de Datos
+│
+├── dominio/ (Module)                     # 🟢 CAPA DE DOMINIO (Java Puro)
+│   ├── build.gradle
+│   └── src/main/java/com/maquimu/dominio/
+│       ├── modelo/                       # Entidades de Dominio
+│       │   ├── Maquinaria.java
+│       │   ├── Cliente.java
+│       │   └── Alquiler.java
+│       ├── puerto/                       # Interfaces (Puertos)
+│       │   ├── dao/                      # Puertos de Lectura
+│       │   │   ├── MaquinariaDao.java
+│       │   │   └── ClienteDao.java
+│       │   └── repositorio/              # Puertos de Escritura
+│       │       ├── MaquinariaRepositorio.java
+│       │       └── ClienteRepositorio.java
+│       └── servicio/                     # Lógica de Negocio
+│           └── ValidadorAlquiler.java
+│
+├── aplicacion/ (Module)                  # 🟡 CAPA DE APLICACIÓN (Orquestación)
+│   ├── build.gradle
+│   └── src/main/java/com/maquimu/aplicacion/
+│       ├── comando/                      # CQRS: Comandos (Escritura)
+│       │   ├── fabrica/                  # Factories
+│       │   │   └── FabricaMaquinaria.java
+│       │   └── manejador/                # Handlers
+│       │       ├── ComandoCrearMaquinaria.java
+│       │       └── ManejadorCrearMaquinaria.java
+│       └── consulta/                     # CQRS: Consultas (Lectura)
+│           ├── fabrica/                  # Factories
+│           └── manejador/                # Handlers
+│               ├── ConsultaListarMaquinaria.java
+│               └── ManejadorListarMaquinaria.java
+│
+└── infraestructura/ (Module)             # 🔴 CAPA DE INFRAESTRUCTURA (Spring Boot)
+    ├── build.gradle
+    └── src/main/java/com/maquimu/infraestructura/
+        ├── adaptador/                    # Implementación de Puertos
+        │   ├── dao/                      # Implementación DAOs (MySQL)
+        │   │   └── JpaMaquinariaDao.java
+        │   └── repositorio/              # Implementación Repositorios (MySQL)
+        │       └── JpaMaquinariaRepositorio.java
+        ├── controlador/                  # REST Controllers
+        │   ├── ComandoControladorMaquinaria.java
+        │   └── ConsultaControladorMaquinaria.java
+        └── configuracion/                # Configuración Spring
+            ├── BeanConfig.java
+            └── SeguridadConfig.java
 ```
-
----
-
-## 🗂️ Documentación (`docs/`)
-
-```
-docs/
-├── architecture/              # Documentación arquitectónica
-│   ├── README.md             # Visión general de arquitectura
-│   ├── coding-standards.md   # Estándares de código
-│   ├── tech-stack.md         # Stack tecnológico
-│   └── source-tree.md        # Este archivo
-│
-├── stories/                   # Historias de Usuario
-│   ├── HISTORIAS_DE_USUARIO.md
-│   ├── 01.configuracion-inicial-backend.story.md
-│   ├── 04.registro-maquinaria.story.md
-│   ├── 06.registro-clientes.story.md
-│   ├── 07.solicitar-alquiler-cliente.story.md
-│   └── 08.consultar-alquileres-cliente.story.md
-│
-├── diseños/                   # Diseños y mockups
-│   ├── Script-BaseDatosMaquiMu.sql
-│   └── *.html                # Maquetaciones HTML
-│
-└── qa/                        # Quality Assurance
-    └── gates/                # Gates de calidad por historia
-│   │   │   │           ├── ClienteRepositoryPort.java
-│   │   │   │           └── AlquilerRepositoryPort.java
-│   │   │   │
-│   │   │   ├── application/               # 🟢 CAPA DE APLICACIÓN
-│   │   │   │   ├── service/              # Implementación de casos de uso
-│   │   │   │   │   ├── MaquinariaService.java
-│   │   │   │   │   ├── ClienteService.java
-│   │   │   │   │   ├── AlquilerService.java
-│   │   │   │   │   └── AuthService.java
-│   │   │   │   │
-│   │   │   │   └── dto/                  # Data Transfer Objects
-│   │   │   │       ├── MaquinariaDTO.java
-│   │   │   │       ├── ClienteDTO.java
-│   │   │   │       ├── AlquilerDTO.java
-│   │   │   │       └── LoginDTO.java
-│   │   │   │
-│   │   │   └── infrastructure/            # 🟡 CAPA DE INFRAESTRUCTURA
-│   │   │       ├── adapter/
-│   │   │       │   ├── in/               # Adaptadores de entrada
-│   │   │       │   │   ├── rest/         # Controllers REST
-│   │   │       │   │   │   ├── MaquinariaController.java
-│   │   │       │   │   │   ├── ClienteController.java
-│   │   │       │   │   │   ├── AlquilerController.java
-│   │   │       │   │   │   └── AuthController.java
-│   │   │       │   │   │
-│   │   │       │   │   └── exception/    # Manejo de excepciones
-│   │   │       │   │       ├── GlobalExceptionHandler.java
-│   │   │       │   │       └── ErrorResponse.java
-│   │   │       │   │
-│   │   │       │   └── out/              # Adaptadores de salida
-│   │   │       │       ├── persistence/  # JPA
-│   │   │       │       │   ├── entity/   # Entidades JPA
-│   │   │       │       │   │   ├── MaquinariaEntity.java
-│   │   │       │       │   │   ├── ClienteEntity.java
-│   │   │       │       │   │   └── AlquilerEntity.java
-│   │   │       │       │   │
-│   │   │       │       │   ├── repository/ # Repositorios Spring Data
-│   │   │       │       │   │   ├── JpaMaquinariaRepository.java
-│   │   │       │       │   │   ├── JpaClienteRepository.java
-│   │   │       │       │   │   └── JpaAlquilerRepository.java
-│   │   │       │       │   │
-│   │   │       │       │   └── adapter/  # Implementación de ports
-│   │   │       │       │       ├── MaquinariaRepositoryAdapter.java
-│   │   │       │       │       └── ClienteRepositoryAdapter.java
-│   │   │       │       │
-│   │   │       │       └── mapper/       # Mappers Entity <-> Domain
-│   │   │       │           └── MaquinariaMapper.java
-│   │   │       │
-│   │   │       └── config/               # Configuración
-│   │   │           ├── SecurityConfig.java
-│   │   │           ├── CorsConfig.java
-│   │   │           └── JwtUtils.java
-│   │   │
-│   │   └── resources/
-│   │       ├── application.properties    # Configuración de aplicación
-│   │       └── application-dev.properties
-│   │
-│   └── test/                             # Tests
-│       └── java/com/maquimu/backend/
-│           ├── service/
-│           └── controller/
-│
-├── build.gradle                          # Configuración Gradle
-└── settings.gradle
 ```
 
 ---

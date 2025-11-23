@@ -60,8 +60,9 @@ dependencies {
 // Driver MySQL
 runtimeOnly 'com.mysql:mysql-connector-j'
 
-// Migraciones (opcional)
+// Migraciones
 implementation 'org.flywaydb:flyway-core'
+implementation 'org.flywaydb:flyway-mysql'
 ```
 
 #### Seguridad & JWT
@@ -91,23 +92,29 @@ testImplementation 'org.springframework.security:spring-security-test'
 
 ### Arquitectura Backend
 
-**Patrón:** Arquitectura Hexagonal (Puertos y Adaptadores)
+**Patrón:** Arquitectura Hexagonal (Puertos y Adaptadores) + CQRS + Multi-módulo Gradle
 
 ```
-backend/
-├── domain/              # Núcleo de negocio
-│   ├── model/          # Entidades de dominio
-│   └── port/
-│       ├── in/         # Casos de uso (interfaces)
-│       └── out/        # Repositorios (interfaces)
-├── application/         # Lógica de aplicación
-│   ├── service/        # Implementación de casos de uso
-│   └── dto/            # Data Transfer Objects
-└── infrastructure/      # Adaptadores externos
-    ├── adapter/
-    │   ├── in/         # REST Controllers
-    │   └── out/        # JPA Repositories
-    └── config/         # Configuración Spring
+maquimu-backend/ (Root)
+├── dominio/             # Módulo: Núcleo de negocio (Puro Java)
+│   ├── modelo/          # Entidades de dominio
+│   ├── puerto/          # Interfaces (Puertos)
+│   │   ├── dao/         # Puertos para consultas (lectura)
+│   │   └── repositorio/ # Puertos para comandos (escritura)
+│   └── servicio/        # Lógica de negocio de dominio
+├── aplicacion/          # Módulo: Casos de uso (Orquestación)
+│   ├── comando/         # CQRS: Comandos (Escritura)
+│   │   ├── fabrica/     # Factories para comandos
+│   │   └── manejador/   # Handlers de comandos
+│   └── consulta/        # CQRS: Consultas (Lectura)
+│       ├── fabrica/     # Factories para consultas
+│       └── manejador/   # Handlers de consultas
+└── infraestructura/     # Módulo: Adaptadores externos (Spring Boot)
+    ├── adaptador/       # Implementaciones de puertos
+    │   ├── dao/         # Implementación de DAOs (MySQL)
+    │   └── repositorio/ # Implementación de Repositorios (MySQL)
+    ├── controlador/     # REST Controllers (Comando/Consulta)
+    └── configuracion/   # Configuración Spring (Beans, Security)
 ```
 
 ---
@@ -180,16 +187,21 @@ src/
 - **MySQL 8.0** - Sistema de gestión de base de datos
 
 ### Configuración Local
-```properties
-# application.properties
-spring.datasource.url=jdbc:mysql://localhost:3306/maquimu_db
-spring.datasource.username=root
-spring.datasource.password=
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-
-spring.jpa.hibernate.ddl-auto=validate
-spring.jpa.show-sql=true
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
+```yaml
+# application-local.yaml
+spring:
+  datasource:
+    url: ${URL_DB} # jdbc:mysql://localhost:3306/maquimu_db?allowPublicKeyRetrieval=true&useSSL=false
+    username: ${USER_DB}
+    password: ${PASSWORD_DB}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
 ```
 
 ### Esquema Principal
