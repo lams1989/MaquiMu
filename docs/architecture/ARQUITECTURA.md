@@ -17,7 +17,9 @@ Este patrón aísla la lógica de negocio central (el núcleo) de las tecnologí
 
 * [cite_start]**Backend:** Java 17, Spring Boot 3[cite: 681, 2486].
 * [cite_start]**Frontend (Web):** Angular 16 (SPA)[cite: 682, 2488].
-* [cite_start]**Móvil:** Android (XML Nativo)[cite: 3441].
+* [cite_start]**Móvil:** Android (XML Nativo)[cite: 3441]
+> [!NOTE]
+> **Nota:** La implementación del módulo Android se pospondrá hasta que el frontend web y el backend estén finalizados.
 * [cite_start]**Base de Datos:** MySQL 8.0[cite: 683, 2490].
 * [cite_start]**Seguridad:** OAuth 2.0 y HTTPS[cite: 685, 2500].
 
