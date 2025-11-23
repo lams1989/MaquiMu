@@ -1,5 +1,0 @@
-spring:
-    datasource:
-        jdbcUrl: jdbc:sqlserver://${URL_DB};databaseName=${DB_NAME};encrypt=false;
-        username: ${USER_DB}
-        password: ${PASSWORD_DB}

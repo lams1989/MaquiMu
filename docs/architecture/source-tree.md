@@ -38,36 +38,6 @@ docs/
 │
 └── qa/                        # Quality Assurance
     └── gates/                # Gates de calidad por historia
-```
-
----
-
-## ☕ Backend (`maquimu-backend/`)
-
-### Estructura Hexagonal
-
-```
-maquimu-backend/
-├── src/
-│   ├── main/
-│   │   ├── java/com/maquimu/backend/
-│   │   │   │
-│   │   │   ├── domain/                    # 🔵 CAPA DE DOMINIO
-│   │   │   │   ├── model/                # Entidades de negocio
-│   │   │   │   │   ├── Maquinaria.java
-│   │   │   │   │   ├── Cliente.java
-│   │   │   │   │   ├── Alquiler.java
-│   │   │   │   │   ├── Usuario.java
-│   │   │   │   │   └── Factura.java
-│   │   │   │   │
-│   │   │   │   └── port/                 # Interfaces (contratos)
-│   │   │   │       ├── in/               # Casos de uso (entrada)
-│   │   │   │       │   ├── MaquinariaUseCase.java
-│   │   │   │       │   ├── ClienteUseCase.java
-│   │   │   │       │   └── AlquilerUseCase.java
-│   │   │   │       │
-│   │   │   │       └── out/              # Repositorios (salida)
-│   │   │   │           ├── MaquinariaRepositoryPort.java
 │   │   │   │           ├── ClienteRepositoryPort.java
 │   │   │   │           └── AlquilerRepositoryPort.java
 │   │   │   │

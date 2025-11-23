@@ -1,5 +1,0 @@
-spring:
-    datasource:
-        jdbcUrl: jdbc:sqlserver://${URL_DB};databaseName=${DB_NAME};useBulkCopyForBatchInsert=true;encrypt=false;
-        username: ${USER_DB}
-        password: ${PASSWORD_DB}

@@ -1,17 +1,3 @@
-# Arquitectura de Software: MaquiMu
-
-## 1. Arquitectura General
-
-[cite_start]La arquitectura seleccionada para el proyecto "MaquiMu" es la **Arquitectura Hexagonal (Puertos y Adaptadores)**[cite: 2654].
-
-Este patrón aísla la lógica de negocio central (el núcleo) de las tecnologías externas (UI, base de datos, APIs). Esto se logra mediante:
-* **Núcleo (Dominio y Aplicación):** Contiene las entidades (`Cliente`, `Maquinaria`) y los casos de uso (`AlquilerService`). [cite_start]No depende de nada externo[cite: 2660].
-* [cite_start]**Puertos:** Interfaces definidas por el núcleo (ej. `AlquilerRepositoryPort`)[cite: 2662].
-* [cite_start]**Adaptadores:** Implementaciones concretas de los puertos[cite: 2664].
-    * [cite_start]*Adaptadores Primarios (Entrada):* Controladores API REST (Spring Boot), UI (Angular), UI Móvil (Android)[cite: 2665].
-    * [cite_start]*Adaptadores Secundarios (Salida):* Clases de persistencia (Spring Data JPA) que implementan los puertos de repositorio[cite: 2666].
-
-## 2. Pila Tecnológica (Tech Stack)
 
 [cite_start]La pila tecnológica final (Versión 2.0) es [cite: 681-685]:
 

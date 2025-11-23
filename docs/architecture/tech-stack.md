@@ -221,25 +221,6 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
 - **IntelliJ IDEA** - Backend (Java/Spring)
 - **Visual Studio Code** - Frontend (Angular)
 - **Android Studio** - Móvil (Kotlin)
-
-### Control de Versiones
-- **Git** - Sistema de control de versiones
-- **GitHub** / **GitLab** - Repositorio remoto
-
-### Testing
-- **JUnit 5** - Tests unitarios (Backend)
-- **Mockito** - Mocking (Backend)
-- **Jasmine/Karma** - Tests unitarios (Frontend)
-- **Postman** - Testing de API
-
-### Documentación API
-- **Swagger / OpenAPI** - Documentación interactiva de API
-
-```gradle
-// Swagger
-implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
-```
-
 ---
 
 ## 🚀 Despliegue
