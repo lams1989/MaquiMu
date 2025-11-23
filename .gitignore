@@ -1,14 +1,2 @@
-# Ignorar la carpeta de configuración de VSCode
-.vscode/
+# Ignorar la carpeta de configuración
 
-# Ignorar la carpeta de Ceiba
-
-
-# Ignorar la carpeta de Copilot CLI
-copilot-cli/
-
-# Ignorar la carpeta de GitHub
-# Nota: Esta carpeta (.github) a menudo SÍ se incluye en el repositorio
-# porque puede contener flujos de trabajo (Actions) y plantillas.
-# Ignórala solo si estás seguro de que no la necesitas compartir.
-.github/
