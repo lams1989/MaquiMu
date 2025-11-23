@@ -2,7 +2,48 @@
 @import 'bootstrap/dist/css/bootstrap.min.css';
 @import 'bootstrap-icons/font/bootstrap-icons.css';
 
+/* CSS Variables - MaquiMu Theme */
+:root {
+    --primary-color: #0D47A1;
+    --accent-color: #FF6F00;
+    --text-dark: #424242;
+    --bg-light: #F5F5F5;
+}
+
 /* Global Styles */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-light);
+    font-family: 'Lato', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    background-color: var(--primary-color);
+    min-height: 100vh;
+    color: white;
+}
+
+.sidebar a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    display: block;
+    transition: all 0.3s ease;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-left: 4px solid var(--accent-color);
+}
+
+/* KPI Card Styles */
+.kpi-card {
+    border: none;
+    border-radius: 10px;
+}
+
+.kpi-card .card-icon {
+    font-size: 2.5em;
+    color: rgba(0, 0, 0, 0.2);
 }
