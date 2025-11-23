@@ -1,0 +1,39 @@
+apply plugin: 'java'
+apply plugin: 'jacoco'
+apply plugin: 'eclipse'
+
+group = 'com.xm'
+version = '0.0.1-SNAPSHOT'
+java {
+	toolchain {
+		languageVersion.set(JavaLanguageVersion.of(javaVersion))
+	}
+}
+
+repositories {
+	maven {
+		url urlFeed
+		name feed
+		credentials {
+			username feed
+			password accessTokenFeed
+		}
+		authentication {
+			basic(BasicAuthentication)
+		}
+	}
+	mavenCentral()
+}
+
+dependencies {
+
+	implementation project(':dominio')
+	implementation project.ext.springtxt
+	implementation project.ext.log4j
+
+	compileOnly project.ext.lombok
+	implementation(group: 'com.xm', name: 'comun-dominio', version: versionComun)
+	implementation(group: 'com.xm', name: 'comun-aplicacion', version: versionComun)
+	
+	annotationProcessor project.ext.lombok
+}

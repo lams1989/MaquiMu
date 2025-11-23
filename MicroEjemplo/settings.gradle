@@ -1,0 +1,5 @@
+rootProject.name = 'control-acceso'
+
+include ':infraestructura'
+include ':aplicacion'
+include ':dominio'

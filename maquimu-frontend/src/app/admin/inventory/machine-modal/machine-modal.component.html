@@ -1,0 +1,65 @@
+<div class="modal" tabindex="-1" [class.d-block]="isVisible" [class.show]="isVisible"
+    style="background-color: rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ isEditMode ? 'Editar' : 'Nueva' }} Maquinaria</h5>
+                <button type="button" class="btn-close" (click)="close()"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="machineForm" (ngSubmit)="onSubmit()">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Nombre *</label>
+                            <input type="text" class="form-control" formControlName="nombre">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Marca</label>
+                            <input type="text" class="form-control" formControlName="marca">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Modelo</label>
+                            <input type="text" class="form-control" formControlName="modelo">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Serial *</label>
+                            <input type="text" class="form-control" formControlName="serial">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Estado *</label>
+                            <select class="form-select" formControlName="estado">
+                                <option value="DISPONIBLE">DISPONIBLE</option>
+                                <option value="ALQUILADO">ALQUILADO</option>
+                                <option value="MANTENIMIENTO">MANTENIMIENTO</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Tarifa Día *</label>
+                            <input type="number" class="form-control" formControlName="tarifaDia">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Tarifa Hora *</label>
+                            <input type="number" class="form-control" formControlName="tarifaHora">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Descripción</label>
+                        <textarea class="form-control" rows="3" formControlName="descripcion"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="close()">Cancelar</button>
+                <button type="button" class="btn btn-primary" (click)="onSubmit()"
+                    [disabled]="machineForm.invalid">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>

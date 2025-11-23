@@ -1,0 +1,89 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'jacoco'
+
+group = 'com.xm'
+version = '0.0.1-SNAPSHOT'
+java {
+	toolchain {
+		languageVersion.set(JavaLanguageVersion.of(javaVersion))
+	}
+}
+
+repositories {
+	maven {
+		url urlFeed
+		name feed
+		credentials {
+			username feed
+			password accessTokenFeed
+		}
+		authentication {
+			basic(BasicAuthentication)
+		}
+	}
+	mavenCentral()
+}
+
+dependencies {
+
+	compileOnly project.ext.lombok
+	annotationProcessor project.ext.lombok
+	testImplementation project.ext.springboottest
+	implementation project.ext.springbootweb
+	implementation project.ext.swagger
+	implementation project.ext.azuremessagingservicebus
+
+	implementation project.ext.apachecommons
+	implementation project.ext.springbootjdbc
+	runtimeOnly project.ext.db
+	testImplementation project.ext.flyway
+	testImplementation project.ext.flywaytest
+	implementation project.ext.actuator
+	implementation project.ext.aop
+    implementation project.ext.infinispanspringbootembedded
+
+	implementation project.ext.jwtapi
+	runtimeOnly project.ext.jwtimpl
+	runtimeOnly project.ext.jwtjackson
+	implementation project.ext.ninbusjosejwt
+
+	implementation project(':dominio')
+	implementation project(':aplicacion')
+
+	implementation(group: 'com.xm', name: 'comun-test', version: versionComun)
+	implementation(group: 'com.xm', name: 'comun-dominio', version: versionComun)
+	implementation(group: 'com.xm', name: 'comun-aplicacion', version: versionComun)
+	implementation(group: 'com.xm', name: 'comun-infraestructura', version: versionComun)
+	
+	implementation project.ext.resilient4j
+	implementation project.ext.log4j
+	implementation project.ext.springbootjasypt
+	testImplementation project.ext.ulisesbocchio
+	implementation project.ext.jsonpath
+	
+	implementation project.ext.azureidentity
+    implementation project.ext.keyvault
+    implementation project.ext.poi
+	implementation project.ext.commonsCsv
+	implementation project.ext.hibernate
+	implementation project.ext.jakarta
+}
+
+jacocoTestReport {
+	reports {
+		xml.required.set(true)
+		html.required.set(true)
+	}
+	additionalSourceDirs files("../aplicacion/src/main/java")
+	additionalClassDirs files("../aplicacion/build/classes/java/main")
+}
+
+test {
+	useJUnitPlatform()
+	maxParallelForks = Runtime.runtime.availableProcessors()
+	finalizedBy jacocoTestReport
+
+}
+
+

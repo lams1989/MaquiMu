@@ -1,0 +1,2 @@
+INSERT INTO controlAcceso.AplicacionPermitida (aplicacionPermitidaID, nombre, clienteIdJwt, tipoIntegracion, tenantId, ambiente, estado)
+VALUES (35, 'RIO_XM', '11e0ae9e-2306-48c9-8acd-e0c998e00175', 'SIMPLEX_OPERATIVO','c980e410-0b5c-48bc-bd1a-8b91cabc84bc', 'PRD', 1);

@@ -1,0 +1,89 @@
+jasypt:
+    encryptor:
+        password: ${jasyptpwd}
+        algorithm: PBEWithMD5AndDES
+        iv-generator-classname: org.jasypt.iv.NoIvGenerator
+
+app:
+    config:
+        database:
+            name: ENC(TF3KqcJhVBP7RmWjBIDlohEU6M+CyhY9hoQQq0Bfw6V+B0lSipDVuLTejJpl5n5dbvSYPxADY9Q=)
+            server: ENC(NirptSBGNlJJQ8yB1f3vNo+YgUeHH/qNBTNdLV5MY8GfeDT6dhjsDmKFPZDCfFaEyxTLGiXO7Y4=)
+
+spring:
+    datasource:
+        driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+        type: com.zaxxer.hikari.HikariDataSource
+        hikari:
+            poolName: pool-pruebas-integracion-control-acceso
+            schema: controlAcceso
+    flyway:
+        schemas: controlAcceso
+        locations: classpath:pruebasintegracion/db/migration
+    main:
+        allow-bean-definition-overriding: true
+
+infinispan:
+  embedded:
+    enabled: true
+
+resilience4j:
+    circuitbreaker:
+        configs:
+            default:
+                slidingWindowType: TIME_BASED
+                slidingWindowSize: 120000
+                minimumNumberOfCalls: 10
+                permittedNumberOfCallsInHalfOpenState: 5
+                waitDurationInOpenState: 10000
+                failureRateThreshold: 50
+                registerHealthIndicator: true
+                slowCallDurationThreshold: 2000
+        instances:
+            circuitoEnviarmensajesColaDeSalida:
+                baseConfig: default
+    retry:
+        configs:
+            default:
+                maxAttempts: 2
+                waitDuration: 5000
+
+microservicio:
+    api_controlacceso: http://localhost:8088/control-acceso/v1
+    ambiente: PRB
+    api-casoanalisis: http://localhost:8084/caso-analisis/v1
+
+seguridad:
+    microsoft:
+        clientSecret: ENC(8aDzbqKg7evQxRQm6s4rT46qQb5W7D9NlHnDT5KU2yY2glS5jL01mePeLLku6PMgAleGvzdAdNA=)
+        scope:
+            graph: https://graph.microsoft.com/.default
+            appSimplex: api://3ea793ef-6adc-432e-ae26-28bf691d6634/.default
+        clientId: ENC(CgRHWs3Am2VdpV4J56yWZtTKdHbkc9y4XoOYKi5rDbxK0Pm6+X+CvD4MyHHn1VEk)
+        authority: https://login.microsoftonline.com/c980e410-0b5c-48bc-bd1a-8b91cabc84bc/oauth2/v2.0/token
+        urlLlavesPublicas: https://login.microsoftonline.com/c980e410-0b5c-48bc-bd1a-8b91cabc84bc/discovery/v2.0/keys
+        urlGruposDeUsuario: https://graph.microsoft.com/v1.0/users/{idUsuario}/memberOf/microsoft.graph.group?$select=displayName
+        urlInformacionUsuario: https://graph.microsoft.com/beta/users/{idUsuario}/profile
+        expresionObtenerIdUsuario: $.positions[?(@.allowedAudiences == 'organization')].detail.company.address.postalCode
+    minutosDuracionSesionSimplexOperativo: 1
+    autenticacion:
+        idObjecto: 91f643ca-45e7-435a-b166-2224b2685372
+        nombre: SimpOpera01
+        nombreCompleto: SimpOpera01
+        correo: 103552452@XM.COM.CO
+    aplicacionToken: ENC(9p7tM5/NZ/7IbslVklmqo/KWeMJDDjf8cpE8z6MzijeEni1yHIfdeAbEreDyf+Jw)
+    url: https://xmze2msvcseguridadprbappf01.azurewebsites.net/api/Autenticacion
+    clientIdUsuario: ENC(kOSWUteYrHKGL/3uoys49Bx+lhmXSIxE/o5kb3stoSCmZX1I1S7JM3VmOy955eep)
+    clientIdTecnico: ENC(9p7tM5/NZ/7IbslVklmqo/KWeMJDDjf8cpE8z6MzijeEni1yHIfdeAbEreDyf+Jw)
+    token:
+        issuer: Simplex
+        audience: simplex
+        secretKey: ENC(34EYa3JR07GG9Ihn12RCDx51CnVWI6Wq6Yh1ZpgLFRpLii6P3ivPGnMJ9vYEJOFR)
+
+aks:
+    managed-identity: ${MANAGED_IDENTITY_PRUEBAS_INTEGRACION}
+
+auditar:
+    bitacora:
+        urlBitacora: ENC(3g9ph4qgYPXgr6ze+xCzO5J/+RlzL2pfV9Q8zszGQMtF1DzR+9kUss71h+LDw8EugDPBwcobtQU=)
+        idAplicacion: ENC(8V+sDnBG1V63C448UxsI4g==)

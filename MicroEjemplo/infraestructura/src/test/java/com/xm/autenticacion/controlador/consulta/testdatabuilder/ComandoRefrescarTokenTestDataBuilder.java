@@ -1,0 +1,21 @@
+package com.xm.autenticacion.controlador.consulta.testdatabuilder;
+
+import com.xm.autenticacion.consulta.ComandoRefrescarToken;
+
+public class ComandoRefrescarTokenTestDataBuilder {
+
+	public static final String ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJTaW1wbGV4IiwiYXVkIjoic2ltcGxleCIsImlhdCI6MTY3ODcyNTUwNSwibmJmIjoxNjc4NzI1NTA1LCJleHAiOjE2Nzg3MjczMDUsIkVtYWlsIjoiU2ltcE9wZXJhMDJAWE0uQ09NLkNPIiwiSWRVc3VhcmlvIjoiIiwiTm9tYnJlQ29tcGxldG8iOiJTaW1wT3BlcmEwMiIsIlJvbGVzIjoiU08tUmVkZXNwYWNobyxTTy1SZWRlc3BhY2hvQWRtaW4ifQ.GryO0cSnxfa29mfICHoYUNy66GsXUSQO0VR33qBqXtI";
+	public static final String REFRESH_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJTaW1wbGV4IiwiYXVkIjoic2ltcGxleCIsImlhdCI6MTcyNzEwNjEyMCwibmJmIjoxNzI3MTA2MTIwLCJleHAiOjQ3MjcxMDk3MjAsIkVtYWlsIjoiU2ltcE9wZXJhMDFAWE0uQ09NLkNPIiwiSWRVc3VhcmlvIjoiMTQ5OSIsImF6cCI6Im9mZmxpbmVfYWNjZXNzIiwiTm9tYnJlQ29tcGxldG8iOiJTaW1wT3BlcmEwMSJ9.xErfUIFZa3bf4IrVJN-_mCN7ULbtahiPZfBi28P0W8E";
+
+	private String accessToken;
+	private String refreshToken;
+
+	public ComandoRefrescarTokenTestDataBuilder() {
+		this.accessToken = ACCESS_TOKEN;
+		this.refreshToken = REFRESH_TOKEN;
+	}
+
+	public ComandoRefrescarToken construir() {
+		return new ComandoRefrescarToken(accessToken, refreshToken);
+	}
+}

@@ -1,0 +1,222 @@
+buildscript {
+    repositories {
+        maven {
+            url urlFeed
+            name feed
+            credentials {
+                username feed
+                password accessTokenFeed
+            }
+            authentication {
+                basic(BasicAuthentication)
+            }
+        }
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath('info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.15.0')
+        classpath('org.owasp:dependency-check-gradle:12.1.0')
+    }
+}
+
+plugins {
+    id 'com.github.jk1.dependency-license-report' version '2.9'
+    id "com.github.ben-manes.versions" version "0.52.0"
+	id 'java'
+	id 'org.springframework.boot' version "${springBootVersion}"
+    id 'org.cyclonedx.bom' version '1.7.4'
+}
+
+licenseReport {
+    /*
+     Se excluye jakarta.websocket-api porque tiene una licencia dual (EPL 2.0 y GPL), al ser dual, según los abogados
+     de Ceiba se puede usar la licencia que se quiera, en este caso se usaría la EPL 2.0 que no tiene problemas de
+     uso en Ceiba.
+     https://mvnrepository.com/artifact/jakarta.websocket/jakarta.websocket-api
+     */
+    excludes = ['jakarta.websocket:jakarta.websocket-api']
+}
+
+dependencyUpdates {
+    // Configura el comportamiento del plugin
+    checkForGradleUpdate = true // Opcional: para verificar actualizaciones de Gradle
+    rejectVersionIf {
+        // Rechaza versiones que no sean estables
+        it.candidate.version ==~ /(?i).*[a-z].*/ // Esto rechaza versiones que contienen letras
+    }
+}
+
+allprojects {
+    repositories {
+		maven {
+			url urlFeed
+			name feed
+			credentials {
+                username feed
+                password accessTokenFeed
+            }
+            authentication {
+                basic(BasicAuthentication)
+            }
+        }
+        mavenCentral()
+    }
+
+    apply plugin: 'org.owasp.dependencycheck'
+
+    project.ext.log4j = ["org.apache.logging.log4j:log4j-api:2.24.3"]
+    project.ext.apachecommons = [
+            "commons-io:commons-io:2.18.0",
+            "org.apache.commons:commons-lang3:3.17.0"
+    ]
+
+    tasks.withType(JavaCompile) {
+		options.encoding = 'UTF-8'
+		options.compilerArgs += ["-parameters"]
+	}
+    tasks.withType(Test) { systemProperty "file.encoding", "UTF-8" }
+
+
+
+
+    project.ext.junit5 = ["org.junit.jupiter:junit-jupiter:5.11.4"]
+    project.ext.mockito = ['org.mockito:mockito-core:5.16.1']
+    project.ext.lombok = ["org.projectlombok:lombok:1.18.38"]
+    project.ext.junit5api =  ('org.junit.jupiter:junit-jupiter-api:5.12.1')
+    project.ext.junit5params = ('org.junit.jupiter:junit-jupiter-params:5.12.1')
+    project.ext.junit5engine = ('org.junit.jupiter:junit-jupiter-engine:5.12.1')
+    project.ext.mockitojunit = ('org.mockito:mockito-junit-jupiter:5.16.1')
+    
+    project.ext.springboottest = ["org.springframework.boot:spring-boot-starter-test:${springBootVersion}"]
+    project.ext.springbootweb = ["org.springframework.boot:spring-boot-starter-web:${springBootVersion}"]
+    project.ext.springdevtools = ["org.springframework.boot:spring-boot-devtools:${springBootVersion}"]
+    project.ext.actuator = ["org.springframework.boot:spring-boot-actuator:${springBootVersion}"]
+    project.ext.actuatorstarter = ["org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}"]
+    project.ext.springbootjasypt = ['com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5']
+    project.ext.ulisesbocchio = ["com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5"]
+    project.ext.infinispanspringbootembedded = ["org.infinispan:infinispan-spring-boot-starter-embedded:14.0.34.Final"]
+
+    project.ext.springtxt = [
+                                "org.springframework:spring-tx:${springVersion}",
+                                "org.springframework:spring-context:${springVersion}"
+                            ]
+
+    project.ext.swagger = [
+            "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6"
+	]
+
+    project.ext.db = ["com.microsoft.sqlserver:mssql-jdbc:12.2.0.jre11"]
+
+    project.ext.springbootjdbc = ["org.springframework.boot:spring-boot-starter-jdbc:${springBootVersion}"]
+	project.ext.flyway = [
+			"org.flywaydb:flyway-core:11.4.0",
+			"org.flywaydb:flyway-sqlserver:11.4.0"
+	]
+	project.ext.flywaytest = ["org.flywaydb.flyway-test-extensions:flyway-spring-test:10.0.0"]
+
+    project.ext.jwtapi = ["io.jsonwebtoken:jjwt-api:0.11.5"]
+    project.ext.jwtimpl = ["io.jsonwebtoken:jjwt-impl:0.11.5"]
+    project.ext.jwtjackson = ["io.jsonwebtoken:jjwt-jackson:0.11.5"]
+    project.ext.ninbusjosejwt = ["com.nimbusds:nimbus-jose-jwt:10.0.2"]
+
+    project.ext.aop = ["org.springframework.boot:spring-boot-starter-aop:${springBootVersion}"]
+	project.ext.resilient4j = ["io.github.resilience4j:resilience4j-spring-boot3:2.3.0"]
+    project.ext.azuremessagingservicebus = ["com.azure:azure-messaging-servicebus:7.17.10"]
+    project.ext.jsonpath = ["com.jayway.jsonpath:json-path:2.9.0"]
+    project.ext.azureidentity = ["com.azure:azure-identity:1.15.4"]
+    project.ext.keyvault = ["com.azure:azure-security-keyvault-secrets:4.9.3"]
+    project.ext.insights = ["com.microsoft.azure:applicationinsights-runtime-attach:3.7.4"]
+    project.ext.poi = ["org.apache.poi:poi:5.4.0", "org.apache.poi:poi-ooxml:5.4.0"]
+    project.ext.commonsCsv = ["org.apache.commons:commons-csv:1.13.0"]
+    project.ext.hibernate = ['org.hibernate.validator:hibernate-validator:8.0.2.Final']
+    project.ext.jakarta = ['jakarta.validation:jakarta.validation-api:3.1.1']
+}
+
+group = 'com.xm'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion.set(JavaLanguageVersion.of(javaVersion))
+	}
+}
+
+repositories {
+	maven {
+			url urlFeed
+			name feed
+			credentials {
+				username feed
+				password accessTokenFeed
+			}
+			authentication {
+				basic(BasicAuthentication)
+			}
+	}
+    mavenCentral()
+}
+
+dependencies {
+
+    configurations {
+        runtime.exclude module: 'spring-boot-starter-tomcat'
+        compile.exclude module: 'spring-boot-starter-tomcat'
+    }
+	implementation 'org.yaml:snakeyaml:2.4'
+
+    implementation project.ext.springbootjasypt
+    implementation project.ext.springbootweb
+    runtimeOnly project.ext.springdevtools
+
+	implementation(group: 'com.xm', name: 'comun-infraestructura', version: versionComun)
+
+    implementation project.ext.flyway
+    implementation project.ext.actuator
+    implementation project.ext.actuatorstarter
+    implementation project.ext.log4j
+    implementation project.ext.insights
+
+
+    implementation project(':infraestructura')
+}
+
+bootJar {
+	mainClass = 'com.xm.Application'
+	archiveBaseName.set('control-acceso')
+	archiveVersion.set(project.version)
+}
+
+test {
+	systemProperty "spring.profiles.active", System.properties['spring.profiles.active']
+
+	useJUnitPlatform()
+
+	if (project.hasProperty('excludeTests')) {
+		exclude project.property('excludeTests')
+	}
+	maxParallelForks = Runtime.runtime.availableProcessors()
+	forkEvery = 1
+}
+
+dependencyCheck {
+    failBuildOnCVSS = 8
+    failOnError = true
+    formats = ['HTML', 'JUNIT']
+    outputDirectory = "$buildDir/reports/security"
+}
+
+configurations.configureEach {
+    resolutionStrategy {
+        force 'io.netty:netty-codec-dns:4.1.118.Final'
+        force 'io.netty:netty-resolver-dns:4.1.118.Final'
+        force 'io.netty:netty-resolver-dns-native-macos:4.1.118.Final'
+        force 'io.netty:netty-resolver-dns-classes-macos:4.1.118.Final'
+    }
+}
+
+cyclonedxBom {
+    destination = file("build/reports")
+    outputName = "bom"
+    outputFormat = "xml"
+}

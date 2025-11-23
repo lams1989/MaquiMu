@@ -1,0 +1,112 @@
+jasypt:
+    encryptor:
+        password: ${jasyptpwd:secretkey}
+        algorithm: PBEWithMD5AndDES
+
+server:
+    port: 8085
+    servlet:
+        context-path: /control-acceso/v1
+        session:
+            timeout: 21600s
+    cors:
+        origins: ${ALLOW_ORIGINS}
+
+app:
+    config:
+        database:
+            name: ${DB_NAME}
+            server: ${URL_DB}
+        ratelimiter:
+            generarToken:  ${TASA_LIMITE_GENERAR_TOKEN}
+            refrescarToken: ${TASA_LIMITE_REFRESCAR_TOKEN}
+
+spring:
+    datasource:
+        driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+        type: com.zaxxer.hikari.HikariDataSource
+        hikari:
+            poolName: pool-control-acceso
+            schema: ${DB_ESQUEMA}
+    flyway:
+        schemas: ${DB_ESQUEMA}
+
+management:
+    health:
+        circuitbreakers:
+            enabled: true
+
+infinispan:
+  embedded:
+    enabled: true
+
+resilience4j:
+    circuitbreaker:
+        configs:
+            default:
+                slidingWindowType: TIME_BASED
+                slidingWindowSize: ${CB_SLIDING_WINDOW_SIZE}
+                minimumNumberOfCalls: ${CB_MINIMUM_NUMBER_OF_CALLS}
+                permittedNumberOfCallsInHalfOpenState: ${CB_PERMITTED_NUMBER_OF_CALLS_IN_HALF_OPEN_STATE}
+                waitDurationInOpenState: ${CB_WAIT_DURATION_IN_OPEN_STATE}
+                failureRateThreshold: ${CB_FAILURE_RATE_THRESHOLD}
+                registerHealthIndicator: true
+                slowCallDurationThreshold: ${CB_SLOW_CALL_DURATION_THRESHOLD}
+        instances:
+            circuitoEnviarmensajesColaDeSalida:
+                baseConfig: default
+    retry:
+        configs:
+            default:
+                maxAttempts: ${RETRY_MAX_RETRY_ATTEMPTS}
+                waitDuration: ${RETRY_WAIT_DURATION}
+
+microservicio:
+    api_controlacceso: ${API_CONTROL_ACCESO}
+    ambiente: ${AMBIENTE}
+    api-casoanalisis: ${API_CASO_ANALISIS}
+
+seguridad:
+    microsoft:
+        clientSecret: ${CLIENT_SECRET}
+        scope:
+            graph: ${SCOPE_GRAPH}
+        clientId: ${CLIENT_ID}
+        authority: ${AUTHORITY}
+        urlLlavesPublicas: ${URL_LLAVES_PUBLICAS}
+        urlGruposDeUsuario: ${URL_GRUPOS_DEL_USUARIO}
+        urlInformacionUsuario: ${URL_INFORMACION_USUARIO}
+        expresionObtenerIdUsuario: ${EXPRESION_OBTENER_ID_USUARIO}
+    minutosDuracionSesionSimplexOperativo: ${MINUTOS_DURACION_SESION_SIMPLEX_OPERATIVO}
+    minutosDuracionRefreshSesionSimplexOperativo: ${MINUTOS_DURACION_REFRESH_SESION_SIMPLEX_OPERATIVO}
+    autenticacion:
+        idObjecto: ${AUTENTICACION_OBJECTO_ID}
+        nombre: ${AUTENTICACION_NOMBRE}
+        nombreCompleto: ${AUTENTICACION_NOMBRE_COMPLETO}
+        correo: ${AUTENTICACION_CORREO}
+    aplicacionToken: ${AUTENTICACION_APLICACION_TOKEN}
+    url: ${AUTENTICACION_URL}
+    clientIdUsuario: ${AUTENTICACION_CLIENT_ID_USUARIO}
+    clientIdTecnico: ${AUTENTICACION_CLIENT_ID_TECNICO}
+    token:
+        issuer: ${TOKEN_ISSUER}
+        audience: ${TOKEN_AUDIENCE}
+        secretKey: ${TOKEN_CLAVE_FIRMADO}
+        audienceApplication: ${TOKEN_AUDIENCE_APPLICATION}
+
+aks:
+    managed-identity: ${MANAGED_IDENTITY}
+
+auditar:
+    bitacora:
+        urlBitacora: ${BITACORA_ENDPOINT}
+        apiKeyOcp: ${OCP_APIM_SUSCRIPTION_KEY}
+        idAplicacion: ${ID_APLICACION}
+
+springdoc:
+    api-docs:
+        enabled: ${SWAGGER_ENABLED:true}
+    swagger-ui:
+        enabled: ${SWAGGER_ENABLED:true}
+        operationsSorter: method
+        tagsSorter: alpha
