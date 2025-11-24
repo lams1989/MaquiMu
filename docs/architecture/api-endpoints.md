@@ -45,18 +45,29 @@ DELETE /api/maquimu/v1/clientes/{id}
 
 ### Alquileres
 ```
-GET    /api/maquimu/v1/alquileres
-GET    /api/maquimu/v1/alquileres/{id}
-POST   /api/maquimu/v1/alquileres
-PUT    /api/maquimu/v1/alquileres/{id}
-DELETE /api/maquimu/v1/alquileres/{id}
+GET    /api/maquimu/v1/alquileres                  (Admin: Listar todos)
+GET    /api/maquimu/v1/alquileres/mis-alquileres   (Cliente: Listar propios)
+GET    /api/maquimu/v1/alquileres/{id}             (Detalle)
+POST   /api/maquimu/v1/alquileres                  (Crear solicitud)
+PATCH  /api/maquimu/v1/alquileres/{id}/aprobar     (Operario: Aprobar)
+PATCH  /api/maquimu/v1/alquileres/{id}/rechazar    (Operario: Rechazar)
+PATCH  /api/maquimu/v1/alquileres/{id}/entregar    (Operario: Entregar/Activar)
+PATCH  /api/maquimu/v1/alquileres/{id}/finalizar   (Operario: Finalizar/Devolver)
 ```
 
 ### Facturas
 ```
-GET    /api/maquimu/v1/facturas
-GET    /api/maquimu/v1/facturas/{id}
-POST   /api/maquimu/v1/facturas
+GET    /api/maquimu/v1/facturas                    (Admin: Listar todas)
+GET    /api/maquimu/v1/facturas/mis-facturas       (Cliente: Listar propias)
+GET    /api/maquimu/v1/facturas/{id}               (Detalle)
+GET    /api/maquimu/v1/facturas/{id}/descargar     (Descargar PDF)
+POST   /api/maquimu/v1/facturas                    (Generar factura)
+```
+
+### Dashboards
+```
+GET    /api/maquimu/v1/dashboard/operario          (KPIs Operario)
+GET    /api/maquimu/v1/dashboard/cliente           (KPIs Cliente)
 ```
 
 ---
