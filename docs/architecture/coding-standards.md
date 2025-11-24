@@ -41,22 +41,31 @@ public static final String ESTADO_DISPONIBLE = "DISPONIBLE";
 
 ### Arquitectura Hexagonal
 
-**Estructura de Paquetes:**
+**Estructura Multi-módulo (Gradle):**
 ```
-com.maquimu.backend
-├── domain/
-│   ├── model/          # Entidades de dominio puras
-│   ├── port/
-│   │   ├── in/         # Interfaces de servicios (casos de uso)
-│   │   └── out/        # Interfaces de repositorios
-├── application/
-│   ├── service/        # Implementación de casos de uso
-│   └── dto/            # Data Transfer Objects
-└── infrastructure/
-    ├── adapter/
-    │   ├── in/         # Controllers REST
-    │   └── out/        # Repositorios JPA
-    └── config/         # Configuración Spring
+maquimu-backend/
+├── dominio/ (Java Puro - Sin dependencias de Framework)
+│   └── src/main/java/com/maquimu/dominio/
+│       ├── modelo/         # Entidades de negocio (Alquiler, Maquinaria)
+│       ├── servicio/       # Lógica de negocio pura (opcional)
+│       └── puerto/
+│           ├── dao/        # Interfaces de salida (Lectura/Escritura)
+│           └── repositorio/# Interfaces de repositorios (DDD)
+│
+├── aplicacion/ (Casos de Uso - CQRS)
+│   └── src/main/java/com/maquimu/aplicacion/
+│       ├── comando/        # DTOs de Comandos (Escritura)
+│       │   └── manejador/  # Lógica de comandos
+│       └── consulta/       # DTOs de Consultas (Lectura)
+│           └── manejador/  # Lógica de consultas
+│
+└── infraestructura/ (Framework - Spring Boot)
+    └── src/main/java/com/maquimu/infraestructura/
+        ├── adaptador/
+        │   ├── entidad/    # Entidades JPA (@Entity)
+        │   ├── repositorio/# Implementación JPA de puertos
+        │   └── controlador/# Controladores REST (@RestController)
+        └── configuracion/  # Configuración Spring (Security, Swagger)
 ```
 
 ### Validaciones
