@@ -29,10 +29,28 @@ El backend se divide en tres módulos principales, respetando estrictamente la r
 
 *   **CQRS:**
     *   **Comandos (`comando`):** Operaciones que modifican el estado (Crear, Actualizar, Eliminar).
-        *   `fabrica`: Construcción de objetos complejos.
-        *   `manejador`: Lógica de ejecución del comando.
+        *   `fabrica`: Construcción de entidades de dominio a partir de comandos.
+        *   `manejador`: Orquestación y lógica de ejecución del comando.
     *   **Consultas (`consulta`):** Operaciones de solo lectura.
-        *   `manejador`: Lógica de ejecución de la consulta.
+        *   `fabrica`: Construcción de DTOs de respuesta (opcional).
+        *   `manejador`: Orquestación y lógica de ejecución de la consulta.
+
+### 🔴 Módulo: Infraestructura (`infraestructura`)
+**Responsabilidad:** Implementar los adaptadores técnicos (BD, API REST, etc.).
+**Dependencias:** `aplicacion`, `dominio`, Spring Boot.
+
+*   **Adaptadores (`adaptador`):**
+    *   `entidad`: Entidades JPA para mapeo ORM.
+    *   `dao`: Implementación de puertos de lectura.
+    *   `repositorio`: Implementación de puertos de escritura.
+*   **Controladores (`controlador`):**
+    *   Controladores REST separados por CQRS (Comando/Consulta).
+*   **Configuración (`configuracion`):**
+    *   Configuración de Spring (Security, Beans, etc.).
+
+---
+
+## 3. Stack Tecnológico
 
 *   **Lenguaje:** Java 17
 *   **Framework:** Spring Boot 3.x
@@ -48,9 +66,15 @@ El backend se divide en tres módulos principales, respetando estrictamente la r
 1.  **Petición HTTP** llega al `Controlador` (Infraestructura).
 2.  El Controlador crea un **Comando/Consulta** (Aplicación).
 3.  El Controlador invoca al **Manejador** correspondiente (Aplicación).
-4.  El Manejador usa el **Dominio** para aplicar reglas de negocio.
-5.  El Manejador usa un **Puerto** (Dominio) para persistir/leer datos.
-6.  El **Adaptador** (Infraestructura) implementa el Puerto y accede a la **Base de Datos**.
+4.  El Manejador usa una **Fábrica** (Aplicación) para construir entidades/DTOs a partir del Comando/Consulta.
+5.  El Manejador aplica **validaciones de negocio** usando el Dominio.
+6.  El Manejador usa un **Puerto** (Dominio) para persistir/leer datos.
+7.  El **Adaptador** (Infraestructura) implementa el Puerto y accede a la **Base de Datos**.
+
+**Flujo Simplificado:**
+```
+HTTP Request → Controlador → Comando/Consulta → Manejador → Fábrica → Entidad/DTO → Puerto → Adaptador → BD
+```
 
 ---
 
@@ -60,3 +84,4 @@ El backend se divide en tres módulos principales, respetando estrictamente la r
 *   **Independencia de la UI:** La API REST es solo un adaptador más.
 *   **Independencia de la BD:** El dominio define interfaces, la infraestructura implementa el acceso a MySQL.
 *   **Separación de Responsabilidades:** CQRS separa claramente lectura de escritura.
+*   **Patrón de Fábricas:** Centraliza la construcción de objetos complejos en la capa de aplicación.

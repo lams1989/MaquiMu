@@ -55,9 +55,11 @@ maquimu-backend/
 ├── aplicacion/ (Casos de Uso - CQRS)
 │   └── src/main/java/com/maquimu/aplicacion/
 │       ├── comando/        # DTOs de Comandos (Escritura)
-│       │   └── manejador/  # Lógica de comandos
+│       │   ├── fabrica/    # Fábricas para construcción de entidades
+│       │   └── manejador/  # Lógica de comandos (orquestación)
 │       └── consulta/       # DTOs de Consultas (Lectura)
-│           └── manejador/  # Lógica de consultas
+│           ├── fabrica/    # Fábricas para construcción de DTOs (opcional)
+│           └── manejador/  # Lógica de consultas (orquestación)
 │
 └── infraestructura/ (Framework - Spring Boot)
     └── src/main/java/com/maquimu/infraestructura/
@@ -102,9 +104,107 @@ public class GlobalExceptionHandler {
 }
 ```
 
+### Patrón de Fábricas (Aplicación)
+
+**Responsabilidad:** Construcción de entidades de dominio y DTOs a partir de comandos/consultas.
+
+**Ubicación:** `aplicacion/comando/fabrica/` y `aplicacion/consulta/fabrica/`
+
+**Cuándo usar Fábricas:**
+- ✅ Comandos/Consultas con **múltiples parámetros**
+- ✅ Lógica de construcción **compleja** (estado inicial, validaciones)
+- ✅ Transformación **Comando → Entidad de Dominio**
+- ✅ Transformación **Entidad → DTO de Respuesta** (si es compleja)
+
+**Cuándo NO usar Fábricas:**
+- ❌ Consultas con **un solo parámetro** (ej: buscar por ID)
+- ❌ Comandos de **eliminación** (solo ID)
+- ❌ Transformaciones **triviales**
+
+**Flujo de Datos:**
+```
+Controlador → Manejador → Fábrica → Entidad/DTO → Servicio/Repositorio/DAO
+```
+
+**Ejemplo - Fábrica de Comando:**
+```java
+// Fábrica para crear entidades de dominio
+public class FabricaMaquinaria {
+    
+    /**
+     * Crea una nueva Maquinaria a partir de un comando.
+     * Establece el estado inicial como DISPONIBLE.
+     */
+    public Maquinaria crear(ComandoCrearMaquinaria comando) {
+        return new Maquinaria(
+            null, // ID se genera en BD
+            comando.getNombre(),
+            comando.getMarca(),
+            comando.getModelo(),
+            comando.getSerial(),
+            EstadoMaquinaria.DISPONIBLE, // Estado inicial
+            comando.getTarifaDia(),
+            comando.getTarifaHora(),
+            comando.getDescripcion()
+        );
+    }
+    
+    /**
+     * Actualiza una Maquinaria existente con datos del comando.
+     */
+    public Maquinaria actualizar(Maquinaria existente, ComandoActualizarMaquinaria comando) {
+        existente.setNombre(comando.getNombre());
+        existente.setMarca(comando.getMarca());
+        existente.setModelo(comando.getModelo());
+        existente.setSerial(comando.getSerial());
+        existente.setEstado(comando.getEstado());
+        existente.setTarifaDia(comando.getTarifaDia());
+        existente.setTarifaHora(comando.getTarifaHora());
+        existente.setDescripcion(comando.getDescripcion());
+        return existente;
+    }
+}
+```
+
+**Ejemplo - Uso en Manejador:**
+```java
+public class ManejadorCrearMaquinaria {
+    private final FabricaMaquinaria fabrica;
+    private final MaquinariaDao dao;
+    private final MaquinariaRepositorio repositorio;
+    
+    public Maquinaria manejar(ComandoCrearMaquinaria comando) {
+        // 1. Validaciones de negocio
+        if (dao.existePorSerial(comando.getSerial())) {
+            throw new SerialDuplicadoException(comando.getSerial());
+        }
+        
+        // 2. Fábrica crea la entidad de dominio
+        Maquinaria maquinaria = fabrica.crear(comando);
+        
+        // 3. Persistir usando repositorio
+        return repositorio.guardar(maquinaria);
+    }
+}
+```
+
+**Ejemplo - Consulta Simple SIN Fábrica:**
+```java
+// Para consultas simples (un parámetro), NO usar fábrica
+public class ManejadorBuscarMaquinaria {
+    private final MaquinariaDao dao;
+    
+    public Maquinaria manejar(Long id) {
+        return dao.buscarPorId(id)
+            .orElseThrow(() -> new MaquinariaNotFoundException(id));
+    }
+}
+```
+
 ---
 
 ## 🅰️ Frontend (Angular)
+
 
 ### Nomenclatura
 
