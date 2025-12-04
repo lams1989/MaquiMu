@@ -46,28 +46,79 @@ public static final String ESTADO_DISPONIBLE = "DISPONIBLE";
 maquimu-backend/
 ├── dominio/ (Java Puro - Sin dependencias de Framework)
 │   └── src/main/java/com/maquimu/dominio/
-│       ├── modelo/         # Entidades de negocio (Alquiler, Maquinaria)
-│       ├── servicio/       # Lógica de negocio pura (opcional)
-│       └── puerto/
-│           ├── dao/        # Interfaces de salida (Lectura/Escritura)
-│           └── repositorio/# Interfaces de repositorios (DDD)
+│       ├── maquinaria/           # Módulo de Maquinaria
+│       │   ├── modelo/           # Entidades (Maquinaria, EstadoMaquinaria)
+│       │   ├── puerto/
+│       │   │   ├── dao/          # MaquinariaDao
+│       │   │   └── repositorio/  # MaquinariaRepositorio
+│       │   └── servicio/         # MaquinariaComandoServicio, MaquinariaConsultaServicio
+│       ├── cliente/              # Módulo de Cliente
+│       │   ├── modelo/
+│       │   ├── puerto/dao/
+│       │   ├── puerto/repositorio/
+│       │   └── servicio/
+│       ├── alquiler/             # Módulo de Alquiler
+│       │   ├── modelo/
+│       │   ├── puerto/dao/
+│       │   ├── puerto/repositorio/
+│       │   └── servicio/
+│       ├── autenticacion/        # Módulo de Autenticación
+│       │   ├── modelo/
+│       │   ├── puerto/dao/
+│       │   ├── puerto/repositorio/
+│       │   └── servicio/
+│       └── compartido/           # Componentes compartidos
+│           ├── excepcion/
+│           └── valor/            # Value Objects
 │
 ├── aplicacion/ (Casos de Uso - CQRS)
 │   └── src/main/java/com/maquimu/aplicacion/
-│       ├── comando/        # DTOs de Comandos (Escritura)
-│       │   ├── fabrica/    # Fábricas para construcción de entidades
-│       │   └── manejador/  # Lógica de comandos (orquestación)
-│       └── consulta/       # DTOs de Consultas (Lectura)
-│           ├── fabrica/    # Fábricas para construcción de DTOs (opcional)
-│           └── manejador/  # Lógica de consultas (orquestación)
+│       ├── maquinaria/
+│       │   ├── comando/
+│       │   │   ├── fabrica/      # FabricaMaquinaria
+│       │   │   └── manejador/    # Handlers de comandos
+│       │   └── consulta/
+│       │       └── manejador/    # Handlers de consultas
+│       ├── cliente/
+│       │   ├── comando/fabrica/
+│       │   ├── comando/manejador/
+│       │   └── consulta/manejador/
+│       ├── alquiler/
+│       │   ├── comando/fabrica/
+│       │   ├── comando/manejador/
+│       │   └── consulta/manejador/
+│       ├── autenticacion/
+│       │   ├── comando/fabrica/
+│       │   ├── comando/manejador/
+│       │   └── consulta/manejador/
+│       └── compartido/
+│           └── servicio/         # GeneradorJwt
 │
 └── infraestructura/ (Framework - Spring Boot)
     └── src/main/java/com/maquimu/infraestructura/
-        ├── adaptador/
-        │   ├── entidad/    # Entidades JPA (@Entity)
-        │   ├── repositorio/# Implementación JPA de puertos
-        │   └── controlador/# Controladores REST (@RestController)
-        └── configuracion/  # Configuración Spring (Security, Swagger)
+        ├── maquinaria/
+        │   ├── adaptador/
+        │   │   ├── entidad/      # MaquinariaEntity
+        │   │   ├── dao/          # JpaMaquinariaDao
+        │   │   └── repositorio/  # JpaMaquinariaRepositorio
+        │   └── controlador/      # ComandoControlador, ConsultaControlador
+        ├── cliente/
+        │   ├── adaptador/entidad/
+        │   ├── adaptador/dao/
+        │   ├── adaptador/repositorio/
+        │   └── controlador/
+        ├── alquiler/
+        │   ├── adaptador/entidad/
+        │   ├── adaptador/dao/
+        │   ├── adaptador/repositorio/
+        │   └── controlador/
+        ├── autenticacion/
+        │   ├── adaptador/entidad/
+        │   ├── adaptador/dao/
+        │   ├── adaptador/repositorio/
+        │   └── controlador/
+        ├── configuracion/        # Spring Security, CORS, Beans
+        └── MaquimuBackendApplication.java
 ```
 
 ### Validaciones
