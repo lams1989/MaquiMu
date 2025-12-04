@@ -1,0 +1,8 @@
+dependencies {
+    // Dependencia al módulo dominio
+    implementation project(':dominio')
+    
+    // Lombok (opcional)
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+}
