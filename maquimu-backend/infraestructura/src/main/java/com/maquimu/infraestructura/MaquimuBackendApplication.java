@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication(scanBasePackages = "com.maquimu")
-@EntityScan(basePackages = "com.maquimu.infraestructura.*.adaptador.entidad")
-@EnableJpaRepositories(basePackages = "com.maquimu.infraestructura.*.adaptador.dao")
+@EntityScan(basePackages = "com.maquimu.infraestructura")
+@EnableJpaRepositories(basePackages = "com.maquimu.infraestructura")
 public class MaquimuBackendApplication {
     public static void main(String[] args) {
         SpringApplication.run(MaquimuBackendApplication.class, args);
