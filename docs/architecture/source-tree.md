@@ -69,11 +69,11 @@ MaquiMu/
 │       │   ├── puerto/
 │       │   │   ├── dao/
 │       │   │   │   └── UsuarioDao.java
-│       │   │   └── repositorio/
-│       │   │       └── UsuarioRepositorio.java
-│       │   └── servicio/
-│       │       ├── UsuarioComandoServicio.java
-│       │       └── UsuarioConsultaServicio.java
+│       │   │   ├── repositorio/
+│       │   │   │   └── UsuarioRepositorio.java
+│       │   │   └── servicio/
+│       │   │       ├── ServicioHashing.java
+│       │   │       └── ServicioToken.java
 │       │
 │       ├── factura/                      # Módulo de Factura
 │       │   ├── modelo/
@@ -162,10 +162,13 @@ MaquiMu/
 │       │   │   │   └── FabricaUsuario.java
 │       │   │   └── manejador/
 │       │   │       └── ManejadorRegistrarUsuario.java
-│       │   └── consulta/
-│       │       ├── ConsultaAutenticarUsuario.java
-│       │       └── manejador/
-│       │           └── ManejadorAutenticarUsuario.java
+│       │   ├── consulta/
+│       │   │   ├── ConsultaAutenticarUsuario.java
+│       │   │   ├── RespuestaAutenticacion.java
+│       │   │   └── manejador/
+│       │   │       └── ManejadorAutenticarUsuario.java
+│       │   └── servicio/
+│       │       └── GeneradorJwt.java
 │       │
 │       ├── factura/
 │       │   ├── comando/
@@ -191,75 +194,76 @@ MaquiMu/
         ├── maquinaria/
         │   ├── adaptador/
         │   │   ├── entidad/
-        │   │   │   └── MaquinariaEntity.java
-        │   │   ├── dao/
-        │   │   │   ├── JpaMaquinariaRepository.java  # Spring Data JPA
-        │   │   │   └── JpaMaquinariaDao.java         # Implementación puerto
-        │   │   └── repositorio/
-        │   │       └── JpaMaquinariaRepositorio.java # Implementación puerto
-        │   └── controlador/
-        │       ├── ComandoControladorMaquinaria.java
-        │       └── ConsultaControladorMaquinaria.java
-        │
-        ├── cliente/
-        │   ├── adaptador/
-        │   │   ├── entidad/
-        │   │   │   └── ClienteEntity.java
-        │   │   ├── dao/
-        │   │   │   ├── JpaClienteRepository.java
-        │   │   │   └── JpaClienteDao.java
-        │   │   └── repositorio/
-        │   │       └── JpaClienteRepositorio.java
-        │   └── controlador/
-        │       ├── ComandoControladorCliente.java
-        │       └── ConsultaControladorCliente.java
-        │
-        ├── alquiler/
-        │   ├── adaptador/
-        │   │   ├── entidad/
-        │   │   │   └── AlquilerEntity.java
-        │   │   ├── dao/
-        │   │   │   ├── JpaAlquilerRepository.java
-        │   │   │   └── JpaAlquilerDao.java
-        │   │   └── repositorio/
-        │   │       └── JpaAlquilerRepositorio.java
-        │   └── controlador/
-        │       ├── ComandoControladorAlquiler.java
-        │       └── ConsultaControladorAlquiler.java
-        │
-        ├── autenticacion/
-        │   ├── adaptador/
-        │   │   ├── entidad/
-        │   │   │   └── UsuarioEntity.java
-        │   │   ├── dao/
-        │   │   │   ├── JpaUsuarioRepository.java
-        │   │   │   └── JpaUsuarioDao.java
-        │   │   └── repositorio/
-        │   │       └── JpaUsuarioRepositorio.java
-        │   └── controlador/
-        │       └── AuthController.java
-        │
-        ├── factura/
-        │   ├── adaptador/
-        │   │   ├── entidad/
-        │   │   │   └── FacturaEntity.java
-        │   │   ├── dao/
-        │   │   │   ├── JpaFacturaRepository.java
-        │   │   │   └── JpaFacturaDao.java
-        │   │   └── repositorio/
-        │   │       └── JpaFacturaRepositorio.java
-        │   └── controlador/
-        │       ├── ComandoControladorFactura.java
-        │       └── ConsultaControladorFactura.java
-        │
-        ├── configuracion/
-        │   ├── SeguridadConfig.java
-        │   ├── JwtAuthenticationFilter.java
-        │   ├── AuthEntryPoint.java
-        │   ├── BeanConfig.java
-        │   └── CorsConfig.java
-        │
-        └── MaquimuBackendApplication.java
+│       │   │   │   └── MaquinariaEntity.java
+│       │   │   ├── dao/
+│       │   │   │   ├── JpaMaquinariaRepository.java  # Spring Data JPA
+│       │   │   │   └── JpaMaquinariaDao.java         # Implementación puerto
+│       │   │   └── repositorio/
+│       │   │       └── JpaMaquinariaRepositorio.java # Implementación puerto
+│       │   └── controlador/
+│       │       ├── ComandoControladorMaquinaria.java
+│       │       └── ConsultaControladorMaquinaria.java
+│       │
+│       ├── cliente/
+│       │   ├── adaptador/
+│       │   │   ├── entidad/
+│       │   │   │   └── ClienteEntity.java
+│       │   │   ├── dao/
+│       │   │   │   ├── JpaClienteRepository.java
+│       │   │   │   └── JpaClienteDao.java
+│       │   │   └── repositorio/
+│       │   │       └── JpaClienteRepositorio.java
+│       │   └── controlador/
+│       │       ├── ComandoControladorCliente.java
+│       │       └── ConsultaControladorCliente.java
+│       │
+│       ├── alquiler/
+│       │   ├── adaptador/
+│       │   │   ├── entidad/
+│       │   │   │   └── AlquilerEntity.java
+│       │   │   ├── dao/
+│       │   │   │   ├── JpaAlquilerRepository.java
+│       │   │   │   └── JpaAlquilerDao.java
+│       │   │   └── repositorio/
+│       │   │       └── JpaAlquilerRepositorio.java
+│       │   └── controlador/
+│       │       ├── ComandoControladorAlquiler.java
+│       │       └── ConsultaControladorAlquiler.java
+│       │
+│       ├── autenticacion/
+│       │   ├── adaptador/
+│       │   │   ├── entidad/
+│       │   │   │   └── UsuarioEntity.java
+│       │   │   ├── dao/
+│       │   │   │   ├── JpaUsuarioRepository.java
+│       │   │   │   └── JpaUsuarioDao.java
+│       │   │   └── repositorio/
+│       │   │       ├── JpaUsuarioRepositorio.java
+│       │   │       └── UserDetailsServiceImpl.java
+│       │   └── controlador/
+│       │       └── AuthController.java
+│       │
+│       ├── factura/
+│       │   ├── adaptador/
+│       │   │   ├── entidad/
+│       │   │   │   └── FacturaEntity.java
+│       │   │   ├── dao/
+│       │   │   │   ├── JpaFacturaRepository.java
+│       │   │   │   └── JpaFacturaDao.java
+│       │   │   └── repositorio/
+│       │   │       └── JpaFacturaRepositorio.java
+│       │   └── controlador/
+│       │       ├── ComandoControladorFactura.java
+│       │       └── ConsultaControladorFactura.java
+│       │
+│       ├── configuracion/
+│       │   ├── SeguridadConfig.java
+│       │   ├── JwtAuthenticationFilter.java
+│       │   ├── AuthEntryPoint.java
+│       │   ├── BeanConfig.java
+│       │   └── CorsConfig.java
+│       │
+│       └── MaquimuBackendApplication.java
 ```
 
 ---
@@ -272,7 +276,8 @@ maquimu-frontend/
 │   ├── app/
 │   │   ├── core/                         # Servicios singleton
 │   │   │   ├── services/
-│   │   │   │   ├── auth.service.ts
+│   │   │   │   ├── auth/
+│   │   │   │   │   └── auth.service.ts
 │   │   │   │   ├── maquinaria.service.ts
 │   │   │   │   ├── cliente.service.ts
 │   │   │   │   └── alquiler.service.ts
@@ -281,8 +286,11 @@ maquimu-frontend/
 │   │   │   │   ├── auth.guard.ts
 │   │   │   │   └── role.guard.ts
 │   │   │   │
-│   │   │   └── interceptors/
-│   │   │       └── jwt.interceptor.ts
+│   │   │   ├── interceptors/
+│   │   │   │   └── auth.interceptor.ts
+│   │   │   │
+│   │   │   └── models/auth/
+│   │   │       └── login-register.models.ts
 │   │   │
 │   │   ├── shared/                       # Componentes compartidos
 │   │   │   ├── components/
@@ -290,32 +298,37 @@ maquimu-frontend/
 │   │   │   │   ├── footer/
 │   │   │   │   └── modal/
 │   │   │   │
-│   │   │   └── models/
-│   │   │       ├── maquinaria.model.ts
-│   │   │       ├── cliente.model.ts
-│   │   │       └── alquiler.model.ts
+│   │   │   └── forbidden/
+│   │   │       └── forbidden.component.ts
 │   │   │
-│   │   ├── features/                     # Módulos de funcionalidad
-│   │   │   ├── auth/                    # Autenticación
-│   │   │   │   ├── login/
-│   │   │   │   └── register/
+│   │   ├── auth/                         # Autenticación (Moved here from features/)
+│   │   │   ├── login/
+│   │   │   │   ├── login.component.ts
+│   │   │   │   ├── login.component.html
+│   │   │   │   └── login.component.css
+│   │   │   ├── register/
+│   │   │   │   ├── register.component.ts
+│   │   │   │   ├── register.component.html
+│   │   │   │   └── register.component.css
+│   │   │   ├── auth-routing.module.ts
+│   │   │   └── auth.module.ts
+│   │   │
+│   │   ├── admin/                   # Módulo Administrador
+│   │   │   ├── inventory/           # Gestión de maquinaria
+│   │   │   │   ├── inventory.component.ts
+│   │   │   │   ├── inventory.component.html
+│   │   │   │   └── machine-modal/
 │   │   │   │
-│   │   │   ├── admin/                   # Módulo Administrador
-│   │   │   │   ├── inventory/           # Gestión de maquinaria
-│   │   │   │   │   ├── inventory.component.ts
-│   │   │   │   │   ├── inventory.component.html
-│   │   │   │   │   └── machine-modal/
-│   │   │   │   │
-│   │   │   │   ├── clients/             # Gestión de clientes
-│   │   │   │   │   ├── client-list.component.ts
-│   │   │   │   │   └── client-modal/
-│   │   │   │   │
-│   │   │   │   └── dashboard/           # Dashboard empleado
+│   │   │   ├── clients/             # Gestión de clientes
+│   │   │   │   ├── client-list.component.ts
+│   │   │   │   └── client-modal/
 │   │   │   │
-│   │   │   └── client/                  # Módulo Cliente
-│   │   │       ├── rental/              # Solicitar alquiler
-│   │   │       ├── my-rentals/          # Mis alquileres
-│   │   │       └── dashboard/           # Dashboard cliente
+│   │   │   └── dashboard/           # Dashboard empleado
+│   │   │
+│   │   ├── client/                  # Módulo Cliente
+│   │   │   ├── rental/              # Solicitar alquiler
+│   │   │   ├── my-rentals/          # Mis alquileres
+│   │   │   └── dashboard/           # Dashboard cliente
 │   │   │
 │   │   ├── app.component.ts             # Componente raíz
 │   │   ├── app.routes.ts                # Configuración de rutas
@@ -346,6 +359,7 @@ maquimu-mobile/
 │   │       │   ├── ui/                   # Capa de presentación
 │   │       │   │   ├── auth/
 │   │       │   │   ├── rental/
+│   │       │   │   ├── my-rentals/
 │   │       │   │   └── dashboard/
 │   │       │   │
 │   │       │   ├── data/                 # Capa de datos
@@ -427,4 +441,5 @@ package com.maquimu.infraestructura.configuracion;
 
 ---
 
-**Última actualización:** 2025-12-04
+**Última actualización:** 2025-12-05
+```

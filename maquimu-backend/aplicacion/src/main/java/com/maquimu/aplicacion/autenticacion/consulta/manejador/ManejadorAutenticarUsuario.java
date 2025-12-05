@@ -4,33 +4,36 @@ import com.maquimu.aplicacion.autenticacion.consulta.ConsultaAutenticarUsuario;
 import com.maquimu.aplicacion.autenticacion.consulta.RespuestaAutenticacion;
 import com.maquimu.dominio.autenticacion.modelo.Usuario;
 import com.maquimu.dominio.autenticacion.puerto.dao.UsuarioDao;
-import com.maquimu.dominio.autenticacion.puerto.servicio.ServicioHashing;
-import com.maquimu.dominio.autenticacion.puerto.servicio.ServicioToken;
+import com.maquimu.dominio.autenticacion.puerto.servicio.ServicioToken; // GeneradorJwt implements ServicioToken
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class ManejadorAutenticarUsuario {
 
-    private final UsuarioDao usuarioDao;
-    private final ServicioHashing servicioHashing;
+    private final UsuarioDao usuarioDao; // Still need to retrieve full User object
     private final ServicioToken servicioToken;
+    private final AuthenticationManager authenticationManager;
 
     public RespuestaAutenticacion ejecutar(ConsultaAutenticarUsuario consulta) {
-        // 1. Buscar usuario
-        Usuario usuario = usuarioDao.buscarPorEmail(consulta.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("Credenciales inválidas"));
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(consulta.getEmail(), consulta.getPassword())
+        );
 
-        // 2. Validar password
-        if (!servicioHashing.coinciden(consulta.getPassword(), usuario.getPasswordHash())) {
-            throw new IllegalArgumentException("Credenciales inválidas");
-        }
+        // If authentication is successful, retrieve UserDetails and generate token
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        
+        // Retrieve the full Usuario object from the database using email from UserDetails
+        Usuario usuario = usuarioDao.buscarPorEmail(userDetails.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado despues de autenticacion"));
 
-        // 3. Generar token
         String token = servicioToken.generarToken(usuario);
 
-        // 4. Retornar respuesta
         return RespuestaAutenticacion.builder()
                 .token(token)
                 .usuario(usuario)
