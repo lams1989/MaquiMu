@@ -1,79 +1,104 @@
--- =====================================================
--- Migración Inicial - Esquema Base de Datos MaquiMu
--- =====================================================
+-- -----------------------------------------------------
+-- Script para crear la base de datos MaquiMu
+-- Basado en el documento: GA6-220501096-AA2-EV03
+-- Motor: MySQL
+-- -----------------------------------------------------
 
--- Tabla de usuarios (autenticación)
-CREATE TABLE IF NOT EXISTS usuarios (
-    usuario_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    nombre_completo VARCHAR(100) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    password_hash VARCHAR(255) NOT NULL,
-    rol ENUM('OPERARIO', 'CLIENTE') NOT NULL,
-    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    INDEX idx_email (email),
-    INDEX idx_rol (rol)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- 2. Tabla: usuarios
+-- Almacena las cuentas de los empleados
+-- -----------------------------------------------------
+CREATE TABLE `usuarios` (
+  `usuario_id` INT NOT NULL AUTO_INCREMENT,
+  `nombre_completo` VARCHAR(255) NOT NULL,
+  `email` VARCHAR(100) NOT NULL,
+  `password_hash` VARCHAR(255) NOT NULL,
+  `rol` ENUM('OPERARIO', 'CLIENTE') NOT NULL,
+  `fecha_creacion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`usuario_id`),
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC)
+) ENGINE = InnoDB;
 
--- Tabla de clientes
-CREATE TABLE IF NOT EXISTS clientes (
-    cliente_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    nombre_cliente VARCHAR(100) NOT NULL,
-    identificacion VARCHAR(50) NOT NULL UNIQUE,
-    telefono VARCHAR(20),
-    email VARCHAR(100) NOT NULL,
-    direccion VARCHAR(255),
-    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    INDEX idx_identificacion (identificacion),
-    INDEX idx_email (email)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Tabla de maquinaria
-CREATE TABLE IF NOT EXISTS maquinaria (
-    maquinaria_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    nombre_equipo VARCHAR(100) NOT NULL,
-    marca VARCHAR(50) NOT NULL,
-    modelo VARCHAR(50) NOT NULL,
-    serial VARCHAR(50) NOT NULL UNIQUE,
-    estado ENUM('DISPONIBLE', 'ALQUILADO', 'EN_MANTENIMIENTO') NOT NULL DEFAULT 'DISPONIBLE',
-    tarifa_por_dia DECIMAL(10,2) NOT NULL,
-    tarifa_por_hora DECIMAL(10,2) NOT NULL,
-    descripcion TEXT,
-    INDEX idx_serial (serial),
-    INDEX idx_estado (estado)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- 3. Tabla: clientes
+-- Contiene la información de las empresas que alquilan
+-- -----------------------------------------------------
+CREATE TABLE `clientes` (
+  `cliente_id` INT NOT NULL AUTO_INCREMENT,
+  `nombre_cliente` VARCHAR(255) NOT NULL,
+  `identificacion` VARCHAR(45) NOT NULL,
+  `telefono` VARCHAR(20) NULL,
+  `email` VARCHAR(100) NOT NULL,
+  `direccion` VARCHAR(255) NULL,
+  `fecha_registro` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`cliente_id`),
+  UNIQUE INDEX `identificacion_UNIQUE` (`identificacion` ASC)
+) ENGINE = InnoDB;
 
--- Tabla de alquileres
-CREATE TABLE IF NOT EXISTS alquileres (
-    alquiler_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    cliente_id BIGINT NOT NULL,
-    maquinaria_id BIGINT NOT NULL,
-    fecha_inicio DATE NOT NULL,
-    fecha_fin DATE,
-    tipo_tarifa ENUM('POR_DIA', 'POR_HORA') NOT NULL,
-    cantidad_unidades INT NOT NULL,
-    costo_total DECIMAL(10,2),
-    estado ENUM('SOLICITADO', 'APROBADO', 'EN_CURSO', 'FINALIZADO', 'CANCELADO') NOT NULL DEFAULT 'SOLICITADO',
-    fecha_solicitud TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (cliente_id) REFERENCES clientes(cliente_id) ON DELETE RESTRICT,
-    FOREIGN KEY (maquinaria_id) REFERENCES maquinaria(maquinaria_id) ON DELETE RESTRICT,
-    INDEX idx_cliente (cliente_id),
-    INDEX idx_maquinaria (maquinaria_id),
-    INDEX idx_estado (estado),
-    INDEX idx_fecha_inicio (fecha_inicio)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Tabla de facturas
-CREATE TABLE IF NOT EXISTS facturas (
-    factura_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    alquiler_id BIGINT NOT NULL,
-    numero_factura VARCHAR(50) NOT NULL UNIQUE,
-    fecha_emision TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    subtotal DECIMAL(10,2) NOT NULL,
-    iva DECIMAL(10,2) NOT NULL,
-    total DECIMAL(10,2) NOT NULL,
-    estado ENUM('PENDIENTE', 'PAGADA', 'ANULADA') NOT NULL DEFAULT 'PENDIENTE',
-    FOREIGN KEY (alquiler_id) REFERENCES alquileres(alquiler_id) ON DELETE RESTRICT,
-    INDEX idx_numero_factura (numero_factura),
-    INDEX idx_alquiler (alquiler_id),
-    INDEX idx_estado (estado)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- 4. Tabla: maquinaria
+-- Inventario central de equipos
+-- -----------------------------------------------------
+CREATE TABLE `maquinaria` (
+  `maquinaria_id` INT NOT NULL AUTO_INCREMENT,
+  `nombre_equipo` VARCHAR(150) NOT NULL,
+  `marca` VARCHAR(50) NULL,
+  `serial` VARCHAR(100) NOT NULL,
+  `modelo` VARCHAR(50) NULL,
+  `tarifa_por_dia` DECIMAL(10,2) NOT NULL,
+  `tarifa_por_hora` DECIMAL(10,2) NOT NULL,
+  PRIMARY KEY (`maquinaria_id`),
+  UNIQUE INDEX `serial_UNIQUE` (`serial` ASC)
+) ENGINE = InnoDB;
+
+
+-- 5. Tabla: alquileres
+-- Tabla transaccional que registra los contratos
+-- -----------------------------------------------------
+CREATE TABLE `alquileres` (
+  `alquiler_id` INT NOT NULL AUTO_INCREMENT,
+  `cliente_id` INT NOT NULL,
+  `maquinaria_id` INT NOT NULL,
+  `usuario_id` INT NOT NULL,
+  `fecha_inicio` DATETIME NOT NULL,
+  `fecha_fin` DATETIME NOT NULL,
+  `costo_total` DECIMAL(12,2) NOT NULL,
+  `estado_alquiler` VARCHAR(50) NOT NULL,
+  PRIMARY KEY (`alquiler_id`),
+  INDEX `fk_alquileres_clientes_idx` (`cliente_id` ASC),
+  INDEX `fk_alquileres_maquinaria_idx` (`maquinaria_id` ASC),
+  INDEX `fk_alquileres_usuarios_idx` (`usuario_id` ASC),
+  CONSTRAINT `fk_alquileres_clientes`
+    FOREIGN KEY (`cliente_id`)
+    REFERENCES `clientes` (`cliente_id`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_alquileres_maquinaria`
+    FOREIGN KEY (`maquinaria_id`)
+    REFERENCES `maquinaria` (`maquinaria_id`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_alquileres_usuarios`
+    FOREIGN KEY (`usuario_id`)
+    REFERENCES `usuarios` (`usuario_id`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE
+) ENGINE = InnoDB;
+
+
+-- 6. Tabla: facturas
+-- Almacena la información financiera de cada alquiler
+-- -----------------------------------------------------
+CREATE TABLE `facturas` (
+  `factura_id` INT NOT NULL AUTO_INCREMENT,
+  `alquiler_id` INT NOT NULL,
+  `fecha_emision` DATE NOT NULL,
+  `monto` DECIMAL(12,2) NOT NULL,
+  `estado_pago` VARCHAR(50) NOT NULL,
+  PRIMARY KEY (`factura_id`),
+  INDEX `fk_facturas_alquileres_idx` (`alquiler_id` ASC),
+  CONSTRAINT `fk_facturas_alquileres`
+    FOREIGN KEY (`alquiler_id`)
+    REFERENCES `alquileres` (`alquiler_id`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE
+) ENGINE = InnoDB;

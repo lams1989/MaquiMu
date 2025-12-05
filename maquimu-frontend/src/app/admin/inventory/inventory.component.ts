@@ -19,10 +19,11 @@ export class InventoryComponent implements OnInit {
     }
 
     loadMaquinarias(): void {
-        this.maquinariaService.getAllMaquinarias().subscribe({
-            next: (data) => this.maquinarias = data,
-            error: (err: any) => console.error('Error loading maquinarias', err)
-        });
+        // TODO: HU-04 - Descomentar esta línea cuando el backend de maquinaria esté implementado.
+        // this.maquinariaService.getAllMaquinarias().subscribe({
+        //     next: (data) => this.maquinarias = data,
+        //     error: (err: any) => console.error('Error loading maquinarias', err)
+        // });
     }
 
     openCreateModal(): void {

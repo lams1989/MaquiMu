@@ -1,8 +1,3 @@
-plugins {
-    id 'org.springframework.boot'
-    id 'io.spring.dependency-management'
-}
-
 dependencies {
     // Dependencias a otros módulos
     implementation project(':aplicacion')
