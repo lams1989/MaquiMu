@@ -1,78 +1,104 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Maquinaria } from '../../../core/models/maquinaria.model';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MaquinariaService } from '../../../core/services/maquinaria.service';
+import { Maquinaria, CrearMaquinariaRequest, ActualizarMaquinariaRequest } from '../../../core/models/maquinaria.model';
+import { CommonModule } from '@angular/common'; // Import CommonModule
 
 @Component({
-    selector: 'app-machine-modal',
-    templateUrl: './machine-modal.component.html',
-    styleUrls: ['./machine-modal.component.css']
+  selector: 'app-machine-modal',
+  templateUrl: './machine-modal.component.html',
+  styleUrls: ['./machine-modal.component.scss'],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule]
 })
-export class MachineModalComponent {
-    @Output() save = new EventEmitter<void>();
+export class MachineModalComponent implements OnInit {
+  @Input() maquinaria: Maquinaria | null = null;
+  @Output() close = new EventEmitter<void>();
 
-    isVisible = false;
-    isEditMode = false;
-    machineForm: FormGroup;
-    currentId?: number;
+  machineForm!: FormGroup;
+  isEditMode: boolean = false;
+  estadosMaquinaria = ['DISPONIBLE', 'ALQUILADO', 'EN_MANTENIMIENTO'];
 
-    constructor(
-        private fb: FormBuilder,
-        private maquinariaService: MaquinariaService
-    ) {
-        this.machineForm = this.fb.group({
-            nombre: ['', Validators.required],
-            marca: [''],
-            modelo: [''],
-            serial: ['', Validators.required],
-            estado: ['DISPONIBLE', Validators.required],
-            tarifaDia: [0, [Validators.required, Validators.min(0)]],
-            tarifaHora: [0, [Validators.required, Validators.min(0)]],
-            descripcion: ['']
-        });
+  constructor(
+    private fb: FormBuilder,
+    private maquinariaService: MaquinariaService
+  ) { }
+
+  ngOnInit(): void {
+    this.isEditMode = !!this.maquinaria;
+    this.initializeForm();
+  }
+
+  initializeForm(): void {
+    this.machineForm = this.fb.group({
+      nombreEquipo: [this.maquinaria?.nombreEquipo || '', Validators.required],
+      marca: [this.maquinaria?.marca || '', Validators.required],
+      modelo: [this.maquinaria?.modelo || '', Validators.required],
+      serial: [this.maquinaria?.serial || '', Validators.required],
+      tarifaPorDia: [this.maquinaria?.tarifaPorDia || null, [Validators.required, Validators.min(0.01)]],
+      tarifaPorHora: [this.maquinaria?.tarifaPorHora || null, [Validators.required, Validators.min(0.01)]],
+      descripcion: [this.maquinaria?.descripcion || ''],
+      estado: [this.maquinaria?.estado || 'DISPONIBLE']
+    });
+
+    if (!this.isEditMode) {
+      this.machineForm.get('estado')?.disable(); // Estado fijo en creación
+    }
+  }
+
+  saveMachine(): void {
+    if (this.machineForm.invalid) {
+      this.machineForm.markAllAsTouched();
+      return;
     }
 
-    open(maquinaria?: Maquinaria): void {
-        this.isVisible = true;
-        this.isEditMode = !!maquinaria;
-        this.currentId = maquinaria?.id;
+    const formValue = this.machineForm.getRawValue();
 
-        if (maquinaria) {
-            this.machineForm.patchValue(maquinaria);
-        } else {
-            this.machineForm.reset({
-                estado: 'DISPONIBLE',
-                tarifaDia: 0,
-                tarifaHora: 0
-            });
+    if (this.isEditMode && this.maquinaria) {
+      const updateRequest: ActualizarMaquinariaRequest = {
+        nombreEquipo: formValue.nombreEquipo,
+        marca: formValue.marca,
+        modelo: formValue.modelo,
+        serial: formValue.serial,
+        tarifaPorDia: formValue.tarifaPorDia,
+        tarifaPorHora: formValue.tarifaPorHora,
+        descripcion: formValue.descripcion,
+        estado: formValue.estado
+      };
+      this.maquinariaService.updateMaquinaria(this.maquinaria.maquinariaId, updateRequest).subscribe({
+        next: () => {
+          console.log('Maquinaria actualizada exitosamente');
+          this.close.emit();
+        },
+        error: (error: any) => {
+          console.error('Error al actualizar maquinaria', error);
+          // Handle specific errors like serial duplication
         }
-    }
-
-    close(): void {
-        this.isVisible = false;
-    }
-
-    onSubmit(): void {
-        if (this.machineForm.invalid) return;
-
-        const maquinaria: Maquinaria = this.machineForm.value;
-
-        if (this.isEditMode && this.currentId) {
-            this.maquinariaService.updateMaquinaria(this.currentId, maquinaria).subscribe({
-                next: () => {
-                    this.save.emit();
-                    this.close();
-                },
-                error: (err: any) => alert('Error al actualizar: ' + (err.error || err.message))
-            });
-        } else {
-            this.maquinariaService.createMaquinaria(maquinaria).subscribe({
-                next: () => {
-                    this.save.emit();
-                    this.close();
-                },
-                error: (err: any) => alert('Error al crear: ' + (err.error || err.message))
-            });
+      });
+    } else {
+      const createRequest: CrearMaquinariaRequest = {
+        nombreEquipo: formValue.nombreEquipo,
+        marca: formValue.marca,
+        modelo: formValue.modelo,
+        serial: formValue.serial,
+        tarifaPorDia: formValue.tarifaPorDia,
+        tarifaPorHora: formValue.tarifaPorHora,
+        descripcion: formValue.descripcion
+      };
+      this.maquinariaService.createMaquinaria(createRequest).subscribe({
+        next: () => {
+          console.log('Maquinaria creada exitosamente');
+          this.close.emit();
+        },
+        error: (error: any) => {
+          console.error('Error al crear maquinaria', error);
+          // Handle specific errors like serial duplication
         }
+      });
     }
+  }
+
+  cancel(): void {
+    this.close.emit();
+  }
 }

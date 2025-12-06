@@ -32,9 +32,6 @@ MaquiMu/
 │       │   │   │   └── MaquinariaDao.java
 │       │   │   └── repositorio/
 │       │   │       └── MaquinariaRepositorio.java
-│       │   └── servicio/
-│       │       ├── MaquinariaComandoServicio.java
-│       │       └── MaquinariaConsultaServicio.java
 │       │
 │       ├── cliente/                      # Módulo de Cliente
 │       │   ├── modelo/

@@ -1,0 +1,1 @@
+ALTER TABLE maquinaria ADD COLUMN descripcion TEXT;

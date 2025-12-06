@@ -1,0 +1,79 @@
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card my-4">
+                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                    <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3 d-flex justify-content-between align-items-center">
+                        <h6 class="text-white text-capitalize ps-3 mb-0">Inventario de Maquinaria</h6>
+                        <button class="btn btn-light btn-sm me-3 mb-0" (click)="openCreateModal()">
+                            <i class="material-icons opacity-10 me-2">add</i>Nueva Maquinaria
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body px-0 pb-2">
+                    <div class="table-responsive p-0">
+                        <table class="table align-items-center mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nombre Equipo</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Marca</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Modelo</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Serial</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Estado</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tarifa Día</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tarifa Hora</th>
+                                    <th class="text-secondary opacity-7"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let maquinaria of maquinarias">
+                                    <td>
+                                        <div class="d-flex px-2 py-1">
+                                            <div class="d-flex flex-column justify-content-center">
+                                                <h6 class="mb-0 text-sm">{{ maquinaria.nombreEquipo }}</h6>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <p class="text-xs font-weight-bold mb-0">{{ maquinaria.marca }}</p>
+                                    </td>
+                                    <td>
+                                        <p class="text-xs font-weight-bold mb-0">{{ maquinaria.modelo }}</p>
+                                    </td>
+                                    <td>
+                                        <p class="text-xs font-weight-bold mb-0">{{ maquinaria.serial }}</p>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-sm"
+                                              [class.bg-gradient-success]="maquinaria.estado === 'DISPONIBLE'"
+                                              [class.bg-gradient-warning]="maquinaria.estado === 'ALQUILADO'"
+                                              [class.bg-gradient-info]="maquinaria.estado === 'EN_MANTENIMIENTO'">
+                                              {{ maquinaria.estado }}
+                                        </span>
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        <span class="text-secondary text-xs font-weight-bold">{{ maquinaria.tarifaPorDia | currency:'USD':'symbol':'1.2-2' }}</span>
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        <span class="text-secondary text-xs font-weight-bold">{{ maquinaria.tarifaPorHora | currency:'USD':'symbol':'1.2-2' }}</span>
+                                    </td>
+                                    <td class="align-middle">
+                                        <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user" (click)="openEditModal(maquinaria)">
+                                            Editar
+                                        </a> |
+                                        <a href="javascript:;" class="text-danger font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Delete user" (click)="deleteMaquinaria(maquinaria.maquinariaId)">
+                                            Eliminar
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Crear/Editar Maquinaria (será un componente separado) -->
+<app-machine-modal *ngIf="showModal" [maquinaria]="selectedMaquinaria" (close)="closeModal()"></app-machine-modal>
