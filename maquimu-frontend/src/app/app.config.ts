@@ -1,16 +1,16 @@
 import { ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'; // Import withInterceptorsFromDi
+import { provideHttpClient, withInterceptorsFromDi, withFetch } from '@angular/common/http';
 
 import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
-import { authInterceptorProvider } from './core/interceptors/auth.interceptor'; // Import the interceptor provider
+import { authInterceptorProvider } from './core/interceptors/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideClientHydration(),
-    provideHttpClient(withInterceptorsFromDi()), // Configure HttpClient to use DI-based interceptors
-    authInterceptorProvider // Add the interceptor provider to the application providers
+    provideHttpClient(withInterceptorsFromDi(), withFetch()), // withFetch() for SSR compatibility
+    authInterceptorProvider
   ]
 };

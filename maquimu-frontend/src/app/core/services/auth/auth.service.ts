@@ -1,5 +1,6 @@
 // src/app/core/services/auth/auth.service.ts
-import { Injectable } from '@angular/core';
+import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -14,9 +15,16 @@ export class AuthService {
   private apiUrl = `${environment.apiUrl}/v1/auth`;
   private currentUserSubject: BehaviorSubject<Usuario | null>;
   public currentUser: Observable<Usuario | null>;
+  private isBrowser: boolean;
 
-  constructor(private http: HttpClient, private router: Router) {
-    this.currentUserSubject = new BehaviorSubject<Usuario | null>(JSON.parse(localStorage.getItem('currentUser') || 'null'));
+  constructor(
+    private http: HttpClient, 
+    private router: Router,
+    @Inject(PLATFORM_ID) platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+    const storedUser = this.isBrowser ? localStorage.getItem('currentUser') : null;
+    this.currentUserSubject = new BehaviorSubject<Usuario | null>(storedUser ? JSON.parse(storedUser) : null);
     this.currentUser = this.currentUserSubject.asObservable();
   }
 
@@ -27,7 +35,7 @@ export class AuthService {
   login(credentials: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
       tap(response => {
-        if (response.token && response.usuario) {
+        if (response.token && response.usuario && this.isBrowser) {
           localStorage.setItem('jwtToken', response.token);
           localStorage.setItem('currentUser', JSON.stringify(response.usuario));
           this.currentUserSubject.next(response.usuario);
@@ -41,7 +49,7 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    return localStorage.getItem('jwtToken');
+    return this.isBrowser ? localStorage.getItem('jwtToken') : null;
   }
 
   isAuthenticated(): boolean {
@@ -57,8 +65,10 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem('jwtToken');
-    localStorage.removeItem('currentUser');
+    if (this.isBrowser) {
+      localStorage.removeItem('jwtToken');
+      localStorage.removeItem('currentUser');
+    }
     this.currentUserSubject.next(null);
     this.router.navigate(['/auth/login']);
   }
