@@ -3,8 +3,8 @@ import { ClienteService } from '@core/services/cliente.service';
 import { ClientModalComponent } from '../client-modal/client-modal.component';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { SidebarComponent } from '@shared/sidebar/sidebar.component';
 import { NavbarComponent } from '@shared/navbar/navbar.component';
+import { SidebarComponent } from '@shared/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-clients',

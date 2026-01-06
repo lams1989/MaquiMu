@@ -1,9 +1,9 @@
 // src/app/core/guards/auth.guard.ts
-import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { AuthService } from '../services/auth/auth.service';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Observable } from 'rxjs';
-import { AuthService } from '../services/auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +22,7 @@ export class AuthGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    
+
     // During SSR, allow access (client will re-check)
     if (!this.isBrowser) {
       return true;

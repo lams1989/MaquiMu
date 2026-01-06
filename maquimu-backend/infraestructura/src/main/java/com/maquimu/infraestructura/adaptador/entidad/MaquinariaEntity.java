@@ -36,7 +36,7 @@ public class MaquinariaEntity {
     private String serial;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "estado_maquinaria", nullable = false) // Changed from 'estado' to 'estado_maquinaria' to avoid conflict with 'estado' field directly
+    @Column(name = "estado_maquinaria", nullable = false)
     private EstadoMaquinaria estado;
 
     @Column(name = "tarifa_por_dia", nullable = false)

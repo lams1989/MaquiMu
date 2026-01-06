@@ -1,12 +1,12 @@
 // src/app/core/services/auth/auth.service.ts
-import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { Router } from '@angular/router';
-import { LoginRequest, RegisterRequest, AuthResponse, Usuario } from '../../models/auth/login-register.models';
+import { AuthResponse, LoginRequest, RegisterRequest, Usuario } from '../../models/auth/login-register.models';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Router } from '@angular/router';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,7 @@ export class AuthService {
   private isBrowser: boolean;
 
   constructor(
-    private http: HttpClient, 
+    private http: HttpClient,
     private router: Router,
     @Inject(PLATFORM_ID) platformId: Object
   ) {

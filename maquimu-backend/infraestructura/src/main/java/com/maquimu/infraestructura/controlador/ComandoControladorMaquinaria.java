@@ -34,14 +34,14 @@ public class ComandoControladorMaquinaria {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Maquinaria> actualizarMaquinaria(@PathVariable Long id, @RequestBody ComandoActualizarMaquinaria comandoActualizarMaquinaria) {
+    public ResponseEntity<Maquinaria> actualizarMaquinaria(@PathVariable("id") Long id, @RequestBody ComandoActualizarMaquinaria comandoActualizarMaquinaria) {
         comandoActualizarMaquinaria.setMaquinariaId(id);
         Maquinaria maquinariaActualizada = manejadorActualizarMaquinaria.ejecutar(comandoActualizarMaquinaria);
         return new ResponseEntity<>(maquinariaActualizada, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarMaquinaria(@PathVariable Long id) {
+    public ResponseEntity<Void> eliminarMaquinaria(@PathVariable("id") Long id) {
         manejadorEliminarMaquinaria.ejecutar(new ComandoEliminarMaquinaria(id));
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

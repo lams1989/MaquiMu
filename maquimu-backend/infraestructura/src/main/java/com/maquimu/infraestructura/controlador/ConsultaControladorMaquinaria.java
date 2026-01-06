@@ -34,7 +34,7 @@ public class ConsultaControladorMaquinaria {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Maquinaria> buscarMaquinariaPorId(@PathVariable Long id) {
+    public ResponseEntity<Maquinaria> buscarMaquinariaPorId(@PathVariable("id") Long id) {
         Maquinaria maquinaria = manejadorBuscarMaquinaria.ejecutar(new ConsultaBuscarMaquinaria(id));
         return new ResponseEntity<>(maquinaria, HttpStatus.OK);
     }

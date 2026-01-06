@@ -1,15 +1,17 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { MaquinariaService } from '@core/services/maquinaria.service';
+import { MachineModalComponent } from '../machine-modal/machine-modal.component';
 import { Maquinaria } from '@core/models/maquinaria.model';
-import { CommonModule } from '@angular/common'; // Import CommonModule
-import { MachineModalComponent } from '../machine-modal/machine-modal.component'; // Import MachineModalComponent
+import { MaquinariaService } from '@core/services/maquinaria.service';
+import { NavbarComponent } from '@shared/navbar/navbar.component';
+import { SidebarComponent } from '@shared/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-inventory',
   templateUrl: './inventory.component.html',
   styleUrls: ['./inventory.component.scss'],
-  standalone: true, // Mark as standalone
-  imports: [CommonModule, MachineModalComponent] // Import CommonModule and MachineModalComponent
+  standalone: true,
+  imports: [CommonModule, MachineModalComponent, SidebarComponent, NavbarComponent]
 })
 export class InventoryComponent implements OnInit {
   maquinarias: Maquinaria[] = [];

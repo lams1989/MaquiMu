@@ -1,14 +1,14 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { ActualizarMaquinariaRequest, CrearMaquinariaRequest, Maquinaria } from '@core/models/maquinaria.model';
 import { environment } from '@environments/environment';
-import { Maquinaria, CrearMaquinariaRequest, ActualizarMaquinariaRequest } from '@core/models/maquinaria.model';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MaquinariaService {
-  private apiUrl = `${environment.apiUrl}/maquinaria`;
+  private apiUrl = `${environment.apiUrl}/v1/maquinaria`;
 
   constructor(private http: HttpClient) { }
 
