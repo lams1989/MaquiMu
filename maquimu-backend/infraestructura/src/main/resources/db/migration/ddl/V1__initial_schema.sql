@@ -1,14 +1,11 @@
 -- -----------------------------------------------------
 -- Script para crear la base de datos MaquiMu
--- Basado en el documento: GA6-220501096-AA2-EV03
 -- Motor: MySQL
 -- -----------------------------------------------------
 
 -- 2. Tabla: usuarios
--- Almacena las cuentas de los empleados
--- -----------------------------------------------------
 CREATE TABLE `usuarios` (
-  `usuario_id` INT NOT NULL AUTO_INCREMENT,
+  `usuario_id` BIGINT NOT NULL AUTO_INCREMENT,
   `nombre_completo` VARCHAR(255) NOT NULL,
   `email` VARCHAR(100) NOT NULL,
   `password_hash` VARCHAR(255) NOT NULL,
@@ -18,12 +15,9 @@ CREATE TABLE `usuarios` (
   UNIQUE INDEX `email_UNIQUE` (`email` ASC)
 ) ENGINE = InnoDB;
 
-
 -- 3. Tabla: clientes
--- Contiene la información de las empresas que alquilan
--- -----------------------------------------------------
 CREATE TABLE `clientes` (
-  `cliente_id` INT NOT NULL AUTO_INCREMENT,
+  `cliente_id` BIGINT NOT NULL AUTO_INCREMENT,
   `nombre_cliente` VARCHAR(255) NOT NULL,
   `identificacion` VARCHAR(45) NOT NULL,
   `telefono` VARCHAR(20) NULL,
@@ -34,12 +28,9 @@ CREATE TABLE `clientes` (
   UNIQUE INDEX `identificacion_UNIQUE` (`identificacion` ASC)
 ) ENGINE = InnoDB;
 
-
 -- 4. Tabla: maquinaria
--- Inventario central de equipos
--- -----------------------------------------------------
 CREATE TABLE `maquinaria` (
-  `maquinaria_id` INT NOT NULL AUTO_INCREMENT,
+  `maquinaria_id` BIGINT NOT NULL AUTO_INCREMENT,
   `nombre_equipo` VARCHAR(150) NOT NULL,
   `marca` VARCHAR(50) NULL,
   `serial` VARCHAR(100) NOT NULL,
@@ -50,19 +41,16 @@ CREATE TABLE `maquinaria` (
   UNIQUE INDEX `serial_UNIQUE` (`serial` ASC)
 ) ENGINE = InnoDB;
 
-
 -- 5. Tabla: alquileres
--- Tabla transaccional que registra los contratos
--- -----------------------------------------------------
 CREATE TABLE `alquileres` (
-  `alquiler_id` INT NOT NULL AUTO_INCREMENT,
-  `cliente_id` INT NOT NULL,
-  `maquinaria_id` INT NOT NULL,
-  `usuario_id` INT NOT NULL,
+  `alquiler_id` BIGINT NOT NULL AUTO_INCREMENT,
+  `cliente_id` BIGINT NOT NULL,
+  `maquinaria_id` BIGINT NOT NULL,
+  `usuario_id` BIGINT NULL,
   `fecha_inicio` DATETIME NOT NULL,
   `fecha_fin` DATETIME NOT NULL,
   `costo_total` DECIMAL(12,2) NOT NULL,
-  `estado_alquiler` VARCHAR(50) NOT NULL,
+  `estado_alquiler` ENUM('PENDIENTE', 'APROBADO', 'ACTIVO', 'FINALIZADO', 'CANCELADO') NOT NULL DEFAULT 'PENDIENTE',
   PRIMARY KEY (`alquiler_id`),
   INDEX `fk_alquileres_clientes_idx` (`cliente_id` ASC),
   INDEX `fk_alquileres_maquinaria_idx` (`maquinaria_id` ASC),
@@ -80,17 +68,14 @@ CREATE TABLE `alquileres` (
   CONSTRAINT `fk_alquileres_usuarios`
     FOREIGN KEY (`usuario_id`)
     REFERENCES `usuarios` (`usuario_id`)
-    ON DELETE RESTRICT
+    ON DELETE SET NULL
     ON UPDATE CASCADE
 ) ENGINE = InnoDB;
 
-
 -- 6. Tabla: facturas
--- Almacena la información financiera de cada alquiler
--- -----------------------------------------------------
 CREATE TABLE `facturas` (
-  `factura_id` INT NOT NULL AUTO_INCREMENT,
-  `alquiler_id` INT NOT NULL,
+  `factura_id` BIGINT NOT NULL AUTO_INCREMENT,
+  `alquiler_id` BIGINT NOT NULL,
   `fecha_emision` DATE NOT NULL,
   `monto` DECIMAL(12,2) NOT NULL,
   `estado_pago` VARCHAR(50) NOT NULL,
@@ -99,6 +84,6 @@ CREATE TABLE `facturas` (
   CONSTRAINT `fk_facturas_alquileres`
     FOREIGN KEY (`alquiler_id`)
     REFERENCES `alquileres` (`alquiler_id`)
-    ON DELETE RESTRICT
+    ON DELETE CASCADE
     ON UPDATE CASCADE
 ) ENGINE = InnoDB;

@@ -1,0 +1,190 @@
+<app-navbar></app-navbar>
+
+<div class="d-flex">
+  <app-sidebar></app-sidebar>
+
+  <main class="main-content flex-grow-1 p-4">
+    <div class="container-fluid">
+      <div class="row mb-4">
+        <div class="col">
+          <h2><i class="bi bi-calendar-plus me-2"></i>Solicitar Alquiler</h2>
+          <p class="text-muted">Complete el formulario para solicitar el alquiler de maquinaria</p>
+        </div>
+      </div>
+
+      <!-- Alertas -->
+      @if (errorMessage) {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <i class="bi bi-exclamation-triangle me-2"></i>{{ errorMessage }}
+          <button type="button" class="btn-close" (click)="errorMessage = ''" aria-label="Close"></button>
+        </div>
+      }
+
+      @if (successMessage) {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <i class="bi bi-check-circle me-2"></i>{{ successMessage }}
+          <button type="button" class="btn-close" (click)="successMessage = ''" aria-label="Close"></button>
+        </div>
+      }
+
+      <!-- Formulario de fechas -->
+      <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0"><i class="bi bi-calendar3 me-2"></i>Paso 1: Seleccione las fechas</h5>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="rentalForm">
+            <div class="row g-3">
+              <div class="col-md-5">
+                <label for="fechaInicio" class="form-label">Fecha y hora de inicio</label>
+                <input
+                  type="datetime-local"
+                  class="form-control"
+                  id="fechaInicio"
+                  formControlName="fechaInicio"
+                  [min]="minDate"
+                  (change)="buscarMaquinariasDisponibles()">
+              </div>
+              <div class="col-md-5">
+                <label for="fechaFin" class="form-label">Fecha y hora de fin</label>
+                <input
+                  type="datetime-local"
+                  class="form-control"
+                  id="fechaFin"
+                  formControlName="fechaFin"
+                  [min]="rentalForm.get('fechaInicio')?.value || minDate"
+                  (change)="buscarMaquinariasDisponibles()">
+              </div>
+              <div class="col-md-2 d-flex align-items-end">
+                <button
+                  type="button"
+                  class="btn btn-outline-primary w-100"
+                  (click)="buscarMaquinariasDisponibles()"
+                  [disabled]="searching">
+                  @if (searching) {
+                    <span class="spinner-border spinner-border-sm me-2"></span>
+                    Buscando...
+                  } @else {
+                    <i class="bi bi-search me-2"></i>Buscar
+                  }
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Lista de maquinarias disponibles -->
+      @if (maquinariasDisponibles.length > 0) {
+        <div class="card mb-4">
+          <div class="card-header bg-success text-white">
+            <h5 class="mb-0"><i class="bi bi-truck me-2"></i>Paso 2: Seleccione la maquinaria</h5>
+          </div>
+          <div class="card-body">
+            <p class="text-muted mb-3">Se encontraron {{ maquinariasDisponibles.length }} maquinarias disponibles</p>
+
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+              @for (maquinaria of maquinariasDisponibles; track maquinaria.maquinariaId) {
+                <div class="col">
+                  <div
+                    class="card h-100 cursor-pointer"
+                    [class.border-primary]="maquinariaSeleccionada?.maquinariaId === maquinaria.maquinariaId"
+                    [class.shadow]="maquinariaSeleccionada?.maquinariaId === maquinaria.maquinariaId"
+                    (click)="seleccionarMaquinaria(maquinaria)">
+                    <div class="card-body">
+                      <h5 class="card-title">{{ maquinaria.nombreEquipo }}</h5>
+                      <h6 class="card-subtitle mb-2 text-muted">{{ maquinaria.marca }} - {{ maquinaria.modelo }}</h6>
+                      <p class="card-text">
+                        <small class="text-muted">Serial: {{ maquinaria.serial }}</small>
+                      </p>
+                      @if (maquinaria.descripcion) {
+                        <p class="card-text">{{ maquinaria.descripcion }}</p>
+                      }
+                      <div class="d-flex justify-content-between align-items-center mt-3">
+                        <span class="badge bg-info">{{ formatCurrency(maquinaria.tarifaPorDia) }}/día</span>
+                        <span class="badge bg-secondary">{{ formatCurrency(maquinaria.tarifaPorHora) }}/hora</span>
+                      </div>
+                    </div>
+                    @if (maquinariaSeleccionada?.maquinariaId === maquinaria.maquinariaId) {
+                      <div class="card-footer bg-primary text-white text-center">
+                        <i class="bi bi-check-circle me-2"></i>Seleccionada
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Resumen y confirmación -->
+      @if (maquinariaSeleccionada) {
+        <div class="card">
+          <div class="card-header bg-warning">
+            <h5 class="mb-0"><i class="bi bi-clipboard-check me-2"></i>Paso 3: Confirmar solicitud</h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-8">
+                <h5>Resumen de la solicitud</h5>
+                <table class="table table-borderless">
+                  <tbody>
+                    <tr>
+                      <th scope="row">Maquinaria:</th>
+                      <td>{{ maquinariaSeleccionada.nombreEquipo }}</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Marca/Modelo:</th>
+                      <td>{{ maquinariaSeleccionada.marca }} {{ maquinariaSeleccionada.modelo }}</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Fecha inicio:</th>
+                      <td>{{ rentalForm.get('fechaInicio')?.value | date:'medium' }}</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Fecha fin:</th>
+                      <td>{{ rentalForm.get('fechaFin')?.value | date:'medium' }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="col-md-4">
+                <div class="card bg-light">
+                  <div class="card-body text-center">
+                    <h6 class="card-subtitle mb-2 text-muted">Costo estimado</h6>
+                    <h2 class="card-title text-primary">{{ formatCurrency(costoEstimado) }}</h2>
+                    <small class="text-muted">*El costo final puede variar según la devolución real</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <hr>
+
+            <div class="d-flex justify-content-end gap-2">
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="maquinariaSeleccionada = null; rentalForm.patchValue({maquinariaId: ''})">
+                <i class="bi bi-arrow-left me-2"></i>Volver
+              </button>
+              <button
+                type="button"
+                class="btn btn-success"
+                (click)="onSubmit()"
+                [disabled]="loading || rentalForm.invalid">
+                @if (loading) {
+                  <span class="spinner-border spinner-border-sm me-2"></span>
+                  Procesando...
+                } @else {
+                  <i class="bi bi-send me-2"></i>Enviar Solicitud
+                }
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </main>
+</div>

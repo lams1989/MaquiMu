@@ -55,6 +55,13 @@ public class Maquinaria {
         }
     }
 
+    /**
+     * Alias para maquinariaId, usado en consultas genéricas.
+     */
+    public Long getId() {
+        return maquinariaId;
+    }
+
     public void alquilar() {
         if (this.estado != EstadoMaquinaria.DISPONIBLE) {
             throw new IllegalStateException("La maquinaria no está disponible para ser alquilada.");

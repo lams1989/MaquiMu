@@ -45,14 +45,15 @@ DELETE /api/maquimu/v1/clientes/{id}
 
 ### Alquileres
 ```
-GET    /api/maquimu/v1/alquileres                  (Admin: Listar todos)
-GET    /api/maquimu/v1/alquileres/mis-alquileres   (Cliente: Listar propios)
-GET    /api/maquimu/v1/alquileres/{id}             (Detalle)
-POST   /api/maquimu/v1/alquileres                  (Crear solicitud)
-PATCH  /api/maquimu/v1/alquileres/{id}/aprobar     (Operario: Aprobar)
-PATCH  /api/maquimu/v1/alquileres/{id}/rechazar    (Operario: Rechazar)
-PATCH  /api/maquimu/v1/alquileres/{id}/entregar    (Operario: Entregar/Activar)
-PATCH  /api/maquimu/v1/alquileres/{id}/finalizar   (Operario: Finalizar/Devolver)
+GET    /api/maquimu/v1/alquileres                       (Admin: Listar todos)
+GET    /api/maquimu/v1/clientes/{clienteId}/alquileres  (Cliente: Listar propios) ✅
+GET    /api/maquimu/v1/alquileres/{id}                  (Detalle)
+POST   /api/maquimu/v1/alquileres                       (Crear solicitud) ✅
+PATCH  /api/maquimu/v1/alquileres/{id}/aprobar          (Operario: Aprobar)
+PATCH  /api/maquimu/v1/alquileres/{id}/rechazar         (Operario: Rechazar)
+PATCH  /api/maquimu/v1/alquileres/{id}/entregar         (Operario: Entregar/Activar)
+PATCH  /api/maquimu/v1/alquileres/{id}/finalizar        (Operario: Finalizar/Devolver)
+GET    /api/maquimu/v1/maquinarias/disponibles          (Listar disponibles por fechas) ✅
 ```
 
 ### Facturas

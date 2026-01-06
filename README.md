@@ -172,4 +172,4 @@ Ver más en [`.luis-metodo/`](./.luis-metodo/)
 
 ---
 
-**Última actualización:** 2025-11-22
+**Última actualización:** 2025-01-05

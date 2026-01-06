@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
 import { PortalComponent } from './portal/portal.component';
+import { RequestRentalComponent } from './request-rental/request-rental.component';
+import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
@@ -11,6 +12,10 @@ const routes: Routes = [
   {
     path: 'portal',
     component: PortalComponent
+  },
+  {
+    path: 'request-rental',
+    component: RequestRentalComponent
   }
 ];
 

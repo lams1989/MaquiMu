@@ -22,7 +22,7 @@ public class UsuarioEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "usuario_id")
-    private Integer id;
+    private Long id;
 
     @Column(name = "nombre_completo", nullable = false, length = 100)
     private String nombreCompleto;
@@ -47,7 +47,7 @@ public class UsuarioEntity {
 
     public Usuario toDomain() {
         return Usuario.builder()
-                .id(this.id != null ? Long.valueOf(this.id) : null)
+                .id(this.id)
                 .nombreCompleto(this.nombreCompleto)
                 .email(this.email)
                 .passwordHash(this.passwordHash)
@@ -58,7 +58,7 @@ public class UsuarioEntity {
 
     public static UsuarioEntity fromDomain(Usuario usuario) {
         return UsuarioEntity.builder()
-                .id(usuario.getId() != null ? usuario.getId().intValue() : null)
+                .id(usuario.getId())
                 .nombreCompleto(usuario.getNombreCompleto())
                 .email(usuario.getEmail())
                 .passwordHash(usuario.getPasswordHash())

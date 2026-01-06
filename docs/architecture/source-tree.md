@@ -45,19 +45,18 @@ MaquiMu/
 │       │       ├── ClienteComandoServicio.java
 │       │       └── ClienteConsultaServicio.java
 │       │
-│       ├── alquiler/                     # Módulo de Alquiler
+│       ├── alquiler/                     # Módulo de Alquiler ✅ HU #06
 │       │   ├── modelo/
-│       │   │   ├── Alquiler.java
-│       │   │   ├── EstadoAlquiler.java
-│       │   │   └── TipoTarifa.java
+│       │   │   ├── Alquiler.java         # Entidad con máquina de estados
+│       │   │   └── EstadoAlquiler.java   # PENDIENTE, APROBADO, ACTIVO, FINALIZADO, CANCELADO
 │       │   ├── puerto/
 │       │   │   ├── dao/
-│       │   │   │   └── AlquilerDao.java
+│       │   │   │   └── AlquilerDao.java  # Puerto de lectura
 │       │   │   └── repositorio/
-│       │   │       └── AlquilerRepositorio.java
+│       │   │       └── AlquilerRepositorio.java  # Puerto de escritura
 │       │   └── servicio/
-│       │       ├── AlquilerComandoServicio.java
-│       │       └── AlquilerConsultaServicio.java
+│       │       ├── CalculadorCostoAlquiler.java       # Servicio de dominio reutilizable
+│       │       └── ValidadorDisponibilidadMaquinaria.java  # Servicio de dominio reutilizable
 │       │
 │       ├── autenticacion/                # Módulo de Autenticación
 │       │   ├── modelo/
@@ -134,23 +133,19 @@ MaquiMu/
 │       │           ├── ManejadorListarClientes.java
 │       │           └── ManejadorBuscarCliente.java
 │       │
-│       ├── alquiler/
+│       ├── alquiler/                     # ✅ HU #06 - Solicitar Alquiler
 │       │   ├── comando/
-│       │   │   ├── ComandoSolicitarAlquiler.java
-│       │   │   ├── ComandoAprobarAlquiler.java
-│       │   │   ├── ComandoFinalizarAlquiler.java
-│       │   │   ├── fabrica/
-│       │   │   │   └── FabricaAlquiler.java
+│       │   │   ├── ComandoSolicitarAlquiler.java     # DTO inmutable
 │       │   │   └── manejador/
-│       │   │       ├── ManejadorSolicitarAlquiler.java
-│       │   │       ├── ManejadorAprobarAlquiler.java
-│       │   │       └── ManejadorFinalizarAlquiler.java
-│       │   └── consulta/
-│       │       ├── ConsultaListarAlquileres.java
-│       │       ├── ConsultaBuscarAlquiler.java
-│       │       └── manejador/
-│       │           ├── ManejadorListarAlquileres.java
-│       │           └── ManejadorBuscarAlquiler.java
+│       │   │       └── ManejadorSolicitarAlquiler.java  # @Service @Transactional
+│       │   ├── consulta/
+│       │   │   ├── ConsultaMaquinariasDisponibles.java  # DTO de consulta
+│       │   │   ├── ConsultaAlquileresCliente.java       # DTO de consulta
+│       │   │   └── manejador/
+│       │   │       ├── ManejadorMaquinariasDisponibles.java  # Handler de disponibilidad
+│       │   │       └── ManejadorAlquileresCliente.java       # Handler de alquileres cliente
+│       │   └── servicio/
+│       │       └── ServicioGestionAlquiler.java      # Orquestador @Service
 │       │
 │       ├── autenticacion/
 │       │   ├── comando/
@@ -214,18 +209,18 @@ MaquiMu/
 │       │       ├── ComandoControladorCliente.java
 │       │       └── ConsultaControladorCliente.java
 │       │
-│       ├── alquiler/
+│       ├── alquiler/                     # ✅ HU #06 - Solicitar Alquiler
 │       │   ├── adaptador/
 │       │   │   ├── entidad/
-│       │   │   │   └── AlquilerEntity.java
+│       │   │   │   └── AlquilerEntity.java          # Entidad JPA con relaciones
 │       │   │   ├── dao/
-│       │   │   │   ├── JpaAlquilerRepository.java
-│       │   │   │   └── JpaAlquilerDao.java
+│       │   │   │   ├── JpaAlquilerRepository.java   # Spring Data con queries
+│       │   │   │   └── AlquilerDaoJpa.java          # Implementación puerto lectura
 │       │   │   └── repositorio/
-│       │   │       └── JpaAlquilerRepositorio.java
+│       │   │       └── AlquilerRepositorioJpa.java  # Implementación puerto escritura
 │       │   └── controlador/
-│       │       ├── ComandoControladorAlquiler.java
-│       │       └── ConsultaControladorAlquiler.java
+│       │       ├── ComandoControladorAlquiler.java  # POST /alquileres
+│       │       └── ConsultaControladorAlquiler.java # GET /maquinarias/disponibles
 │       │
 │       ├── autenticacion/
 │       │   ├── adaptador/
@@ -277,7 +272,7 @@ maquimu-frontend/
 │   │   │   │   │   └── auth.service.ts
 │   │   │   │   ├── maquinaria.service.ts
 │   │   │   │   ├── cliente.service.ts
-│   │   │   │   └── alquiler.service.ts
+│   │   │   │   └── alquiler.service.ts   # ✅ HU #06 - Servicio de alquileres
 │   │   │   │
 │   │   │   ├── guards/
 │   │   │   │   ├── auth.guard.ts
@@ -286,8 +281,10 @@ maquimu-frontend/
 │   │   │   ├── interceptors/
 │   │   │   │   └── auth.interceptor.ts
 │   │   │   │
-│   │   │   └── models/auth/
-│   │   │       └── login-register.models.ts
+│   │   │   └── models/
+│   │   │       ├── auth/
+│   │   │       │   └── login-register.models.ts
+│   │   │       └── alquiler.model.ts     # ✅ HU #06 - Interfaces TypeScript
 │   │   │
 │   │   ├── shared/                       # Componentes compartidos
 │   │   │   ├── components/
@@ -323,9 +320,15 @@ maquimu-frontend/
 │   │   │   └── dashboard/           # Dashboard empleado
 │   │   │
 │   │   ├── client/                  # Módulo Cliente
-│   │   │   ├── rental/              # Solicitar alquiler
+│   │   │   ├── request-rental/      # ✅ HU #06 - Solicitar alquiler
+│   │   │   │   ├── request-rental.component.ts
+│   │   │   │   ├── request-rental.component.html
+│   │   │   │   └── request-rental.component.css
+│   │   │   ├── portal/              # Portal de cliente
 │   │   │   ├── my-rentals/          # Mis alquileres
-│   │   │   └── dashboard/           # Dashboard cliente
+│   │   │   ├── dashboard/           # Dashboard cliente
+│   │   │   ├── client-routing.module.ts
+│   │   │   └── client.module.ts
 │   │   │
 │   │   ├── app.component.ts             # Componente raíz
 │   │   ├── app.routes.ts                # Configuración de rutas

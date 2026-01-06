@@ -7,7 +7,7 @@ Este directorio contiene la fuente de verdad técnica del proyecto. La documenta
 ### 1. Visión General y Negocio
 *   **[CONTEXTO_PROYECTO.md](CONTEXTO_PROYECTO.md):** Visión del producto, objetivos y alcance del negocio.
 *   **[ARQUITECTURA.md](ARQUITECTURA.md):** Definición de alto nivel del patrón **Hexagonal + CQRS**.
-*   **[tech-stack.md](tech-stack.md):** Tecnologías, versiones y librerías aprobadas (Java 17, Spring Boot 3, Angular 16).
+*   **[tech-stack.md](tech-stack.md):** Tecnologías, versiones y librerías aprobadas (Java 17, Spring Boot 3, Angular 17).
 
 ### 2. Estructura y Código
 *   **[source-tree.md](source-tree.md):** Estructura física de carpetas y archivos (Multi-módulo Gradle).
