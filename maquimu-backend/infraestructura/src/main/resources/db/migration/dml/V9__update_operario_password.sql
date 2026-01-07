@@ -1,6 +1,6 @@
 -- V9__update_operario_password.sql
 -- Actualiza el password_hash del usuario 'operario@maquimu.com'
--- El hash corresponde a la contraseña 'password' generada con BCryptPasswordEncoder de Spring Security.
+-- Hash válido para 'password' (mismo que V8 para idempotencia)
 UPDATE usuarios
-SET password_hash = '$2a$10$22n9vB8M.3QzM4c72k74kO8q2/5eL5c7k8k4c7k4k7c7k.O8i0'
+SET password_hash = '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy'
 WHERE email = 'operario@maquimu.com';

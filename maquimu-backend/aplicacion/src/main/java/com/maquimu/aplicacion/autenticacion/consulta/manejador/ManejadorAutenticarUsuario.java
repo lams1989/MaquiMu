@@ -2,9 +2,12 @@ package com.maquimu.aplicacion.autenticacion.consulta.manejador;
 
 import com.maquimu.aplicacion.autenticacion.consulta.ConsultaAutenticarUsuario;
 import com.maquimu.aplicacion.autenticacion.consulta.RespuestaAutenticacion;
+import com.maquimu.dominio.autenticacion.modelo.RolUsuario;
 import com.maquimu.dominio.autenticacion.modelo.Usuario;
 import com.maquimu.dominio.autenticacion.puerto.dao.UsuarioDao;
-import com.maquimu.dominio.autenticacion.puerto.servicio.ServicioToken; // GeneradorJwt implements ServicioToken
+import com.maquimu.dominio.autenticacion.puerto.servicio.ServicioToken;
+import com.maquimu.dominio.cliente.modelo.Cliente;
+import com.maquimu.dominio.cliente.puerto.dao.ClienteDao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,11 +15,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 @RequiredArgsConstructor
 public class ManejadorAutenticarUsuario {
 
-    private final UsuarioDao usuarioDao; // Still need to retrieve full User object
+    private final UsuarioDao usuarioDao;
+    private final ClienteDao clienteDao;
     private final ServicioToken servicioToken;
     private final AuthenticationManager authenticationManager;
 
@@ -31,6 +37,12 @@ public class ManejadorAutenticarUsuario {
         // Retrieve the full Usuario object from the database using email from UserDetails
         Usuario usuario = usuarioDao.buscarPorEmail(userDetails.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado despues de autenticacion"));
+
+        // Si el usuario es CLIENTE, buscar su clienteId
+        if (usuario.getRol() == RolUsuario.CLIENTE) {
+            Optional<Cliente> cliente = clienteDao.buscarPorUsuarioId(usuario.getId());
+            cliente.ifPresent(c -> usuario.setClienteId(c.getClienteId()));
+        }
 
         String token = servicioToken.generarToken(usuario);
 

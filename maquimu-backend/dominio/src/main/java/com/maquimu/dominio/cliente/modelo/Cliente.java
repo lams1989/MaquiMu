@@ -16,6 +16,7 @@ public class Cliente {
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
 
     private Long clienteId;
+    private Long usuarioId;
     private String nombreCliente;
     private String identificacion;
     private String telefono;
@@ -24,27 +25,29 @@ public class Cliente {
     private LocalDateTime fechaRegistro;
 
     // Constructor completo
-    public Cliente(Long clienteId, String nombreCliente, String identificacion, String telefono, String email, String direccion, LocalDateTime fechaRegistro) {
+        public Cliente(Long clienteId, Long usuarioId, String nombreCliente, String identificacion, String telefono, String email, String direccion, LocalDateTime fechaRegistro) {
         this.clienteId = clienteId;
+        // usuarioId ahora puede ser nulo cuando se registra un cliente sin usuario asociado
+        this.usuarioId = usuarioId;
         this.nombreCliente = Optional.ofNullable(nombreCliente)
-                .filter(n -> !n.isBlank())
-                .orElseThrow(() -> new IllegalArgumentException("El nombre del cliente no puede ser nulo o vacío."));
+            .filter(n -> !n.isBlank())
+            .orElseThrow(() -> new IllegalArgumentException("El nombre del cliente no puede ser nulo o vacío."));
         this.identificacion = Optional.ofNullable(identificacion)
-                .filter(i -> !i.isBlank())
-                .orElseThrow(() -> new IllegalArgumentException("La identificación no puede ser nula o vacía."));
+            .filter(i -> !i.isBlank())
+            .orElseThrow(() -> new IllegalArgumentException("La identificación no puede ser nula o vacía."));
         this.email = Optional.ofNullable(email)
-                .filter(e -> !e.isBlank())
-                .orElseThrow(() -> new IllegalArgumentException("El email no puede ser nulo o vacío."));
+            .filter(e -> !e.isBlank())
+            .orElseThrow(() -> new IllegalArgumentException("El email no puede ser nulo o vacío."));
         this.telefono = telefono;
         this.direccion = direccion;
         this.fechaRegistro = Optional.ofNullable(fechaRegistro).orElse(LocalDateTime.now());
 
         validarEmail();
-    }
+        }
 
     // Constructor sin ID para creación
-    public Cliente(String nombreCliente, String identificacion, String telefono, String email, String direccion) {
-        this(null, nombreCliente, identificacion, telefono, email, direccion, LocalDateTime.now());
+    public Cliente(Long usuarioId, String nombreCliente, String identificacion, String telefono, String email, String direccion) {
+        this(null, usuarioId, nombreCliente, identificacion, telefono, email, direccion, LocalDateTime.now());
     }
 
     private void validarEmail() {

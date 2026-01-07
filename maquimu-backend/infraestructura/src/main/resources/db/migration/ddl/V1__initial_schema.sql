@@ -18,6 +18,7 @@ CREATE TABLE `usuarios` (
 -- 3. Tabla: clientes
 CREATE TABLE `clientes` (
   `cliente_id` BIGINT NOT NULL AUTO_INCREMENT,
+  `usuario_id` BIGINT NULL,
   `nombre_cliente` VARCHAR(255) NOT NULL,
   `identificacion` VARCHAR(45) NOT NULL,
   `telefono` VARCHAR(20) NULL,
@@ -25,7 +26,14 @@ CREATE TABLE `clientes` (
   `direccion` VARCHAR(255) NULL,
   `fecha_registro` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`cliente_id`),
-  UNIQUE INDEX `identificacion_UNIQUE` (`identificacion` ASC)
+  UNIQUE INDEX `identificacion_UNIQUE` (`identificacion` ASC),
+  UNIQUE INDEX `usuario_id_UNIQUE` (`usuario_id` ASC),
+  INDEX `fk_clientes_usuarios_idx` (`usuario_id` ASC),
+  CONSTRAINT `fk_clientes_usuarios`
+    FOREIGN KEY (`usuario_id`)
+    REFERENCES `usuarios` (`usuario_id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 ) ENGINE = InnoDB;
 
 -- 4. Tabla: maquinaria

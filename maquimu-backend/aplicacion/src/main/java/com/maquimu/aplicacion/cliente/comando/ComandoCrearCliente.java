@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ComandoCrearCliente {
+    private Long usuarioId;
     private String nombreCliente;
     private String identificacion;
     private String telefono;

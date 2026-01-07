@@ -17,4 +17,5 @@ public class ComandoRegistrarUsuario {
     private String email;
     private String password;
     private RolUsuario rol;
+    private String identificacion; // Requerido para usuarios con rol CLIENTE
 }

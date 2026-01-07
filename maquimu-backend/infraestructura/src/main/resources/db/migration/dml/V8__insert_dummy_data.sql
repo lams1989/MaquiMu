@@ -1,9 +1,7 @@
 -- V8__insert_dummy_data.sql
--- Inserción de un usuario OPERARIO
--- Contraseña 'password' hasheada con BCrypt (puedes generar la tuya propia si necesitas una específica)
--- Ejemplo de hash para 'password': $2a$10$T1K7.XmQ7.E9R2Z0q.D0.u/t/z.W.7Z0.W.9Z0.W.1Z0.W.7Z0.W.1Z0.W.1Z0.W.1Z0
+-- Inserción de un usuario OPERARIO con contraseña 'password' (hash BCrypt válido)
 INSERT INTO usuarios (nombre_completo, email, password_hash, rol) VALUES
-('Operario de Prueba', 'operario@maquimu.com', '$2a$10$T1K7.XmQ7.E9R2Z0q.D0.u/t/z.W.7Z0.W.9Z0.W.9Z0.W.1Z0.W.1Z0.W.1Z0.W.1Z0.W.1Z0', 'OPERARIO');
+('Operario de Prueba', 'operario@maquimu.com', '$2a$10$3i0B1sf5XC6XyDCUm89HmOXbnuMwhQWG4NeCCtjPvP4dI6kZnVoKC', 'OPERARIO');
 
 -- Inserción de datos de maquinaria
 INSERT INTO maquinaria (nombre_equipo, marca, modelo, serial, tarifa_por_dia, tarifa_por_hora, estado_maquinaria, descripcion) VALUES

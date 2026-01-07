@@ -1,39 +1,24 @@
 package com.maquimu.aplicacion.alquiler.comando;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
 /**
  * Comando para solicitar un nuevo alquiler.
- * DTO inmutable usado en el patrón CQRS.
+ * DTO usado en el patrón CQRS.
  */
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ComandoSolicitarAlquiler {
 
-    private final Long clienteId;
-    private final Long maquinariaId;
-    private final LocalDateTime fechaInicio;
-    private final LocalDateTime fechaFin;
-
-    public ComandoSolicitarAlquiler(Long clienteId, Long maquinariaId, 
-                                     LocalDateTime fechaInicio, LocalDateTime fechaFin) {
-        this.clienteId = clienteId;
-        this.maquinariaId = maquinariaId;
-        this.fechaInicio = fechaInicio;
-        this.fechaFin = fechaFin;
-    }
-
-    public Long getClienteId() {
-        return clienteId;
-    }
-
-    public Long getMaquinariaId() {
-        return maquinariaId;
-    }
-
-    public LocalDateTime getFechaInicio() {
-        return fechaInicio;
-    }
-
-    public LocalDateTime getFechaFin() {
-        return fechaFin;
-    }
+    private Long clienteId;
+    private Long maquinariaId;
+    private LocalDateTime fechaInicio;
+    private LocalDateTime fechaFin;
 }

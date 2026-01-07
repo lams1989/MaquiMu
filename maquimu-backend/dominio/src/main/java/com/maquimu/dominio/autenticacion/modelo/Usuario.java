@@ -19,4 +19,5 @@ public class Usuario {
     private String passwordHash;
     private RolUsuario rol;
     private LocalDateTime fechaCreacion;
+    private Long clienteId; // ID del cliente asociado si el rol es CLIENTE
 }

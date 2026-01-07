@@ -52,12 +52,11 @@ export class RequestRentalComponent implements OnInit {
   ngOnInit(): void {
     if (this.isBrowser) {
       // Obtener clienteId del usuario logueado
-      const userJson = localStorage.getItem('user');
+      const userJson = localStorage.getItem('currentUser');
       if (userJson) {
         const user = JSON.parse(userJson);
-        // Aquí deberíamos obtener el clienteId asociado al usuario
-        // Por ahora, si el rol es CLIENTE, usamos el ID del usuario
-        this.clienteId = user.id;
+        // El clienteId viene en la respuesta de login para usuarios CLIENTE
+        this.clienteId = user.clienteId;
       }
     }
   }

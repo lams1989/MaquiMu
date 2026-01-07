@@ -22,13 +22,16 @@ public class ClienteEntity {
     @Column(name = "cliente_id")
     private Long clienteId;
 
+    @Column(name = "usuario_id", nullable = true, unique = true)
+    private Long usuarioId;
+
     @Column(name = "nombre_cliente", nullable = false)
     private String nombreCliente;
 
     @Column(nullable = false, unique = true)
     private String identificacion;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String telefono;
 
     @Column(nullable = false)
@@ -43,6 +46,7 @@ public class ClienteEntity {
     public static ClienteEntity fromCliente(Cliente cliente) {
         return new ClienteEntity(
                 cliente.getClienteId(),
+                cliente.getUsuarioId(),
                 cliente.getNombreCliente(),
                 cliente.getIdentificacion(),
                 cliente.getTelefono(),
@@ -55,6 +59,7 @@ public class ClienteEntity {
     public Cliente toCliente() {
         return Cliente.builder()
                 .clienteId(clienteId)
+                .usuarioId(usuarioId)
                 .nombreCliente(nombreCliente)
                 .identificacion(identificacion)
                 .telefono(telefono)

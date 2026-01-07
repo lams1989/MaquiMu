@@ -7,5 +7,6 @@ import java.util.Optional;
 
 public interface JpaClienteRepository extends JpaRepository<ClienteEntity, Long> {
     Optional<ClienteEntity> findByIdentificacion(String identificacion);
+    Optional<ClienteEntity> findByUsuarioId(Long usuarioId);
     boolean existsByIdentificacion(String identificacion);
 }

@@ -4,13 +4,15 @@ export interface Usuario {
     usuarioId: number;
     nombreCompleto: string;
     email: string;
-    rol: 'OPERARIO' | 'CLIENTE'; // Assuming these are the only two roles
+    rol: 'OPERARIO' | 'CLIENTE';
+    clienteId?: number; // ID del cliente asociado si el rol es CLIENTE
 }
 
 export interface RegisterRequest {
     nombreCompleto: string;
     email: string;
     password: string;
+    identificacion: string; // Campo nuevo requerido para clientes
     rol: 'OPERARIO' | 'CLIENTE'; // Default for auto-registration is CLIENTE, but backend allows OPERARIO
 }
 

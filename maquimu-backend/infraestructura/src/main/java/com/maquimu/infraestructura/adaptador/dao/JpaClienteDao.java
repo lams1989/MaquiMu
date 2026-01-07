@@ -39,6 +39,12 @@ public class JpaClienteDao implements ClienteDao {
     }
 
     @Override
+    public Optional<Cliente> buscarPorUsuarioId(Long usuarioId) {
+        return jpaClienteRepository.findByUsuarioId(usuarioId)
+                .map(ClienteEntity::toCliente);
+    }
+
+    @Override
     public boolean existePorIdentificacion(String identificacion) {
         return jpaClienteRepository.existsByIdentificacion(identificacion);
     }

@@ -9,5 +9,6 @@ public interface ClienteDao {
     List<Cliente> listarTodos();
     Optional<Cliente> buscarPorId(Long id);
     Optional<Cliente> buscarPorIdentificacion(String identificacion);
+    Optional<Cliente> buscarPorUsuarioId(Long usuarioId);
     boolean existePorIdentificacion(String identificacion);
 }

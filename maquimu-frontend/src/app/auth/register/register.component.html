@@ -25,6 +25,16 @@
         </div>
 
         <div class="mb-3">
+          <label for="identificacion" class="form-label">Identificación (Cédula/NIT)</label>
+          <input type="text" id="identificacion" formControlName="identificacion" class="form-control"
+                 [ngClass]="{ 'is-invalid': registerForm.get('identificacion')?.touched && registerForm.get('identificacion')?.invalid }">
+          <div *ngIf="registerForm.get('identificacion')?.touched && registerForm.get('identificacion')?.invalid" class="invalid-feedback">
+            <div *ngIf="registerForm.get('identificacion')?.errors?.['required']">La identificación es requerida.</div>
+            <div *ngIf="registerForm.get('identificacion')?.errors?.['minlength']">Debe tener al menos 5 caracteres.</div>
+          </div>
+        </div>
+
+        <div class="mb-3">
           <label for="password" class="form-label">Contraseña</label>
           <input type="password" id="password" formControlName="password" class="form-control"
                  [ngClass]="{ 'is-invalid': registerForm.get('password')?.touched && registerForm.get('password')?.invalid }">
@@ -42,7 +52,15 @@
             <div>Las contraseñas no coinciden.</div>
           </div>
         </div>
-        
+
+        <div class="mb-3">
+          <label for="rol" class="form-label">Tipo de Usuario</label>
+          <select id="rol" formControlName="rol" class="form-select">
+            <option value="CLIENTE">Cliente</option>
+            <option value="OPERARIO">Operario</option>
+          </select>
+        </div>
+
         <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
 
         <div class="d-grid mt-4">
@@ -51,7 +69,7 @@
             {{ isLoading ? 'Registrando...' : 'Registrar' }}
           </button>
         </div>
-        
+
         <div class="text-center mt-3">
           <span>¿Ya tienes una cuenta? <a routerLink="/auth/login">Inicia Sesión</a></span>
         </div>

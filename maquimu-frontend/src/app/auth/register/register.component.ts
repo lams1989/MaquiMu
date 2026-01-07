@@ -28,6 +28,7 @@ export class RegisterComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]],
+      identificacion: ['', [Validators.required, Validators.minLength(5)]], // Campo nuevo requerido
       rol: ['CLIENTE', Validators.required] // Por defecto, el auto-registro es para Clientes
     }, { validator: this.passwordMatchValidator });
   }
@@ -47,9 +48,9 @@ export class RegisterComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
 
-    const { nombreCompleto, email, password, rol } = this.registerForm.value;
+    const { nombreCompleto, email, password, identificacion, rol } = this.registerForm.value;
 
-    this.authService.register({ nombreCompleto, email, password, rol }).subscribe({
+    this.authService.register({ nombreCompleto, email, password, identificacion, rol }).subscribe({
       next: () => {
         this.isLoading = false;
         // Redirigir al login con un mensaje de éxito
