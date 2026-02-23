@@ -32,7 +32,7 @@ export class ClientModalComponent implements OnInit {
     this.clientForm = this.fb.group({
       nombreCliente: [this.cliente?.nombreCliente || '', Validators.required],
       identificacion: [this.cliente?.identificacion || '', Validators.required],
-      telefono: [this.cliente?.telefono || '', Validators.required],
+      telefono: [this.cliente?.telefono || ''],
       email: [this.cliente?.email || '', [Validators.required, Validators.email]],
       direccion: [this.cliente?.direccion || '']
     });

@@ -27,12 +27,8 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="telefono" class="form-label">Teléfono</label>
-                            <input type="text" id="telefono" formControlName="telefono" class="form-control"
-                                   [class.is-invalid]="clientForm.get('telefono')?.invalid && clientForm.get('telefono')?.touched">
-                            <div *ngIf="clientForm.get('telefono')?.invalid && clientForm.get('telefono')?.touched" class="invalid-feedback">
-                                El teléfono es requerido.
-                            </div>
+                            <label for="telefono" class="form-label">Teléfono <span class="text-muted">(opcional)</span></label>
+                            <input type="text" id="telefono" formControlName="telefono" class="form-control">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="email" class="form-label">Correo Electrónico</label>

@@ -2,7 +2,7 @@ export interface Cliente {
   clienteId: number;
   nombreCliente: string;
   identificacion: string;
-  telefono: string;
+  telefono?: string;
   email: string;
   direccion?: string;
   fechaRegistro: string;
@@ -11,7 +11,7 @@ export interface Cliente {
 export interface CrearClienteRequest {
   nombreCliente: string;
   identificacion: string;
-  telefono: string;
+  telefono?: string;
   email: string;
   direccion?: string;
 }
