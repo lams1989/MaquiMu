@@ -58,4 +58,12 @@ public class AlquilerDaoJpa implements AlquilerDao {
                 .map(AlquilerEntity::toAlquiler)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<Alquiler> listarPorEstado(EstadoAlquiler estado) {
+        return jpaAlquilerRepository.findByEstado(estado)
+                .stream()
+                .map(AlquilerEntity::toAlquiler)
+                .collect(Collectors.toList());
+    }
 }

@@ -19,7 +19,8 @@ public interface JpaAlquilerRepository extends JpaRepository<AlquilerEntity, Lon
 
     @Query("SELECT a FROM AlquilerEntity a WHERE a.maquinaria.maquinariaId = :maquinariaId " +
            "AND a.estado NOT IN (com.maquimu.dominio.alquiler.modelo.EstadoAlquiler.CANCELADO, " +
-           "com.maquimu.dominio.alquiler.modelo.EstadoAlquiler.FINALIZADO) " +
+           "com.maquimu.dominio.alquiler.modelo.EstadoAlquiler.FINALIZADO, " +
+           "com.maquimu.dominio.alquiler.modelo.EstadoAlquiler.RECHAZADO) " +
            "AND ((a.fechaInicio BETWEEN :fechaInicio AND :fechaFin) " +
            "OR (a.fechaFin BETWEEN :fechaInicio AND :fechaFin) " +
            "OR (a.fechaInicio <= :fechaInicio AND a.fechaFin >= :fechaFin))")
@@ -32,7 +33,8 @@ public interface JpaAlquilerRepository extends JpaRepository<AlquilerEntity, Lon
     @Query("SELECT CASE WHEN COUNT(a) > 0 THEN true ELSE false END FROM AlquilerEntity a " +
            "WHERE a.maquinaria.maquinariaId = :maquinariaId " +
            "AND a.estado NOT IN (com.maquimu.dominio.alquiler.modelo.EstadoAlquiler.CANCELADO, " +
-           "com.maquimu.dominio.alquiler.modelo.EstadoAlquiler.FINALIZADO) " +
+           "com.maquimu.dominio.alquiler.modelo.EstadoAlquiler.FINALIZADO, " +
+           "com.maquimu.dominio.alquiler.modelo.EstadoAlquiler.RECHAZADO) " +
            "AND ((a.fechaInicio BETWEEN :fechaInicio AND :fechaFin) " +
            "OR (a.fechaFin BETWEEN :fechaInicio AND :fechaFin) " +
            "OR (a.fechaInicio <= :fechaInicio AND a.fechaFin >= :fechaFin))")

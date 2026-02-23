@@ -7,9 +7,10 @@ export interface Alquiler {
   fechaFin: string;
   costoTotal: number;
   estado: EstadoAlquiler;
+  motivoRechazo?: string;
 }
 
-export type EstadoAlquiler = 'PENDIENTE' | 'APROBADO' | 'ACTIVO' | 'FINALIZADO' | 'CANCELADO';
+export type EstadoAlquiler = 'PENDIENTE' | 'APROBADO' | 'RECHAZADO' | 'ACTIVO' | 'FINALIZADO' | 'CANCELADO';
 
 export interface SolicitudAlquiler {
   clienteId: number;

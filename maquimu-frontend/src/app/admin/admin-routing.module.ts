@@ -1,3 +1,4 @@
+import { AdminRentalsComponent } from './rentals/admin-rentals.component';
 import { ClientsComponent } from './clients/clients/clients.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { InventoryComponent } from './inventory/inventory/inventory.component';
@@ -21,6 +22,10 @@ const routes: Routes = [
   {
     path: 'clients',
     component: ClientsComponent
+  },
+  {
+    path: 'rentals',
+    component: AdminRentalsComponent
   }
 ];
 

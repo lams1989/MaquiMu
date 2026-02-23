@@ -17,6 +17,7 @@ public class Alquiler {
     private LocalDateTime fechaFin;
     private BigDecimal costoTotal;
     private EstadoAlquiler estado;
+    private String motivoRechazo; // Nullable: solo cuando estado es RECHAZADO
 
     // Constructor vacío
     public Alquiler() {
@@ -47,6 +48,21 @@ public class Alquiler {
         this.fechaFin = fechaFin;
         this.costoTotal = costoTotal;
         this.estado = estado;
+    }
+
+    // Constructor completo con motivo de rechazo
+    public Alquiler(Long alquilerId, Long clienteId, Long maquinariaId, Long usuarioId,
+                    LocalDateTime fechaInicio, LocalDateTime fechaFin, 
+                    BigDecimal costoTotal, EstadoAlquiler estado, String motivoRechazo) {
+        this.alquilerId = alquilerId;
+        this.clienteId = clienteId;
+        this.maquinariaId = maquinariaId;
+        this.usuarioId = usuarioId;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+        this.costoTotal = costoTotal;
+        this.estado = estado;
+        this.motivoRechazo = motivoRechazo;
     }
 
     // Validaciones de negocio
@@ -80,6 +96,14 @@ public class Alquiler {
             throw new IllegalStateException("Solo se puede finalizar un alquiler en estado ACTIVO");
         }
         this.estado = EstadoAlquiler.FINALIZADO;
+    }
+
+    public void rechazar(String motivoRechazo) {
+        if (this.estado != EstadoAlquiler.PENDIENTE) {
+            throw new IllegalStateException("Solo se puede rechazar un alquiler en estado PENDIENTE");
+        }
+        this.motivoRechazo = motivoRechazo;
+        this.estado = EstadoAlquiler.RECHAZADO;
     }
 
     public void cancelar() {
@@ -156,5 +180,13 @@ public class Alquiler {
 
     public void setEstado(EstadoAlquiler estado) {
         this.estado = estado;
+    }
+
+    public String getMotivoRechazo() {
+        return motivoRechazo;
+    }
+
+    public void setMotivoRechazo(String motivoRechazo) {
+        this.motivoRechazo = motivoRechazo;
     }
 }

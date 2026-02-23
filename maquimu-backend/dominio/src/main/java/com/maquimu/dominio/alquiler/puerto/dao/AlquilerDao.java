@@ -1,6 +1,7 @@
 package com.maquimu.dominio.alquiler.puerto.dao;
 
 import com.maquimu.dominio.alquiler.modelo.Alquiler;
+import com.maquimu.dominio.alquiler.modelo.EstadoAlquiler;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -42,4 +43,9 @@ public interface AlquilerDao {
      * Lista los alquileres pendientes de aprobación.
      */
     List<Alquiler> listarPendientes();
+
+    /**
+     * Lista los alquileres filtrados por estado.
+     */
+    List<Alquiler> listarPorEstado(EstadoAlquiler estado);
 }

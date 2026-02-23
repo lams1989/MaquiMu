@@ -1,4 +1,4 @@
-import { Alquiler, SolicitudAlquiler } from '@core/models/alquiler.model';
+import { Alquiler, EstadoAlquiler, SolicitudAlquiler } from '@core/models/alquiler.model';
 import { environment } from '@environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -36,5 +36,53 @@ export class AlquilerService {
    */
   getAlquileresCliente(clienteId: number): Observable<Alquiler[]> {
     return this.http.get<Alquiler[]>(`${this.apiUrl}/clientes/${clienteId}/alquileres`);
+  }
+
+  // ===== HU 07: Gestión de Alquileres (Operario) =====
+
+  /**
+   * Lista todos los alquileres, opcionalmente filtrados por estado
+   */
+  getAlquileres(estado?: EstadoAlquiler): Observable<Alquiler[]> {
+    let params = new HttpParams();
+    if (estado) {
+      params = params.set('estado', estado);
+    }
+    return this.http.get<Alquiler[]>(`${this.apiUrl}/alquileres`, { params });
+  }
+
+  /**
+   * Obtiene el detalle de un alquiler por ID
+   */
+  getAlquilerDetalle(id: number): Observable<Alquiler> {
+    return this.http.get<Alquiler>(`${this.apiUrl}/alquileres/${id}`);
+  }
+
+  /**
+   * Aprueba un alquiler pendiente
+   */
+  aprobarAlquiler(id: number, usuarioId: number): Observable<Alquiler> {
+    return this.http.patch<Alquiler>(`${this.apiUrl}/alquileres/${id}/aprobar`, { usuarioId });
+  }
+
+  /**
+   * Rechaza un alquiler pendiente
+   */
+  rechazarAlquiler(id: number, motivoRechazo?: string): Observable<Alquiler> {
+    return this.http.patch<Alquiler>(`${this.apiUrl}/alquileres/${id}/rechazar`, { motivoRechazo });
+  }
+
+  /**
+   * Registra la entrega de maquinaria (activa el alquiler)
+   */
+  entregarAlquiler(id: number): Observable<Alquiler> {
+    return this.http.patch<Alquiler>(`${this.apiUrl}/alquileres/${id}/entregar`, {});
+  }
+
+  /**
+   * Finaliza un alquiler activo (devolución de maquinaria)
+   */
+  finalizarAlquiler(id: number): Observable<Alquiler> {
+    return this.http.patch<Alquiler>(`${this.apiUrl}/alquileres/${id}/finalizar`, {});
   }
 }
