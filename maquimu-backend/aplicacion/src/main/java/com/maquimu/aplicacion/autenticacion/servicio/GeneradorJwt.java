@@ -57,6 +57,15 @@ public class GeneradorJwt implements ServicioToken {
         return extraerClaim(token, claims -> claims.get("userId", Long.class));
     }
 
+    public Long extraerUsuarioId(String token) {
+        return extraerClaim(token, claims -> claims.get("userId", Long.class));
+    }
+
+    public RolUsuario extraerRol(String token) {
+        String rol = extraerClaim(token, claims -> claims.get("rol", String.class));
+        return RolUsuario.valueOf(rol);
+    }
+
     private <T> T extraerClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = validarToken(token);
         return claimsResolver.apply(claims);
