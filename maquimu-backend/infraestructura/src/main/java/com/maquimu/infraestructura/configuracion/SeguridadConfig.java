@@ -41,6 +41,7 @@ public class SeguridadConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/maquimu/v1/auth/**").permitAll()
                 .requestMatchers("/actuator/health").permitAll()
+                .requestMatchers("/error").permitAll()
                 .anyRequest().authenticated()
             );
 
