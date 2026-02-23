@@ -4,15 +4,13 @@ import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Maquinaria } from '@core/models/maquinaria.model';
 import { MaquinariaService } from '@core/services/maquinaria.service';
-import { NavbarComponent } from '@shared/navbar/navbar.component';
 import { Router } from '@angular/router';
-import { SidebarComponent } from '@shared/sidebar/sidebar.component';
 import { SolicitudAlquiler } from '@core/models/alquiler.model';
 
 @Component({
   selector: 'app-request-rental',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, NavbarComponent, SidebarComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './request-rental.component.html',
   styleUrl: './request-rental.component.css'
 })

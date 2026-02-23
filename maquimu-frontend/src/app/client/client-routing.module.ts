@@ -1,3 +1,4 @@
+import { ClientLayoutComponent } from './layout/client-layout.component';
 import { NgModule } from '@angular/core';
 import { PortalComponent } from './portal/portal.component';
 import { RequestRentalComponent } from './request-rental/request-rental.component';
@@ -6,16 +7,22 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'portal',
-    pathMatch: 'full'
-  },
-  {
-    path: 'portal',
-    component: PortalComponent
-  },
-  {
-    path: 'request-rental',
-    component: RequestRentalComponent
+    component: ClientLayoutComponent,
+    children: [
+      {
+        path: '',
+        redirectTo: 'portal',
+        pathMatch: 'full'
+      },
+      {
+        path: 'portal',
+        component: PortalComponent
+      },
+      {
+        path: 'request-rental',
+        component: RequestRentalComponent
+      }
+    ]
   }
 ];
 
