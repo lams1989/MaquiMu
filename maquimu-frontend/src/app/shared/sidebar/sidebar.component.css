@@ -1,0 +1,13 @@
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.sidebar .mt-auto {
+    margin-top: auto !important;
+}
+
+.sidebar .mt-auto a:hover {
+    color: #fff !important;
+}
