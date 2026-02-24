@@ -21,6 +21,7 @@ export class MyRentalsComponent implements OnInit {
 
   alquilerDetalle: Alquiler | null = null;
   loadingDetalle = false;
+  showDetalle = false;
 
   estados: { value: EstadoAlquiler | ''; label: string }[] = [
     { value: '', label: 'Todos' },
@@ -64,6 +65,7 @@ export class MyRentalsComponent implements OnInit {
   }
 
   verDetalle(id: number): void {
+    this.showDetalle = true;
     this.loadingDetalle = true;
     this.alquilerService.getMiAlquilerDetalle(id).subscribe({
       next: (data) => {
@@ -73,11 +75,13 @@ export class MyRentalsComponent implements OnInit {
       error: (err) => {
         console.error('Error al cargar detalle', err);
         this.loadingDetalle = false;
+        this.showDetalle = false;
       }
     });
   }
 
   cerrarDetalle(): void {
+    this.showDetalle = false;
     this.alquilerDetalle = null;
   }
 
