@@ -1,9 +1,13 @@
+<div class="modal-backdrop fade show"></div>
 <div class="modal fade show d-block" tabindex="-1" role="dialog" aria-labelledby="machineModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="machineModalLabel">{{ isEditMode ? 'Editar Maquinaria' : 'Nueva Maquinaria' }}</h5>
-                <button type="button" class="btn-close" aria-label="Close" (click)="cancel()"></button>
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="machineModalLabel">
+                    <i class="bi me-2" [ngClass]="isEditMode ? 'bi-pencil-square' : 'bi-plus-circle'"></i>
+                    {{ isEditMode ? 'Editar Maquinaria' : 'Nueva Maquinaria' }}
+                </h5>
+                <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="cancel()"></button>
             </div>
             <div class="modal-body">
                 <form [formGroup]="machineForm">

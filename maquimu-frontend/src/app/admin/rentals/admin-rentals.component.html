@@ -7,123 +7,87 @@
 
     <!-- Main Content -->
     <div class="flex-grow-1">
-        <!-- Rentals Content -->
-        <div class="container-fluid py-4">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card my-4">
-                        <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                            <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3 d-flex justify-content-between align-items-center">
-                                <h6 class="text-white text-capitalize ps-3 mb-0">Gestión de Alquileres</h6>
-                                <div class="me-3">
-                                    <select class="form-select form-select-sm" [(ngModel)]="filtroEstado" (ngModelChange)="onFiltroChange()">
-                                        <option *ngFor="let estado of estados" [value]="estado.value">{{ estado.label }}</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body px-0 pb-2">
-                            <!-- Loading spinner -->
-                            <div *ngIf="loading" class="text-center py-4">
-                                <div class="spinner-border text-primary" role="status">
-                                    <span class="visually-hidden">Cargando...</span>
-                                </div>
-                            </div>
+        <div class="container-fluid py-4 px-4">
+            <!-- Page Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="fw-bold mb-1"><i class="bi bi-journal-check me-2"></i>Gestión de Alquileres</h2>
+                    <p class="text-muted mb-0">Administra y controla los alquileres del sistema</p>
+                </div>
+                <select class="form-select" style="width: auto;" [(ngModel)]="filtroEstado" (ngModelChange)="onFiltroChange()">
+                    <option *ngFor="let estado of estados" [value]="estado.value">{{ estado.label }}</option>
+                </select>
+            </div>
 
-                            <!-- Empty state -->
-                            <div *ngIf="!loading && alquileres.length === 0" class="text-center py-4">
-                                <p class="text-muted">No se encontraron alquileres.</p>
-                            </div>
+            <!-- Loading spinner -->
+            <div *ngIf="loading" class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+                <p class="mt-2 text-muted">Cargando alquileres...</p>
+            </div>
 
-                            <!-- Table -->
-                            <div class="table-responsive p-0" *ngIf="!loading && alquileres.length > 0">
-                                <table class="table align-items-center mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Cliente ID</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Maquinaria ID</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Fecha Inicio</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Fecha Fin</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Costo Total</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Estado</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr *ngFor="let alquiler of alquileres">
-                                            <td>
-                                                <div class="d-flex px-2 py-1">
-                                                    <span class="text-xs font-weight-bold">{{ alquiler.alquilerId }}</span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ alquiler.clienteId }}</p>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ alquiler.maquinariaId }}</p>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ alquiler.fechaInicio | date:'short' }}</p>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ alquiler.fechaFin | date:'short' }}</p>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ alquiler.costoTotal | currency:'COP':'symbol':'1.0-0' }}</p>
-                                            </td>
-                                            <td>
-                                                <span class="badge" [ngClass]="getBadgeClass(alquiler.estado)">
-                                                    {{ getEstadoLabel(alquiler.estado) }}
-                                                </span>
-                                            </td>
-                                            <td class="align-middle text-center">
-                                                <!-- Ver detalle -->
-                                                <a href="javascript:;" class="text-info font-weight-bold text-xs me-2"
-                                                   (click)="verDetalle(alquiler)" title="Ver detalle">
-                                                    Ver
-                                                </a>
+            <!-- Empty state -->
+            <div *ngIf="!loading && alquileres.length === 0" class="text-center py-5">
+                <i class="bi bi-inbox display-4 text-muted d-block mb-2"></i>
+                <p class="text-muted">No se encontraron alquileres.</p>
+            </div>
 
-                                                <!-- Aprobar (solo PENDIENTE) -->
-                                                <a *ngIf="alquiler.estado === 'PENDIENTE'"
-                                                   href="javascript:;" class="text-success font-weight-bold text-xs me-2"
-                                                   (click)="aprobar(alquiler)" title="Aprobar">
-                                                    Aprobar
-                                                </a>
-
-                                                <!-- Rechazar (solo PENDIENTE) -->
-                                                <a *ngIf="alquiler.estado === 'PENDIENTE'"
-                                                   href="javascript:;" class="text-danger font-weight-bold text-xs me-2"
-                                                   (click)="abrirModalRechazo(alquiler)" title="Rechazar">
-                                                    Rechazar
-                                                </a>
-
-                                                <!-- Entregar (solo APROBADO) -->
-                                                <a *ngIf="alquiler.estado === 'APROBADO'"
-                                                   href="javascript:;" class="text-primary font-weight-bold text-xs me-2"
-                                                   (click)="entregar(alquiler)" title="Registrar entrega">
-                                                    Entregar
-                                                </a>
-
-                                                <!-- Finalizar (solo ACTIVO) -->
-                                                <a *ngIf="alquiler.estado === 'ACTIVO'"
-                                                   href="javascript:;" class="text-secondary font-weight-bold text-xs me-2"
-                                                   (click)="finalizar(alquiler)" title="Finalizar alquiler">
-                                                    Finalizar
-                                                </a>
-
-                                                <!-- Generar Factura (solo FINALIZADO) -->
-                                                <a *ngIf="alquiler.estado === 'FINALIZADO'"
-                                                   href="javascript:;" class="text-warning font-weight-bold text-xs"
-                                                   (click)="generarFactura(alquiler)" title="Generar factura">
-                                                    Facturar
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+            <!-- Table Card -->
+            <div class="card border-0" *ngIf="!loading && alquileres.length > 0">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Cliente ID</th>
+                                    <th>Maquinaria ID</th>
+                                    <th>Fecha Inicio</th>
+                                    <th>Fecha Fin</th>
+                                    <th class="text-end">Costo Total</th>
+                                    <th>Estado</th>
+                                    <th class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let alquiler of alquileres">
+                                    <td class="fw-semibold">{{ alquiler.alquilerId }}</td>
+                                    <td>{{ alquiler.clienteId }}</td>
+                                    <td>{{ alquiler.maquinariaId }}</td>
+                                    <td>{{ alquiler.fechaInicio | date:'short' }}</td>
+                                    <td>{{ alquiler.fechaFin | date:'short' }}</td>
+                                    <td class="text-end fw-medium">{{ alquiler.costoTotal | currency:'COP':'symbol':'1.0-0' }}</td>
+                                    <td>
+                                        <span class="badge rounded-pill" [ngClass]="getBadgeClass(alquiler.estado)">
+                                            {{ getEstadoLabel(alquiler.estado) }}
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="btn-group btn-group-sm">
+                                            <button class="btn btn-outline-info" title="Ver detalle" (click)="verDetalle(alquiler)">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            <button *ngIf="alquiler.estado === 'PENDIENTE'" class="btn btn-outline-success" title="Aprobar" (click)="aprobar(alquiler)">
+                                                <i class="bi bi-check-lg"></i>
+                                            </button>
+                                            <button *ngIf="alquiler.estado === 'PENDIENTE'" class="btn btn-outline-danger" title="Rechazar" (click)="abrirModalRechazo(alquiler)">
+                                                <i class="bi bi-x-lg"></i>
+                                            </button>
+                                            <button *ngIf="alquiler.estado === 'APROBADO'" class="btn btn-outline-primary" title="Entregar" (click)="entregar(alquiler)">
+                                                <i class="bi bi-truck"></i>
+                                            </button>
+                                            <button *ngIf="alquiler.estado === 'ACTIVO'" class="btn btn-outline-secondary" title="Finalizar" (click)="finalizar(alquiler)">
+                                                <i class="bi bi-flag"></i>
+                                            </button>
+                                            <button *ngIf="alquiler.estado === 'FINALIZADO'" class="btn btn-outline-warning" title="Facturar" (click)="generarFactura(alquiler)">
+                                                <i class="bi bi-receipt"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

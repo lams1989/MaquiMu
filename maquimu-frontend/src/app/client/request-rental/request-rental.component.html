@@ -1,8 +1,8 @@
 <div class="container-fluid">
       <div class="row mb-4">
         <div class="col">
-          <h2><i class="bi bi-calendar-plus me-2"></i>Solicitar Alquiler</h2>
-          <p class="text-muted">Complete el formulario para solicitar el alquiler de maquinaria</p>
+          <h2 class="fw-bold mb-1"><i class="bi bi-calendar-plus me-2"></i>Solicitar Alquiler</h2>
+          <p class="text-muted mb-0">Complete el formulario para solicitar el alquiler de maquinaria</p>
         </div>
       </div>
 
@@ -23,8 +23,8 @@
 
       <!-- Formulario de fechas -->
       <div class="card mb-4">
-        <div class="card-header bg-primary text-white">
-          <h5 class="mb-0"><i class="bi bi-calendar3 me-2"></i>Paso 1: Seleccione las fechas</h5>
+        <div class="card-header text-white" style="background: var(--primary-gradient, linear-gradient(135deg, #0D47A1, #1976D2)); border-radius: var(--radius-md, 12px) var(--radius-md, 12px) 0 0;">
+          <h5 class="mb-0 fw-semibold"><i class="bi bi-calendar3 me-2"></i>Paso 1: Seleccione las fechas</h5>
         </div>
         <div class="card-body">
           <form [formGroup]="rentalForm">
@@ -71,8 +71,8 @@
       <!-- Lista de maquinarias disponibles -->
       @if (maquinariasDisponibles.length > 0) {
         <div class="card mb-4">
-          <div class="card-header bg-success text-white">
-            <h5 class="mb-0"><i class="bi bi-truck me-2"></i>Paso 2: Seleccione la maquinaria</h5>
+          <div class="card-header text-white" style="background: linear-gradient(135deg, #16a34a, #22c55e); border-radius: var(--radius-md, 12px) var(--radius-md, 12px) 0 0;">
+            <h5 class="mb-0 fw-semibold"><i class="bi bi-truck me-2"></i>Paso 2: Seleccione la maquinaria</h5>
           </div>
           <div class="card-body">
             <p class="text-muted mb-3">Se encontraron {{ maquinariasDisponibles.length }} maquinarias disponibles</p>
@@ -115,8 +115,8 @@
       <!-- Resumen y confirmación -->
       @if (maquinariaSeleccionada) {
         <div class="card">
-          <div class="card-header bg-warning">
-            <h5 class="mb-0"><i class="bi bi-clipboard-check me-2"></i>Paso 3: Confirmar solicitud</h5>
+          <div class="card-header text-white" style="background: var(--accent-gradient, linear-gradient(135deg, #FF6F00, #FF8F00)); border-radius: var(--radius-md, 12px) var(--radius-md, 12px) 0 0;">
+            <h5 class="mb-0 fw-semibold"><i class="bi bi-clipboard-check me-2"></i>Paso 3: Confirmar solicitud</h5>
           </div>
           <div class="card-body">
             <div class="row">

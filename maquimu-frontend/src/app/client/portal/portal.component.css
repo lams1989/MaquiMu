@@ -1,12 +1,81 @@
-.card-feature {
-    background-color: white;
-    border: none;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+/* Client Portal - Modern Styles */
+
+.portal-content {
+    max-width: 1100px;
 }
 
-.card-feature:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+/* KPI Cards */
+.kpi-card {
+    border-radius: var(--radius-md, 12px);
+    box-shadow: var(--shadow-md, 0 4px 6px rgba(0,0,0,0.04));
+    transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.kpi-card:hover {
+    box-shadow: var(--shadow-lg, 0 10px 25px rgba(0,0,0,0.06));
+    transform: translateY(-2px);
+}
+
+.kpi-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+}
+
+.kpi-icon-primary {
+    background: linear-gradient(135deg, rgba(13, 71, 161, 0.12), rgba(25, 118, 210, 0.08));
+    color: #0D47A1;
+}
+
+.kpi-icon-accent {
+    background: linear-gradient(135deg, rgba(255, 111, 0, 0.12), rgba(255, 143, 0, 0.08));
+    color: #FF6F00;
+}
+
+/* Quick Access Cards */
+.quick-card {
+    border-radius: var(--radius-md, 12px) !important;
+    box-shadow: var(--shadow-sm, 0 1px 3px rgba(0,0,0,0.06));
+    transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+
+.quick-card:hover {
+    box-shadow: var(--shadow-lg, 0 10px 25px rgba(0,0,0,0.06));
+    transform: translateY(-4px);
+}
+
+.quick-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    transition: transform 250ms ease;
+}
+
+.quick-card:hover .quick-icon {
+    transform: scale(1.08);
+}
+
+.quick-icon-primary {
+    background: linear-gradient(135deg, #0D47A1, #1976D2);
+    color: white;
+}
+
+.quick-icon-info {
+    background: linear-gradient(135deg, #0891b2, #06b6d4);
+    color: white;
+}
+
+.quick-icon-accent {
+    background: linear-gradient(135deg, #FF6F00, #FF8F00);
+    color: white;
 }

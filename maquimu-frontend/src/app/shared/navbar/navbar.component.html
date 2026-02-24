@@ -1,14 +1,19 @@
 <nav class="navbar navbar-header px-4 py-2">
     <a routerLink="/admin/dashboard" class="navbar-brand d-flex align-items-center text-white text-decoration-none">
-        <img src="assets/images/mu.png" alt="MaquiMu" height="36" class="me-2">
-        <span class="fw-semibold fs-5">MaquiMu</span>
-        <span class="badge bg-primary ms-2" style="font-size: 0.65rem; letter-spacing: 0.5px;">ADMIN</span>
+        <div class="brand-logo-wrapper me-2">
+            <img src="assets/images/mu.png" alt="MaquiMu" height="28">
+        </div>
+        <span class="fw-bold fs-5">MaquiMu</span>
+        <span class="admin-badge ms-2">ADMIN</span>
     </a>
-    <div class="d-flex align-items-center">
-        <span class="me-3 text-white-50 d-none d-sm-inline">
-            <i class="bi bi-person-circle me-1"></i>{{ currentUser?.nombreCompleto || 'Usuario' }}
-        </span>
-        <button class="btn btn-outline-light btn-sm" (click)="logout()" title="Cerrar Sesión">
+    <div class="d-flex align-items-center gap-3">
+        <div class="user-info d-none d-sm-flex align-items-center">
+            <div class="user-avatar me-2">
+                <i class="bi bi-person-fill"></i>
+            </div>
+            <span class="text-white-50 small fw-medium">{{ currentUser?.nombreCompleto || 'Usuario' }}</span>
+        </div>
+        <button class="btn btn-logout btn-sm" (click)="logout()" title="Cerrar Sesión">
             <i class="bi bi-box-arrow-right me-1"></i>Salir
         </button>
     </div>

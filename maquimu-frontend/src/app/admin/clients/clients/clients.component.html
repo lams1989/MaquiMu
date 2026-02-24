@@ -7,69 +7,64 @@
 
     <!-- Main Content -->
     <div class="flex-grow-1">
-        <!-- Clients Content -->
-        <div class="container-fluid py-4">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card my-4">
-                        <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                            <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3 d-flex justify-content-between align-items-center">
-                                <h6 class="text-white text-capitalize ps-3 mb-0">Gestión de Clientes</h6>
-                                <button class="btn btn-light btn-sm me-3 mb-0" (click)="openCreateModal()">
-                                    <i class="material-icons opacity-10 me-2">add</i>Nuevo Cliente
-                                </button>
-                            </div>
-                        </div>
-                        <div class="card-body px-0 pb-2">
-                            <div class="table-responsive p-0">
-                                <table class="table align-items-center mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nombre</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Identificación</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Teléfono</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Dirección</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Fecha Registro</th>
-                                            <th class="text-secondary opacity-7"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr *ngFor="let cliente of clientes">
-                                            <td>
-                                                <div class="d-flex px-2 py-1">
-                                                    <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">{{ cliente.nombreCliente }}</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ cliente.identificacion }}</p>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ cliente.telefono }}</p>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ cliente.email }}</p>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ cliente.direccion || '-' }}</p>
-                                            </td>
-                                            <td class="align-middle text-center">
-                                                <span class="text-secondary text-xs font-weight-bold">{{ formatDate(cliente.fechaRegistro) }}</span>
-                                            </td>
-                                    <td class="align-middle">
-                                        <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Editar cliente" (click)="openEditModal(cliente)">
-                                            Editar
-                                        </a> |
-                                        <a href="javascript:;" class="text-danger font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Eliminar cliente" (click)="deleteCliente(cliente.clienteId)">
-                                            Eliminar
-                                        </a>
+        <div class="container-fluid py-4 px-4">
+            <!-- Page Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="fw-bold mb-1"><i class="bi bi-people me-2"></i>Gestión de Clientes</h2>
+                    <p class="text-muted mb-0">Administra los clientes registrados en el sistema</p>
+                </div>
+                <button class="btn btn-primary" (click)="openCreateModal()">
+                    <i class="bi bi-plus-lg me-2"></i>Nuevo Cliente
+                </button>
+            </div>
+
+            <!-- Table Card -->
+            <div class="card border-0">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Identificación</th>
+                                    <th>Teléfono</th>
+                                    <th>Email</th>
+                                    <th>Dirección</th>
+                                    <th>Fecha Registro</th>
+                                    <th class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let cliente of clientes">
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="client-avatar me-2">
+                                                <i class="bi bi-person-fill"></i>
+                                            </div>
+                                            <span class="fw-semibold">{{ cliente.nombreCliente }}</span>
+                                        </div>
+                                    </td>
+                                    <td><code class="text-muted">{{ cliente.identificacion }}</code></td>
+                                    <td>{{ cliente.telefono }}</td>
+                                    <td>{{ cliente.email }}</td>
+                                    <td>{{ cliente.direccion || '—' }}</td>
+                                    <td>{{ formatDate(cliente.fechaRegistro) }}</td>
+                                    <td class="text-center">
+                                        <div class="btn-group btn-group-sm">
+                                            <button class="btn btn-outline-primary" title="Editar" (click)="openEditModal(cliente)">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button class="btn btn-outline-danger" title="Eliminar" (click)="deleteCliente(cliente.clienteId)">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr *ngIf="clientes.length === 0">
-                                    <td colspan="7" class="text-center py-4">
-                                        <p class="text-secondary mb-0">No hay clientes registrados.</p>
+                                    <td colspan="7" class="text-center py-5">
+                                        <i class="bi bi-people display-4 text-muted d-block mb-2"></i>
+                                        <p class="text-muted mb-0">No hay clientes registrados.</p>
                                     </td>
                                 </tr>
                             </tbody>
@@ -77,8 +72,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
         </div>
     </div>
 </div>
