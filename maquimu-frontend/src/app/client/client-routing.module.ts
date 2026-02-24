@@ -1,4 +1,5 @@
 import { ClientLayoutComponent } from './layout/client-layout.component';
+import { MyInvoicesComponent } from './my-invoices/my-invoices.component';
 import { MyRentalsComponent } from './my-rentals/my-rentals.component';
 import { NgModule } from '@angular/core';
 import { PortalComponent } from './portal/portal.component';
@@ -26,6 +27,10 @@ const routes: Routes = [
       {
         path: 'my-rentals',
         component: MyRentalsComponent
+      },
+      {
+        path: 'my-invoices',
+        component: MyInvoicesComponent
       }
     ]
   }

@@ -69,4 +69,22 @@ export class FacturaService {
       responseType: 'blob'
     });
   }
+
+  // ========== Endpoints para CLIENTE ==========
+
+  /**
+   * Lista las facturas del cliente autenticado.
+   */
+  getMisFacturas(): Observable<Factura[]> {
+    return this.http.get<Factura[]>(`${this.apiUrl}/mis-facturas`);
+  }
+
+  /**
+   * Descarga el PDF de una factura del cliente autenticado.
+   */
+  descargarMiPdf(facturaId: number): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/mis-facturas/${facturaId}/pdf`, {
+      responseType: 'blob'
+    });
+  }
 }
