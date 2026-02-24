@@ -11,6 +11,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -24,6 +25,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final GeneradorJwt generadorJwt;
     private final UserDetailsServiceImpl userDetailsService; // Inject the specific implementation
+
+    @Override
+    protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
+        String requestUri = request.getRequestURI();
+        return requestUri != null && requestUri.startsWith("/api/maquimu/v1/auth/");
+    }
 
     @Override
     protected void doFilterInternal(
@@ -40,21 +47,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        jwt = authHeader.substring(7);
-        userEmail = generadorJwt.extraerEmail(jwt); // Assuming extraerEmail is accessible
+        try {
+            jwt = authHeader.substring(7);
+            userEmail = generadorJwt.extraerEmail(jwt); // Assuming extraerEmail is accessible
 
-        if (StringUtils.hasText(userEmail) && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+            if (StringUtils.hasText(userEmail) && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
 
-            if (generadorJwt.esTokenValido(jwt)) { // Changed to esTokenValido(String token)
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities()
-                );
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+                if (generadorJwt.esTokenValido(jwt)) { // Changed to esTokenValido(String token)
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities()
+                    );
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
             }
+        } catch (UsernameNotFoundException ignored) {
         }
         filterChain.doFilter(request, response);
     }

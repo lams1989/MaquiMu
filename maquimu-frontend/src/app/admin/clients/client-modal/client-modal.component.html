@@ -1,60 +1,148 @@
 <div class="modal-backdrop fade show"></div>
 <div class="modal fade show d-block" tabindex="-1" role="dialog" aria-labelledby="clientModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="clientModalLabel">
-                    <i class="bi me-2" [ngClass]="isEditMode ? 'bi-pencil-square' : 'bi-plus-circle'"></i>
-                    {{ isEditMode ? 'Editar Cliente' : 'Nuevo Cliente' }}
-                </h5>
-                <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="cancel()"></button>
+        <div class="modal-content client-modal-card">
+            <!-- Header con gradiente -->
+            <div class="client-modal-header">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="header-icon">
+                        <i class="bi" [ngClass]="isEditMode ? 'bi-pencil-square' : 'bi-person-plus-fill'"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title mb-0" id="clientModalLabel">
+                            {{ isEditMode ? 'Editar Cliente' : 'Registrar Nuevo Cliente' }}
+                        </h5>
+                        <p class="modal-subtitle mb-0">{{ isEditMode ? 'Modifique los datos del cliente.' : 'Ingrese los datos legales y de contacto.' }}</p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close-modal" aria-label="Close" (click)="cancel()">
+                    <i class="bi bi-x-lg"></i>
+                </button>
             </div>
-            <div class="modal-body">
+
+            <!-- Body -->
+            <div class="client-modal-body">
                 <form [formGroup]="clientForm">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="nombreCliente" class="form-label">Nombre del Cliente</label>
-                            <input type="text" id="nombreCliente" formControlName="nombreCliente" class="form-control"
-                                   [class.is-invalid]="clientForm.get('nombreCliente')?.invalid && clientForm.get('nombreCliente')?.touched">
-                            <div *ngIf="clientForm.get('nombreCliente')?.invalid && clientForm.get('nombreCliente')?.touched" class="invalid-feedback">
-                                El nombre del cliente es requerido.
+                    <!-- Tipo de Cliente -->
+                    <div class="mb-4" *ngIf="!isEditMode">
+                        <label class="form-label fw-semibold">Tipo de Cliente</label>
+                        <div class="d-flex gap-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" formControlName="tipoCliente" id="juridica" value="JURIDICA">
+                                <label class="form-check-label" for="juridica">Persona Jurídica (Empresa)</label>
                             </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="identificacion" class="form-label">Identificación</label>
-                            <input type="text" id="identificacion" formControlName="identificacion" class="form-control"
-                                   [class.is-invalid]="clientForm.get('identificacion')?.invalid && clientForm.get('identificacion')?.touched">
-                            <div *ngIf="clientForm.get('identificacion')?.invalid && clientForm.get('identificacion')?.touched" class="invalid-feedback">
-                                La identificación es requerida.
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" formControlName="tipoCliente" id="natural" value="NATURAL">
+                                <label class="form-check-label" for="natural">Persona Natural</label>
                             </div>
                         </div>
                     </div>
+
                     <div class="row">
+                        <!-- Nombre -->
                         <div class="col-md-6 mb-3">
-                            <label for="telefono" class="form-label">Teléfono <span class="text-muted">(opcional)</span></label>
-                            <input type="text" id="telefono" formControlName="telefono" class="form-control">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="email" class="form-label">Correo Electrónico</label>
-                            <input type="email" id="email" formControlName="email" class="form-control"
-                                   [class.is-invalid]="clientForm.get('email')?.invalid && clientForm.get('email')?.touched">
-                            <div *ngIf="clientForm.get('email')?.errors?.['required'] && clientForm.get('email')?.touched" class="invalid-feedback">
-                                El correo electrónico es requerido.
+                            <label for="nombreCliente" class="form-label">
+                                {{ clientForm.get('tipoCliente')?.value === 'NATURAL' ? 'Nombre Completo' : 'Razón Social / Nombre' }}
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                <input type="text" id="nombreCliente" formControlName="nombreCliente" class="form-control"
+                                       placeholder="Nombre del cliente o razón social"
+                                       [class.is-invalid]="clientForm.get('nombreCliente')?.invalid && clientForm.get('nombreCliente')?.touched">
+                                <div *ngIf="clientForm.get('nombreCliente')?.invalid && clientForm.get('nombreCliente')?.touched" class="invalid-feedback">
+                                    El nombre del cliente es requerido.
+                                </div>
                             </div>
-                            <div *ngIf="clientForm.get('email')?.errors?.['email'] && clientForm.get('email')?.touched" class="invalid-feedback">
-                                Por favor ingrese un correo electrónico válido.
+                        </div>
+                        <!-- Identificación -->
+                        <div class="col-md-6 mb-3">
+                            <label for="identificacion" class="form-label">
+                                {{ clientForm.get('tipoCliente')?.value === 'NATURAL' ? 'Cédula' : 'NIT / Cédula' }}
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-card-text"></i></span>
+                                <input type="text" id="identificacion" formControlName="identificacion" class="form-control"
+                                       placeholder="Sin puntos ni guiones"
+                                       [class.is-invalid]="clientForm.get('identificacion')?.invalid && clientForm.get('identificacion')?.touched">
+                                <div *ngIf="clientForm.get('identificacion')?.invalid && clientForm.get('identificacion')?.touched" class="invalid-feedback">
+                                    La identificación es requerida.
+                                </div>
                             </div>
                         </div>
                     </div>
+
+                    <div class="row">
+                        <!-- Email -->
+                        <div class="col-md-6 mb-3">
+                            <label for="email" class="form-label">Correo Electrónico <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                <input type="email" id="email" formControlName="email" class="form-control"
+                                       placeholder="facturacion@empresa.com"
+                                       [class.is-invalid]="clientForm.get('email')?.invalid && clientForm.get('email')?.touched">
+                                <div *ngIf="clientForm.get('email')?.errors?.['required'] && clientForm.get('email')?.touched" class="invalid-feedback">
+                                    El correo electrónico es requerido.
+                                </div>
+                                <div *ngIf="clientForm.get('email')?.errors?.['email'] && clientForm.get('email')?.touched" class="invalid-feedback">
+                                    Ingrese un correo electrónico válido.
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Teléfono -->
+                        <div class="col-md-6 mb-3">
+                            <label for="telefono" class="form-label">Teléfono / Celular <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                                <input type="tel" id="telefono" formControlName="telefono" class="form-control"
+                                       placeholder="300 123 4567"
+                                       [class.is-invalid]="clientForm.get('telefono')?.invalid && clientForm.get('telefono')?.touched">
+                                <div *ngIf="clientForm.get('telefono')?.invalid && clientForm.get('telefono')?.touched" class="invalid-feedback">
+                                    El teléfono es requerido.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dirección -->
                     <div class="mb-3">
-                        <label for="direccion" class="form-label">Dirección</label>
-                        <textarea id="direccion" formControlName="direccion" class="form-control" rows="3"></textarea>
+                        <label for="direccion" class="form-label">Dirección Física <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+                            <input type="text" id="direccion" formControlName="direccion" class="form-control"
+                                   placeholder="Calle, Carrera, Número..."
+                                   [class.is-invalid]="clientForm.get('direccion')?.invalid && clientForm.get('direccion')?.touched">
+                            <div *ngIf="clientForm.get('direccion')?.invalid && clientForm.get('direccion')?.touched" class="invalid-feedback">
+                                La dirección es requerida.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Autorización Datos -->
+                    <div class="authorize-box mt-4" *ngIf="!isEditMode">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" formControlName="autorizaDatos" id="autorizaDatos">
+                            <label class="form-check-label" for="autorizaDatos">
+                                El cliente autoriza el tratamiento de datos personales según la política de privacidad.
+                            </label>
+                        </div>
+                        <div *ngIf="clientForm.get('autorizaDatos')?.invalid && clientForm.get('autorizaDatos')?.touched" class="text-danger small mt-1">
+                            <i class="bi bi-exclamation-circle me-1"></i>Debe aceptar el tratamiento de datos para continuar.
+                        </div>
                     </div>
                 </form>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="cancel()">Cancelar</button>
-                <button type="button" class="btn btn-primary" (click)="saveClient()" [disabled]="clientForm.invalid">Guardar</button>
+
+            <!-- Footer -->
+            <div class="client-modal-footer">
+                <button type="button" class="btn btn-cancel" (click)="cancel()">
+                    <i class="bi bi-x-circle me-1"></i>Cancelar
+                </button>
+                <button type="button" class="btn btn-save-client" (click)="saveClient()" [disabled]="clientForm.invalid">
+                    <i class="bi me-1" [ngClass]="isEditMode ? 'bi-check-circle' : 'bi-floppy'"></i>
+                    {{ isEditMode ? 'Actualizar Cliente' : 'Guardar Cliente' }}
+                </button>
             </div>
         </div>
     </div>

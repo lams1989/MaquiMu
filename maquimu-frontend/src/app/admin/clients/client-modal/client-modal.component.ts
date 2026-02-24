@@ -30,11 +30,13 @@ export class ClientModalComponent implements OnInit {
 
   initializeForm(): void {
     this.clientForm = this.fb.group({
+      tipoCliente: ['JURIDICA'],
       nombreCliente: [this.cliente?.nombreCliente || '', Validators.required],
       identificacion: [this.cliente?.identificacion || '', Validators.required],
-      telefono: [this.cliente?.telefono || ''],
+      telefono: [this.cliente?.telefono || '', Validators.required],
       email: [this.cliente?.email || '', [Validators.required, Validators.email]],
-      direccion: [this.cliente?.direccion || '']
+      direccion: [this.cliente?.direccion || '', Validators.required],
+      autorizaDatos: [this.isEditMode ? true : false, Validators.requiredTrue]
     });
   }
 

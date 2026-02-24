@@ -10,10 +10,14 @@ export class AuthInterceptor implements HttpInterceptor {
 
   constructor(private authService: AuthService) {}
 
+  private isAuthEndpoint(url: string): boolean {
+    return url.includes('/api/maquimu/v1/auth/');
+  }
+
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token = this.authService.getToken();
 
-    if (token) {
+    if (token && !this.isAuthEndpoint(request.url)) {
       request = request.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`

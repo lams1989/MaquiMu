@@ -17,6 +17,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -139,6 +140,42 @@ class JwtAuthenticationFilterTest {
 
         verify(generadorJwt, never()).extraerEmail(anyString());
         verify(userDetailsService, never()).loadUserByUsername(anyString());
+        verify(filterChain).doFilter(request, response);
+    }
+
+    @Test
+    void doFilterInternal_enEndpointAuth_deberiaOmitirFiltro() throws ServletException, IOException {
+        // Arrange
+        when(request.getRequestURI()).thenReturn("/api/maquimu/v1/auth/register");
+        when(request.getHeader("Authorization")).thenReturn("Bearer token");
+
+        // Act
+        jwtAuthenticationFilter.doFilter(request, response, filterChain);
+
+        // Assert
+        verify(generadorJwt, never()).extraerEmail(anyString());
+        verify(userDetailsService, never()).loadUserByUsername(anyString());
+        verify(filterChain).doFilter(request, response);
+    }
+
+    @Test
+    void doFilterInternal_conUsuarioNoEncontrado_noDeberiaLanzarExcepcion() throws ServletException, IOException {
+        // Arrange
+        String token = "valid.jwt.token";
+        String email = "inexistente@maquimu.com";
+
+        when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
+        when(generadorJwt.extraerEmail(token)).thenReturn(email);
+        when(userDetailsService.loadUserByUsername(email))
+                .thenThrow(new UsernameNotFoundException("Usuario no encontrado"));
+
+        // Act
+        assertDoesNotThrow(() -> jwtAuthenticationFilter.doFilterInternal(request, response, filterChain));
+
+        // Assert
+        assertNull(SecurityContextHolder.getContext().getAuthentication());
+        verify(generadorJwt).extraerEmail(token);
+        verify(userDetailsService).loadUserByUsername(email);
         verify(filterChain).doFilter(request, response);
     }
 }

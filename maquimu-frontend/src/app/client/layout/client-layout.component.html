@@ -11,6 +11,13 @@
     </div>
     <div class="navbar-actions">
         <app-notification-dropdown></app-notification-dropdown>
+        <div class="nav-divider d-none d-sm-block"></div>
+        <div class="user-pill d-none d-sm-flex">
+            <div class="user-avatar-pro">
+                <span>{{ (currentUser?.nombreCompleto || 'U').charAt(0) }}</span>
+            </div>
+            <span class="user-name">{{ currentUser?.nombreCompleto || 'Usuario' }}</span>
+        </div>
         <!-- Mobile menu button -->
         <button *ngIf="showSidebar" class="nav-action-btn d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#clientSidebarMobile">
             <i class="bi bi-list"></i>

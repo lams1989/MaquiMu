@@ -1,4 +1,167 @@
-/* Styles for MachineModalComponent */
-.modal {
-  background-color: rgba(0, 0, 0, 0.5);
+/* ============================================
+   Machine Modal — Modern Pro
+   ============================================ */
+
+.modal-backdrop {
+  backdrop-filter: blur(4px);
+}
+
+.machine-modal-card {
+  border: none;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+}
+
+/* — Header — */
+.machine-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 2rem;
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+  color: #f8fafc;
+}
+
+.header-icon {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  font-size: 1.15rem;
+  color: #93c5fd;
+}
+
+.modal-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.modal-subtitle {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 2px;
+}
+
+.btn-close-modal {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 200ms ease;
+  font-size: 0.9rem;
+}
+
+.btn-close-modal:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+/* — Body — */
+.machine-modal-body {
+  padding: 2rem;
+}
+
+.machine-modal-body .form-label {
+  font-size: 0.835rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.4rem;
+}
+
+.machine-modal-body .form-control,
+.machine-modal-body .form-select {
+  border-radius: 8px;
+  border: 1.5px solid #e2e8f0;
+  padding: 0.55rem 0.8rem;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.machine-modal-body .form-control:focus,
+.machine-modal-body .form-select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+.machine-modal-body .input-group-text {
+  background: #f1f5f9;
+  border: 1.5px solid #e2e8f0;
+  border-right: none;
+  color: #64748b;
+  font-size: 0.9rem;
+  border-radius: 8px 0 0 8px;
+}
+
+.machine-modal-body .input-group .form-control,
+.machine-modal-body .input-group .form-select {
+  border-left: none;
+  border-radius: 0 8px 8px 0;
+}
+
+.machine-modal-body .input-group .form-control:focus,
+.machine-modal-body .input-group .form-select:focus {
+  border-color: #3b82f6;
+}
+
+/* — Footer — */
+.machine-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1.25rem 2rem;
+  border-top: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.btn-cancel {
+  padding: 0.5rem 1.25rem;
+  border: 1.5px solid #e2e8f0;
+  background: #fff;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 0.85rem;
+  border-radius: 8px;
+  transition: all 200ms ease;
+}
+
+.btn-cancel:hover {
+  background: #f1f5f9;
+  color: #334155;
+  border-color: #cbd5e1;
+}
+
+.btn-save-machine {
+  padding: 0.5rem 1.5rem;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  border: none;
+  border-radius: 8px;
+  transition: all 200ms ease;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+}
+
+.btn-save-machine:hover:not(:disabled) {
+  background: linear-gradient(135deg, #d97706, #b45309);
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+  transform: translateY(-1px);
+}
+
+.btn-save-machine:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
 }

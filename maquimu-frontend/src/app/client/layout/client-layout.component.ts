@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { filter } from 'rxjs/operators';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { NotificationDropdownComponent } from '../../shared/notification-dropdown/notification-dropdown.component';
+import { Usuario } from '../../core/models/auth/login-register.models';
 
 @Component({
   selector: 'app-client-layout',
@@ -14,6 +15,7 @@ import { NotificationDropdownComponent } from '../../shared/notification-dropdow
 })
 export class ClientLayoutComponent implements OnInit {
   showSidebar = true;
+  currentUser: Usuario | null = null;
 
   constructor(
     private authService: AuthService,
@@ -21,6 +23,9 @@ export class ClientLayoutComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.authService.currentUser.subscribe(user => {
+      this.currentUser = user;
+    });
     this.checkRoute(this.router.url);
     this.router.events
       .pipe(filter(e => e instanceof NavigationEnd))
