@@ -1,10 +1,10 @@
+import { ActualizarMaquinariaRequest, CrearMaquinariaRequest, Maquinaria } from '@core/models/maquinaria.model';
+import { CommonModule } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MachineModalComponent } from '@app/admin/inventory/machine-modal/machine-modal.component';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { MaquinariaService } from '@core/services/maquinaria.service';
-import { Maquinaria, CrearMaquinariaRequest, ActualizarMaquinariaRequest } from '@core/models/maquinaria.model';
 import { of, throwError } from 'rxjs';
-import { CommonModule } from '@angular/common'; // Import CommonModule
 
 describe('MachineModalComponent', () => {
   let component: MachineModalComponent;
@@ -100,7 +100,7 @@ describe('MachineModalComponent', () => {
 
   it('should handle creation error', () => {
     const createRequest: CrearMaquinariaRequest = { nombreEquipo: 'Nueva Maquinaria', marca: 'MarcaX', modelo: 'ModeloY', serial: 'NEW001', tarifaPorDia: 50, tarifaPorHora: 5 };
-    maquinariaServiceSpy.createMaquinaria.and.returnValue(throwError(() => new Error('Error de creación')));
+    maquinariaServiceSpy.createMaquinaria.and.returnValue(throwError(() => ({ error: { message: 'Ya existe un registro con la información proporcionada' } })));
     component.maquinaria = null;
     component.ngOnInit();
     component.machineForm.patchValue(createRequest);
@@ -108,13 +108,15 @@ describe('MachineModalComponent', () => {
 
     component.saveMachine();
 
-    expect(console.error).toHaveBeenCalledWith('Error al crear maquinaria', jasmine.any(Error));
+    expect(component.errorMessage).toBe('Ya existe un registro con la información proporcionada');
+    expect(component.isSubmitting).toBeFalse();
+    expect(console.error).toHaveBeenCalled();
     expect(maquinariaServiceSpy.createMaquinaria).toHaveBeenCalled();
   });
 
   it('should handle update error', () => {
     const updateRequest: ActualizarMaquinariaRequest = { nombreEquipo: 'Excavadora Actualizada' };
-    maquinariaServiceSpy.updateMaquinaria.and.returnValue(throwError(() => new Error('Error de actualización')));
+    maquinariaServiceSpy.updateMaquinaria.and.returnValue(throwError(() => ({ error: { message: 'No se pudo actualizar la maquinaria' } })));
     component.maquinaria = mockMaquinaria;
     component.ngOnInit();
     component.machineForm.patchValue(updateRequest);
@@ -122,7 +124,9 @@ describe('MachineModalComponent', () => {
 
     component.saveMachine();
 
-    expect(console.error).toHaveBeenCalledWith('Error al actualizar maquinaria', jasmine.any(Error));
+    expect(component.errorMessage).toBe('No se pudo actualizar la maquinaria');
+    expect(component.isSubmitting).toBeFalse();
+    expect(console.error).toHaveBeenCalled();
     expect(maquinariaServiceSpy.updateMaquinaria).toHaveBeenCalled();
   });
 });

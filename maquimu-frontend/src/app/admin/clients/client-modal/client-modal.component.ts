@@ -17,6 +17,7 @@ export class ClientModalComponent implements OnInit {
 
   clientForm!: FormGroup;
   isEditMode: boolean = false;
+  errorMessage: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -46,6 +47,8 @@ export class ClientModalComponent implements OnInit {
       return;
     }
 
+    this.errorMessage = '';
+
     const formValue = this.clientForm.getRawValue();
 
     if (this.isEditMode && this.cliente) {
@@ -63,9 +66,7 @@ export class ClientModalComponent implements OnInit {
         },
         error: (error: any) => {
           console.error('Error al actualizar cliente', error);
-          if (error.error?.message) {
-            alert(error.error.message);
-          }
+          this.errorMessage = error.error?.message || 'No se pudo actualizar el cliente. Intente nuevamente.';
         }
       });
     } else {
@@ -83,9 +84,7 @@ export class ClientModalComponent implements OnInit {
         },
         error: (error: any) => {
           console.error('Error al crear cliente', error);
-          if (error.error?.message) {
-            alert(error.error.message);
-          }
+          this.errorMessage = error.error?.message || 'No se pudo crear el cliente. Intente nuevamente.';
         }
       });
     }

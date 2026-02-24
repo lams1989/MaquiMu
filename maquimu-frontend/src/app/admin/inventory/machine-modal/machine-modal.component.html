@@ -22,6 +22,10 @@
 
             <!-- Body -->
             <div class="machine-modal-body">
+                <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ errorMessage }}
+                </div>
+
                 <form [formGroup]="machineForm">
                     <div class="row">
                         <!-- Nombre del Equipo -->
@@ -138,7 +142,7 @@
                 <button type="button" class="btn btn-cancel" (click)="cancel()">
                     <i class="bi bi-x-circle me-1"></i>Cancelar
                 </button>
-                <button type="button" class="btn btn-save-machine" (click)="saveMachine()" [disabled]="machineForm.invalid">
+                <button type="button" class="btn btn-save-machine" (click)="saveMachine()" [disabled]="machineForm.invalid || isSubmitting">
                     <i class="bi me-1" [ngClass]="isEditMode ? 'bi-check-circle' : 'bi-floppy'"></i>
                     {{ isEditMode ? 'Actualizar Maquinaria' : 'Guardar Maquinaria' }}
                 </button>

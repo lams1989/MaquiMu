@@ -1,8 +1,8 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { ActualizarMaquinariaRequest, CrearMaquinariaRequest, Maquinaria } from '../../../core/models/maquinaria.model';
+import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MaquinariaService } from '../../../core/services/maquinaria.service';
-import { Maquinaria, CrearMaquinariaRequest, ActualizarMaquinariaRequest } from '../../../core/models/maquinaria.model';
-import { CommonModule } from '@angular/common'; // Import CommonModule
 
 @Component({
   selector: 'app-machine-modal',
@@ -17,6 +17,8 @@ export class MachineModalComponent implements OnInit {
 
   machineForm!: FormGroup;
   isEditMode: boolean = false;
+  isSubmitting: boolean = false;
+  errorMessage: string = '';
   estadosMaquinaria = ['DISPONIBLE', 'ALQUILADO', 'EN_MANTENIMIENTO'];
 
   constructor(
@@ -52,6 +54,9 @@ export class MachineModalComponent implements OnInit {
       return;
     }
 
+    this.errorMessage = '';
+    this.isSubmitting = true;
+
     const formValue = this.machineForm.getRawValue();
 
     if (this.isEditMode && this.maquinaria) {
@@ -68,11 +73,13 @@ export class MachineModalComponent implements OnInit {
       this.maquinariaService.updateMaquinaria(this.maquinaria.maquinariaId, updateRequest).subscribe({
         next: () => {
           console.log('Maquinaria actualizada exitosamente');
+          this.isSubmitting = false;
           this.close.emit();
         },
         error: (error: any) => {
+          this.isSubmitting = false;
+          this.errorMessage = this.obtenerMensajeError(error, 'No se pudo actualizar la maquinaria. Intente nuevamente.');
           console.error('Error al actualizar maquinaria', error);
-          // Handle specific errors like serial duplication
         }
       });
     } else {
@@ -88,11 +95,13 @@ export class MachineModalComponent implements OnInit {
       this.maquinariaService.createMaquinaria(createRequest).subscribe({
         next: () => {
           console.log('Maquinaria creada exitosamente');
+          this.isSubmitting = false;
           this.close.emit();
         },
         error: (error: any) => {
+          this.isSubmitting = false;
+          this.errorMessage = this.obtenerMensajeError(error, 'No se pudo registrar la maquinaria. Intente nuevamente.');
           console.error('Error al crear maquinaria', error);
-          // Handle specific errors like serial duplication
         }
       });
     }
@@ -100,5 +109,9 @@ export class MachineModalComponent implements OnInit {
 
   cancel(): void {
     this.close.emit();
+  }
+
+  private obtenerMensajeError(error: any, mensajePorDefecto: string): string {
+    return error?.error?.message || error?.message || mensajePorDefecto;
   }
 }
