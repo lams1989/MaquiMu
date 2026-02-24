@@ -66,4 +66,14 @@ public class AlquilerDaoJpa implements AlquilerDao {
                 .map(AlquilerEntity::toAlquiler)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public long contarPorEstado(EstadoAlquiler estado) {
+        return jpaAlquilerRepository.countByEstado(estado);
+    }
+
+    @Override
+    public long contarPorClienteYEstado(Long clienteId, EstadoAlquiler estado) {
+        return jpaAlquilerRepository.countByClienteClienteIdAndEstado(clienteId, estado);
+    }
 }

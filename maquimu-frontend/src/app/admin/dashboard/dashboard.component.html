@@ -9,15 +9,31 @@
 
         <!-- Dashboard Content -->
         <div class="container-fluid p-4">
-            <div class="row g-4 mb-4">
-                <!-- KPI Cards -->
+
+            <!-- Loading -->
+            <div *ngIf="loading" class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+                <p class="mt-2 text-muted">Cargando estadísticas...</p>
+            </div>
+
+            <!-- Error -->
+            <div *ngIf="errorMessage && !loading" class="alert alert-danger d-flex align-items-center" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <div>{{ errorMessage }}</div>
+                <button class="btn btn-sm btn-outline-danger ms-auto" (click)="cargarStats()">Reintentar</button>
+            </div>
+
+            <!-- KPI Cards -->
+            <div *ngIf="!loading && stats" class="row g-4 mb-4">
                 <div class="col-md-4">
                     <div class="card kpi-card shadow-sm p-3">
                         <div class="d-flex align-items-center">
                             <i class="bi bi-truck-front me-3 card-icon"></i>
                             <div>
                                 <small class="text-muted">Maquinaria Disponible</small>
-                                <h3 class="fw-bold text-success">12</h3>
+                                <h3 class="fw-bold text-success">{{ stats.maquinariaDisponible }}</h3>
                             </div>
                         </div>
                     </div>
@@ -28,7 +44,7 @@
                             <i class="bi bi-journal-check me-3 card-icon"></i>
                             <div>
                                 <small class="text-muted">Alquileres Activos</small>
-                                <h3 class="fw-bold text-primary">5</h3>
+                                <h3 class="fw-bold text-primary">{{ stats.alquileresActivos }}</h3>
                             </div>
                         </div>
                     </div>
@@ -39,57 +55,48 @@
                             <i class="bi bi-receipt me-3 card-icon"></i>
                             <div>
                                 <small class="text-muted">Facturas Pendientes</small>
-                                <h3 class="fw-bold text-warning">8</h3>
+                                <h3 class="fw-bold text-warning">{{ stats.facturasPendientes }}</h3>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Activity Table -->
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-white">
-                    <h5 class="mb-0">Actividad Reciente</h5>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead class="bg-light">
-                                <tr>
-                                    <th class="ps-4">Tipo</th>
-                                    <th>Descripción</th>
-                                    <th>Fecha</th>
-                                    <th>Usuario</th>
-                                    <th class="text-end pe-4">Acción</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="ps-4"><span class="badge bg-primary">Alquiler</span></td>
-                                    <td>Nuevo contrato para Excavadora con Cliente X</td>
-                                    <td>Hace 5 mins</td>
-                                    <td>Juan Pérez</td>
-                                    <td class="text-end pe-4"><button
-                                            class="btn btn-sm btn-outline-primary">Ver</button></td>
-                                </tr>
-                                <tr>
-                                    <td class="ps-4"><span class="badge bg-success">Factura</span></td>
-                                    <td>Factura #00125 marcada como pagada</td>
-                                    <td>Hace 1 hora</td>
-                                    <td>María Gómez</td>
-                                    <td class="text-end pe-4"><button
-                                            class="btn btn-sm btn-outline-primary">Ver</button></td>
-                                </tr>
-                                <tr>
-                                    <td class="ps-4"><span class="badge bg-info text-dark">Inventario</span></td>
-                                    <td>Máquina 'Bulldozer D6' registrada</td>
-                                    <td>Hace 3 horas</td>
-                                    <td>Juan Pérez</td>
-                                    <td class="text-end pe-4"><button
-                                            class="btn btn-sm btn-outline-primary">Ver</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
+            <!-- Accesos rápidos -->
+            <div *ngIf="!loading && stats" class="row g-4">
+                <div class="col-12">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0"><i class="bi bi-lightning me-2"></i>Accesos Rápidos</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-3">
+                                    <a routerLink="/admin/inventory" class="btn btn-outline-success w-100 py-3">
+                                        <i class="bi bi-truck-front d-block mb-1 fs-4"></i>
+                                        Inventario
+                                    </a>
+                                </div>
+                                <div class="col-md-3">
+                                    <a routerLink="/admin/rentals" class="btn btn-outline-primary w-100 py-3">
+                                        <i class="bi bi-journal-check d-block mb-1 fs-4"></i>
+                                        Alquileres
+                                    </a>
+                                </div>
+                                <div class="col-md-3">
+                                    <a routerLink="/admin/financial" class="btn btn-outline-warning w-100 py-3">
+                                        <i class="bi bi-receipt d-block mb-1 fs-4"></i>
+                                        Finanzas
+                                    </a>
+                                </div>
+                                <div class="col-md-3">
+                                    <a routerLink="/admin/clients" class="btn btn-outline-info w-100 py-3">
+                                        <i class="bi bi-people d-block mb-1 fs-4"></i>
+                                        Clientes
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

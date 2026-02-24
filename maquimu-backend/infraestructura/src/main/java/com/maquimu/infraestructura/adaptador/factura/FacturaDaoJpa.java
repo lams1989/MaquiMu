@@ -57,4 +57,9 @@ public class FacturaDaoJpa implements FacturaDao {
     public long contarPorEstadoPago(EstadoPago estadoPago) {
         return jpaFacturaRepository.countByEstadoPago(estadoPago);
     }
+
+    @Override
+    public long contarPorClienteYEstadoPago(Long clienteId, EstadoPago estadoPago) {
+        return jpaFacturaRepository.countByCliente_ClienteIdAndEstadoPago(clienteId, estadoPago);
+    }
 }

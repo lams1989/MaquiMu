@@ -48,4 +48,14 @@ public interface AlquilerDao {
      * Lista los alquileres filtrados por estado.
      */
     List<Alquiler> listarPorEstado(EstadoAlquiler estado);
+
+    /**
+     * Cuenta los alquileres por estado.
+     */
+    long contarPorEstado(EstadoAlquiler estado);
+
+    /**
+     * Cuenta los alquileres de un cliente específico filtrados por estado.
+     */
+    long contarPorClienteYEstado(Long clienteId, EstadoAlquiler estado);
 }

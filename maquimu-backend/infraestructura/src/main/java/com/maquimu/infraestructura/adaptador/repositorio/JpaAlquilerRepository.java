@@ -45,4 +45,8 @@ public interface JpaAlquilerRepository extends JpaRepository<AlquilerEntity, Lon
     );
 
     List<AlquilerEntity> findByEstado(EstadoAlquiler estado);
+
+    long countByEstado(EstadoAlquiler estado);
+
+    long countByClienteClienteIdAndEstado(Long clienteId, EstadoAlquiler estado);
 }

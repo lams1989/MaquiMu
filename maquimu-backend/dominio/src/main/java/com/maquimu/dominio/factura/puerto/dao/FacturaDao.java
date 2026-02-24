@@ -16,4 +16,9 @@ public interface FacturaDao {
     List<Factura> buscarPorClienteId(Long clienteId);
     List<Factura> listarPorEstadoPago(EstadoPago estadoPago);
     long contarPorEstadoPago(EstadoPago estadoPago);
+
+    /**
+     * Cuenta las facturas de un cliente específico filtradas por estado de pago.
+     */
+    long contarPorClienteYEstadoPago(Long clienteId, EstadoPago estadoPago);
 }

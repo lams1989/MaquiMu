@@ -14,4 +14,6 @@ public interface JpaFacturaRepository extends JpaRepository<FacturaEntity, Long>
     List<FacturaEntity> findByCliente_ClienteId(Long clienteId);
     List<FacturaEntity> findByEstadoPago(EstadoPago estadoPago);
     long countByEstadoPago(EstadoPago estadoPago);
+
+    long countByCliente_ClienteIdAndEstadoPago(Long clienteId, EstadoPago estadoPago);
 }
