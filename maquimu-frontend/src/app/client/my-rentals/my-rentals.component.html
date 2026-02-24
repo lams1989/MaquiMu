@@ -1,0 +1,169 @@
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold mb-0">
+      <i class="bi bi-clock-history me-2"></i>Mis Alquileres
+    </h2>
+    <button class="btn btn-outline-primary btn-sm" (click)="cargarAlquileres()" [disabled]="loading">
+      <i class="bi bi-arrow-clockwise me-1"></i>Actualizar
+    </button>
+  </div>
+
+  <!-- Filtro por estado -->
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-body py-3">
+      <div class="row align-items-center">
+        <div class="col-md-4">
+          <label for="filtroEstado" class="form-label fw-semibold mb-1">Filtrar por estado</label>
+          <select id="filtroEstado" class="form-select" [(ngModel)]="filtroEstado" (ngModelChange)="aplicarFiltro()">
+            <option *ngFor="let e of estados" [ngValue]="e.value">{{ e.label }}</option>
+          </select>
+        </div>
+        <div class="col-md-8 text-end mt-3 mt-md-0">
+          <span class="text-muted">
+            Mostrando <strong>{{ alquileresFiltrados.length }}</strong> de <strong>{{ alquileres.length }}</strong> alquileres
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="mt-2 text-muted">Cargando tus alquileres...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="errorMessage && !loading" class="alert alert-danger d-flex align-items-center" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    <div>{{ errorMessage }}</div>
+  </div>
+
+  <!-- Sin alquileres -->
+  <div *ngIf="!loading && !errorMessage && alquileres.length === 0" class="text-center py-5">
+    <i class="bi bi-inbox display-1 text-muted"></i>
+    <h5 class="mt-3 text-muted">No tienes alquileres registrados</h5>
+    <p class="text-muted">Cuando solicites un alquiler, aparecerá aquí.</p>
+    <a routerLink="/client/request-rental" class="btn btn-primary">
+      <i class="bi bi-plus-circle me-1"></i>Solicitar Alquiler
+    </a>
+  </div>
+
+  <!-- Sin resultados con filtro -->
+  <div *ngIf="!loading && !errorMessage && alquileres.length > 0 && alquileresFiltrados.length === 0" class="text-center py-5">
+    <i class="bi bi-funnel display-4 text-muted"></i>
+    <h5 class="mt-3 text-muted">No hay alquileres con este estado</h5>
+    <button class="btn btn-outline-secondary btn-sm mt-2" (click)="filtroEstado = ''; aplicarFiltro()">
+      Limpiar filtro
+    </button>
+  </div>
+
+  <!-- Tabla de alquileres -->
+  <div *ngIf="!loading && !errorMessage && alquileresFiltrados.length > 0" class="card shadow-sm border-0">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0 align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>#</th>
+            <th>Maquinaria ID</th>
+            <th>Fecha Inicio</th>
+            <th>Fecha Fin</th>
+            <th>Costo Total</th>
+            <th>Estado</th>
+            <th class="text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let alquiler of alquileresFiltrados">
+            <td><strong>{{ alquiler.alquilerId }}</strong></td>
+            <td>
+              <i class="bi bi-truck me-1 text-muted"></i>{{ alquiler.maquinariaId }}
+            </td>
+            <td>{{ alquiler.fechaInicio | date:'dd/MM/yyyy' }}</td>
+            <td>{{ alquiler.fechaFin | date:'dd/MM/yyyy' }}</td>
+            <td class="fw-semibold">{{ formatCurrency(alquiler.costoTotal) }}</td>
+            <td>
+              <span class="badge rounded-pill" [ngClass]="getBadgeClass(alquiler.estado)">
+                {{ alquiler.estado }}
+              </span>
+            </td>
+            <td class="text-center">
+              <button class="btn btn-sm btn-outline-primary"
+                      (click)="verDetalle(alquiler.alquilerId!)"
+                      data-bs-toggle="modal" data-bs-target="#detalleModal">
+                <i class="bi bi-eye me-1"></i>Detalle
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Detalle -->
+<div class="modal fade" id="detalleModal" tabindex="-1" aria-labelledby="detalleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="detalleModalLabel">
+          <i class="bi bi-file-earmark-text me-2"></i>
+          Detalle del Alquiler
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar" (click)="cerrarDetalle()"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Loading -->
+        <div *ngIf="loadingDetalle" class="text-center py-4">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+          </div>
+        </div>
+
+        <div *ngIf="!loadingDetalle && alquilerDetalle">
+          <div class="row g-3">
+            <div class="col-6">
+              <label class="form-label text-muted small mb-0">ID Alquiler</label>
+              <p class="fw-bold mb-0">{{ alquilerDetalle.alquilerId }}</p>
+            </div>
+            <div class="col-6">
+              <label class="form-label text-muted small mb-0">Estado</label>
+              <p class="mb-0">
+                <span class="badge rounded-pill" [ngClass]="getBadgeClass(alquilerDetalle.estado)">
+                  {{ alquilerDetalle.estado }}
+                </span>
+              </p>
+            </div>
+            <div class="col-6">
+              <label class="form-label text-muted small mb-0">Maquinaria ID</label>
+              <p class="fw-bold mb-0">{{ alquilerDetalle.maquinariaId }}</p>
+            </div>
+            <div class="col-6">
+              <label class="form-label text-muted small mb-0">Costo Total</label>
+              <p class="fw-bold text-success mb-0">{{ formatCurrency(alquilerDetalle.costoTotal) }}</p>
+            </div>
+            <div class="col-6">
+              <label class="form-label text-muted small mb-0">Fecha Inicio</label>
+              <p class="fw-bold mb-0">{{ alquilerDetalle.fechaInicio | date:'dd/MM/yyyy' }}</p>
+            </div>
+            <div class="col-6">
+              <label class="form-label text-muted small mb-0">Fecha Fin</label>
+              <p class="fw-bold mb-0">{{ alquilerDetalle.fechaFin | date:'dd/MM/yyyy' }}</p>
+            </div>
+            <div class="col-12" *ngIf="alquilerDetalle.motivoRechazo">
+              <label class="form-label text-muted small mb-0">Motivo de Rechazo</label>
+              <div class="alert alert-danger py-2 mb-0">
+                <i class="bi bi-exclamation-circle me-1"></i>{{ alquilerDetalle.motivoRechazo }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="cerrarDetalle()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>

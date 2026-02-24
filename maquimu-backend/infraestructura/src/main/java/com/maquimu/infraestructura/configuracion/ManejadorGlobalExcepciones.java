@@ -23,6 +23,11 @@ public class ManejadorGlobalExcepciones {
         return construirRespuesta(HttpStatus.UNAUTHORIZED, "Credenciales inválidas");
     }
 
+    @ExceptionHandler(SecurityException.class)
+    public ResponseEntity<Map<String, Object>> manejarSecurityException(SecurityException ex) {
+        return construirRespuesta(HttpStatus.FORBIDDEN, ex.getMessage());
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> manejarExcepcionGeneral(Exception ex) {
         return construirRespuesta(HttpStatus.INTERNAL_SERVER_ERROR, "Error interno del servidor");

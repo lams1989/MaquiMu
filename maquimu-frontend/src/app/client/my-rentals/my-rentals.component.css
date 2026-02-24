@@ -1,0 +1,21 @@
+/* Mis Alquileres - Estilos */
+
+.table th {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #6c757d;
+}
+
+.badge.rounded-pill {
+  font-size: 0.78rem;
+  padding: 0.35em 0.75em;
+}
+
+.modal-header.bg-primary {
+  border-bottom: none;
+}
+
+.btn-close-white {
+  filter: brightness(0) invert(1);
+}

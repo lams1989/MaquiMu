@@ -58,6 +58,22 @@ export class AlquilerService {
     return this.http.get<Alquiler>(`${this.apiUrl}/alquileres/${id}`);
   }
 
+  // ===== HU 08: Consultar Alquileres (Cliente) =====
+
+  /**
+   * Obtiene los alquileres del cliente autenticado (JWT)
+   */
+  getMisAlquileres(): Observable<Alquiler[]> {
+    return this.http.get<Alquiler[]>(`${this.apiUrl}/alquileres/mis-alquileres`);
+  }
+
+  /**
+   * Obtiene el detalle de un alquiler del cliente autenticado con validación de propiedad
+   */
+  getMiAlquilerDetalle(id: number): Observable<Alquiler> {
+    return this.http.get<Alquiler>(`${this.apiUrl}/alquileres/mis-alquileres/${id}`);
+  }
+
   /**
    * Aprueba un alquiler pendiente
    */
