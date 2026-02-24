@@ -1,13 +1,14 @@
 import { AuthService } from '../../core/services/auth/auth.service';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { NotificationDropdownComponent } from '../notification-dropdown/notification-dropdown.component';
 import { RouterModule } from '@angular/router';
 import { Usuario } from '../../core/models/auth/login-register.models';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, NotificationDropdownComponent],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })

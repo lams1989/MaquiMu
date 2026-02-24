@@ -82,14 +82,14 @@ describe('RoleGuard', () => {
   it('should handle routes without role requirements', () => {
     routeSnapshot.data['roles'] = [];
     authService.getUserRole.and.returnValue('OPERARIO');
+    const mockUrlTree = {} as UrlTree;
+    router.createUrlTree.and.returnValue(mockUrlTree);
 
     const result = guard.canActivate(routeSnapshot, stateSnapshot);
 
-    // If no roles specified (empty array), includes() will always return false,
-    // so it should redirect to forbidden
-    const mockUrlTree = {} as UrlTree;
-    router.createUrlTree.and.returnValue(mockUrlTree);
-    expect(result).toBe(true); // Actually, with empty array it won't match, let me check the guard logic
+    // Empty array: includes() always returns false → redirect to forbidden
+    expect(result).toBe(mockUrlTree);
+    expect(router.createUrlTree).toHaveBeenCalledWith(['/forbidden']);
   });
 
   it('should be case-sensitive with roles', () => {

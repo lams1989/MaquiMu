@@ -1,11 +1,13 @@
+import { By } from '@angular/platform-browser';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { DebugElement } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { InventoryComponent } from '@app/admin/inventory/inventory/inventory.component';
+import { MachineModalComponent } from '@app/admin/inventory/machine-modal/machine-modal.component';
+import { Maquinaria } from '@core/models/maquinaria.model';
 import { MaquinariaService } from '@core/services/maquinaria.service';
 import { of } from 'rxjs';
-import { Maquinaria } from '@core/models/maquinaria.model';
-import { DebugElement } from '@angular/core';
-import { By } from '@angular/platform-browser';
-import { MachineModalComponent } from '@app/admin/inventory/machine-modal/machine-modal.component';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('InventoryComponent', () => {
   let component: InventoryComponent;
@@ -23,7 +25,7 @@ describe('InventoryComponent', () => {
     maquinariaServiceSpy.deleteMaquinaria.and.returnValue(of(void 0)); // For delete operation
 
     await TestBed.configureTestingModule({
-      imports: [InventoryComponent, MachineModalComponent], // Import standalone component
+      imports: [InventoryComponent, MachineModalComponent, HttpClientTestingModule, RouterTestingModule],
       providers: [
         { provide: MaquinariaService, useValue: maquinariaServiceSpy }
       ]
@@ -82,7 +84,7 @@ describe('InventoryComponent', () => {
     expect(tableRows.length).toBe(mockMaquinarias.length);
 
     const firstRowColumns: DebugElement[] = tableRows[0].queryAll(By.css('td'));
-    expect(firstRowColumns[0].nativeElement.textContent).toContain(mockMaquinarias[0].nombreEquipo);
-    expect(firstRowColumns[1].nativeElement.textContent).toContain(mockMaquinarias[0].marca);
+    expect(firstRowColumns[1].nativeElement.textContent).toContain(mockMaquinarias[0].nombreEquipo);
+    expect(firstRowColumns[2].nativeElement.textContent).toContain(mockMaquinarias[0].marca);
   });
 });

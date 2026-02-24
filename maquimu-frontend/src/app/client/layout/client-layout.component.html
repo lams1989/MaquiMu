@@ -1,41 +1,54 @@
 <!-- Header -->
-<nav class="navbar client-header px-4 py-2">
-    <a routerLink="/client/portal" class="navbar-brand d-flex align-items-center text-white text-decoration-none">
-        <div class="brand-logo-wrapper me-2">
-            <img src="assets/images/mu.png" alt="MaquiMu" height="28">
-        </div>
-        <span class="fw-bold fs-5">MaquiMu</span>
-        <span class="client-badge ms-2">CLIENTE</span>
-    </a>
-    <div class="d-flex align-items-center gap-2">
-        <!-- Mobile menu button (solo cuando hay sidebar) -->
-        <button *ngIf="showSidebar" class="btn btn-logout btn-sm d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#clientSidebarMobile">
+<nav class="navbar-pro">
+    <div class="navbar-brand-section">
+        <a routerLink="/client/portal" class="brand-link">
+            <div class="brand-logo">
+                <img src="assets/images/mu.png" alt="MaquiMu" height="22">
+            </div>
+            <span class="brand-name">MaquiMu</span>
+        </a>
+        <span class="role-chip role-chip-client">Cliente</span>
+    </div>
+    <div class="navbar-actions">
+        <app-notification-dropdown></app-notification-dropdown>
+        <!-- Mobile menu button -->
+        <button *ngIf="showSidebar" class="nav-action-btn d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#clientSidebarMobile">
             <i class="bi bi-list"></i>
         </button>
-        <button class="btn btn-logout btn-sm" (click)="logout()" title="Cerrar Sesión">
-            <i class="bi bi-box-arrow-right me-1"></i>Salir
+        <button class="nav-action-btn nav-logout" (click)="logout()" title="Cerrar Sesión">
+            <i class="bi bi-power"></i>
         </button>
     </div>
 </nav>
 
 <div class="d-flex">
-    <!-- Sidebar Cliente (oculto en portal/dashboard) -->
-    <div *ngIf="showSidebar" class="sidebar d-none d-md-block text-white">
-        <nav class="sidebar-nav">
+    <!-- Sidebar Cliente -->
+    <aside *ngIf="showSidebar" class="sidebar-pro d-none d-md-flex">
+        <div class="sidebar-menu">
+            <div class="sidebar-section-label">Navegación</div>
             <a routerLink="/client/portal" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-                <i class="bi bi-grid-1x2 me-2"></i>Inicio
+                <div class="sidebar-icon si-blue"><i class="bi bi-grid-1x2-fill"></i></div>
+                <span>Inicio</span>
             </a>
             <a routerLink="/client/request-rental" routerLinkActive="active">
-                <i class="bi bi-calendar-plus me-2"></i>Solicitar Alquiler
+                <div class="sidebar-icon si-emerald"><i class="bi bi-calendar-plus-fill"></i></div>
+                <span>Solicitar Alquiler</span>
             </a>
+
+            <div class="sidebar-section-label">Mis Registros</div>
             <a routerLink="/client/my-rentals" routerLinkActive="active">
-                <i class="bi bi-journal-text me-2"></i>Mis Alquileres
+                <div class="sidebar-icon si-amber"><i class="bi bi-journal-text"></i></div>
+                <span>Mis Alquileres</span>
             </a>
             <a routerLink="/client/my-invoices" routerLinkActive="active">
-                <i class="bi bi-receipt me-2"></i>Mis Facturas
+                <div class="sidebar-icon si-rose"><i class="bi bi-receipt"></i></div>
+                <span>Mis Facturas</span>
             </a>
-        </nav>
-    </div>
+        </div>
+        <div class="sidebar-footer">
+            <span>© 2025 MaquiMu v1.0</span>
+        </div>
+    </aside>
 
     <!-- Contenido dinámico -->
     <main class="flex-grow-1 p-4">
@@ -44,27 +57,36 @@
 </div>
 
 <!-- Offcanvas sidebar para móvil -->
-<div class="offcanvas offcanvas-start text-white" tabindex="-1" id="clientSidebarMobile">
-    <div class="offcanvas-header border-bottom border-secondary">
-        <h5 class="offcanvas-title d-flex align-items-center">
-            <img src="assets/images/mu.png" alt="MaquiMu" height="24" class="me-2">Portal Cliente
+<div class="offcanvas offcanvas-start" tabindex="-1" id="clientSidebarMobile">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title d-flex align-items-center gap-2">
+            <div class="brand-logo brand-logo-sm">
+                <img src="assets/images/mu.png" alt="MaquiMu" height="18">
+            </div>
+            Portal Cliente
         </h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
     </div>
     <div class="offcanvas-body p-0">
-        <nav class="sidebar-nav">
+        <div class="sidebar-menu">
+            <div class="sidebar-section-label">Navegación</div>
             <a routerLink="/client/portal" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" data-bs-dismiss="offcanvas">
-                <i class="bi bi-grid-1x2 me-2"></i>Inicio
+                <div class="sidebar-icon si-blue"><i class="bi bi-grid-1x2-fill"></i></div>
+                <span>Inicio</span>
             </a>
             <a routerLink="/client/request-rental" routerLinkActive="active" data-bs-dismiss="offcanvas">
-                <i class="bi bi-calendar-plus me-2"></i>Solicitar Alquiler
+                <div class="sidebar-icon si-emerald"><i class="bi bi-calendar-plus-fill"></i></div>
+                <span>Solicitar Alquiler</span>
             </a>
+            <div class="sidebar-section-label">Mis Registros</div>
             <a routerLink="/client/my-rentals" routerLinkActive="active" data-bs-dismiss="offcanvas">
-                <i class="bi bi-journal-text me-2"></i>Mis Alquileres
+                <div class="sidebar-icon si-amber"><i class="bi bi-journal-text"></i></div>
+                <span>Mis Alquileres</span>
             </a>
             <a routerLink="/client/my-invoices" routerLinkActive="active" data-bs-dismiss="offcanvas">
-                <i class="bi bi-receipt me-2"></i>Mis Facturas
+                <div class="sidebar-icon si-rose"><i class="bi bi-receipt"></i></div>
+                <span>Mis Facturas</span>
             </a>
-        </nav>
+        </div>
     </div>
 </div>

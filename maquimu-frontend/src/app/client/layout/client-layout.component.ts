@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { filter } from 'rxjs/operators';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
+import { NotificationDropdownComponent } from '../../shared/notification-dropdown/notification-dropdown.component';
 
 @Component({
   selector: 'app-client-layout',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, NotificationDropdownComponent],
   templateUrl: './client-layout.component.html',
   styleUrl: './client-layout.component.css'
 })

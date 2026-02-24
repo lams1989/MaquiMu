@@ -1,6 +1,7 @@
 import { Alquiler } from '@core/models/alquiler.model';
 import { AlquilerService } from '@core/services/alquiler.service';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MyRentalsComponent } from './my-rentals.component';
 import { of, throwError } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -45,12 +46,8 @@ describe('MyRentalsComponent', () => {
     spy.getMisAlquileres.and.returnValue(of(mockAlquileres));
 
     await TestBed.configureTestingModule({
-      imports: [MyRentalsComponent, RouterTestingModule]
-    })
-    .overrideComponent(MyRentalsComponent, {
-      set: {
-        providers: [{ provide: AlquilerService, useValue: spy }]
-      }
+      imports: [MyRentalsComponent, RouterTestingModule, HttpClientTestingModule],
+      providers: [{ provide: AlquilerService, useValue: spy }]
     })
     .compileComponents();
 
