@@ -1,102 +1,124 @@
-<div class="d-flex">
-    <!-- Sidebar -->
-    <app-sidebar></app-sidebar>
+<!-- Navbar -->
+<app-navbar></app-navbar>
 
-    <!-- Main Content -->
-    <div class="flex-grow-1">
-        <!-- Navbar -->
-        <app-navbar></app-navbar>
+<!-- Dashboard Content -->
+<div class="container-fluid p-4">
 
-        <!-- Dashboard Content -->
-        <div class="container-fluid p-4">
+    <!-- Welcome -->
+    <div class="row mb-4">
+        <div class="col">
+            <h2><i class="bi bi-speedometer2 me-2"></i>Dashboard Operario</h2>
+            <p class="text-muted">Resumen general del sistema MaquiMu.</p>
+        </div>
+    </div>
 
-            <!-- Loading -->
-            <div *ngIf="loading" class="text-center py-5">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Cargando...</span>
-                </div>
-                <p class="mt-2 text-muted">Cargando estadísticas...</p>
-            </div>
+    <!-- Loading -->
+    <div *ngIf="loading" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p class="mt-2 text-muted">Cargando estadísticas...</p>
+    </div>
 
-            <!-- Error -->
-            <div *ngIf="errorMessage && !loading" class="alert alert-danger d-flex align-items-center" role="alert">
-                <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                <div>{{ errorMessage }}</div>
-                <button class="btn btn-sm btn-outline-danger ms-auto" (click)="cargarStats()">Reintentar</button>
-            </div>
+    <!-- Error -->
+    <div *ngIf="errorMessage && !loading" class="alert alert-danger d-flex align-items-center" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <div>{{ errorMessage }}</div>
+        <button class="btn btn-sm btn-outline-danger ms-auto" (click)="cargarStats()">Reintentar</button>
+    </div>
 
-            <!-- KPI Cards -->
-            <div *ngIf="!loading && stats" class="row g-4 mb-4">
-                <div class="col-md-4">
-                    <div class="card kpi-card shadow-sm p-3">
-                        <div class="d-flex align-items-center">
-                            <i class="bi bi-truck-front me-3 card-icon"></i>
-                            <div>
-                                <small class="text-muted">Maquinaria Disponible</small>
-                                <h3 class="fw-bold text-success">{{ stats.maquinariaDisponible }}</h3>
-                            </div>
-                        </div>
+    <!-- KPI Cards -->
+    <div *ngIf="!loading && stats" class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="card border-start border-4 border-success shadow-sm h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="bg-success bg-opacity-10 rounded-circle p-3 me-3">
+                        <i class="bi bi-truck-front text-success fs-3"></i>
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card kpi-card shadow-sm p-3">
-                        <div class="d-flex align-items-center">
-                            <i class="bi bi-journal-check me-3 card-icon"></i>
-                            <div>
-                                <small class="text-muted">Alquileres Activos</small>
-                                <h3 class="fw-bold text-primary">{{ stats.alquileresActivos }}</h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card kpi-card shadow-sm p-3">
-                        <div class="d-flex align-items-center">
-                            <i class="bi bi-receipt me-3 card-icon"></i>
-                            <div>
-                                <small class="text-muted">Facturas Pendientes</small>
-                                <h3 class="fw-bold text-warning">{{ stats.facturasPendientes }}</h3>
-                            </div>
-                        </div>
+                    <div>
+                        <h6 class="text-muted mb-1">Maquinaria Disponible</h6>
+                        <h2 class="mb-0 fw-bold">{{ stats.maquinariaDisponible }}</h2>
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-start border-4 border-primary shadow-sm h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="bg-primary bg-opacity-10 rounded-circle p-3 me-3">
+                        <i class="bi bi-journal-check text-primary fs-3"></i>
+                    </div>
+                    <div>
+                        <h6 class="text-muted mb-1">Alquileres Activos</h6>
+                        <h2 class="mb-0 fw-bold">{{ stats.alquileresActivos }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-start border-4 border-warning shadow-sm h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="bg-warning bg-opacity-10 rounded-circle p-3 me-3">
+                        <i class="bi bi-receipt text-warning fs-3"></i>
+                    </div>
+                    <div>
+                        <h6 class="text-muted mb-1">Facturas Pendientes</h6>
+                        <h2 class="mb-0 fw-bold">{{ stats.facturasPendientes }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-            <!-- Accesos rápidos -->
-            <div *ngIf="!loading && stats" class="row g-4">
-                <div class="col-12">
-                    <div class="card shadow-sm border-0">
-                        <div class="card-header bg-white">
-                            <h5 class="mb-0"><i class="bi bi-lightning me-2"></i>Accesos Rápidos</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row g-3">
-                                <div class="col-md-3">
-                                    <a routerLink="/admin/inventory" class="btn btn-outline-success w-100 py-3">
-                                        <i class="bi bi-truck-front d-block mb-1 fs-4"></i>
-                                        Inventario
-                                    </a>
-                                </div>
-                                <div class="col-md-3">
-                                    <a routerLink="/admin/rentals" class="btn btn-outline-primary w-100 py-3">
-                                        <i class="bi bi-journal-check d-block mb-1 fs-4"></i>
-                                        Alquileres
-                                    </a>
-                                </div>
-                                <div class="col-md-3">
-                                    <a routerLink="/admin/financial" class="btn btn-outline-warning w-100 py-3">
-                                        <i class="bi bi-receipt d-block mb-1 fs-4"></i>
-                                        Finanzas
-                                    </a>
-                                </div>
-                                <div class="col-md-3">
-                                    <a routerLink="/admin/clients" class="btn btn-outline-info w-100 py-3">
-                                        <i class="bi bi-people d-block mb-1 fs-4"></i>
-                                        Clientes
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+    <!-- Accesos rápidos -->
+    <div *ngIf="!loading && stats">
+        <h5 class="mb-3"><i class="bi bi-lightning-charge me-2"></i>Accesos Rápidos</h5>
+        <div class="row g-4 mb-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-success">
+                    <div class="card-body text-center">
+                        <i class="bi bi-truck-front display-4 text-success mb-3"></i>
+                        <h5 class="card-title">Inventario</h5>
+                        <p class="card-text text-muted">Gestiona la maquinaria disponible</p>
+                        <a routerLink="/admin/inventory" class="btn btn-success">
+                            <i class="bi bi-gear me-2"></i>Ver Inventario
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-primary">
+                    <div class="card-body text-center">
+                        <i class="bi bi-journal-check display-4 text-primary mb-3"></i>
+                        <h5 class="card-title">Alquileres</h5>
+                        <p class="card-text text-muted">Administra los alquileres activos</p>
+                        <a routerLink="/admin/rentals" class="btn btn-primary">
+                            <i class="bi bi-list-ul me-2"></i>Ver Alquileres
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-warning">
+                    <div class="card-body text-center">
+                        <i class="bi bi-currency-dollar display-4 text-warning mb-3"></i>
+                        <h5 class="card-title">Finanzas</h5>
+                        <p class="card-text text-muted">Revisa facturas y estados de pago</p>
+                        <a routerLink="/admin/financial" class="btn btn-warning">
+                            <i class="bi bi-receipt me-2"></i>Ver Finanzas
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-info">
+                    <div class="card-body text-center">
+                        <i class="bi bi-people display-4 text-info mb-3"></i>
+                        <h5 class="card-title">Clientes</h5>
+                        <p class="card-text text-muted">Gestiona los clientes registrados</p>
+                        <a routerLink="/admin/clients" class="btn btn-info text-white">
+                            <i class="bi bi-person-lines-fill me-2"></i>Ver Clientes
+                        </a>
                     </div>
                 </div>
             </div>

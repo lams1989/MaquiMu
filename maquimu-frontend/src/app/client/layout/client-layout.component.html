@@ -1,10 +1,24 @@
+<!-- Header -->
+<nav class="navbar client-header px-4 py-2">
+    <a routerLink="/client/portal" class="navbar-brand d-flex align-items-center text-white text-decoration-none">
+        <img src="assets/images/mu.png" alt="MaquiMu" height="36" class="me-2">
+        <span class="fw-semibold fs-5">MaquiMu</span>
+        <span class="badge bg-info ms-2" style="font-size: 0.65rem; letter-spacing: 0.5px;">CLIENTE</span>
+    </a>
+    <div class="d-flex align-items-center">
+        <!-- Mobile menu button (solo cuando hay sidebar) -->
+        <button *ngIf="showSidebar" class="btn btn-outline-light btn-sm d-md-none me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#clientSidebarMobile">
+            <i class="bi bi-list"></i>
+        </button>
+        <button class="btn btn-outline-light btn-sm" (click)="logout()" title="Cerrar Sesión">
+            <i class="bi bi-box-arrow-right me-1"></i>Salir
+        </button>
+    </div>
+</nav>
+
 <div class="d-flex">
-    <!-- Sidebar Cliente -->
-    <div class="sidebar d-none d-md-block bg-dark text-white" style="width: 250px;">
-        <div class="p-3 text-center border-bottom border-secondary">
-            <img src="assets/images/mu.png" alt="Logo MaquiMu" class="img-fluid w-75 mb-2">
-            <small class="d-block text-white opacity-75">Portal Cliente</small>
-        </div>
+    <!-- Sidebar Cliente (oculto en portal/dashboard) -->
+    <div *ngIf="showSidebar" class="sidebar d-none d-md-block bg-dark text-white" style="width: 250px;">
         <nav class="mt-3">
             <a routerLink="/client/portal" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
                 <i class="bi bi-house-door me-2"></i>Inicio
@@ -21,30 +35,10 @@
         </nav>
     </div>
 
-    <!-- Main Content -->
-    <div class="flex-grow-1">
-        <!-- Navbar -->
-        <nav class="navbar navbar-light bg-white shadow-sm px-4">
-            <span class="navbar-brand mb-0 h1">
-                <img src="assets/images/mu.png" alt="MaquiMu" height="32" class="me-2">
-                Portal de Clientes
-            </span>
-            <div class="d-flex align-items-center">
-                <!-- Mobile menu button -->
-                <button class="btn btn-outline-dark d-md-none me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#clientSidebarMobile">
-                    <i class="bi bi-list"></i>
-                </button>
-                <button class="btn btn-outline-danger btn-sm" (click)="logout()" title="Cerrar Sesión">
-                    <i class="bi bi-box-arrow-right me-1"></i>Salir
-                </button>
-            </div>
-        </nav>
-
-        <!-- Contenido dinámico -->
-        <main class="p-4">
-            <router-outlet></router-outlet>
-        </main>
-    </div>
+    <!-- Contenido dinámico -->
+    <main class="flex-grow-1 p-4">
+        <router-outlet></router-outlet>
+    </main>
 </div>
 
 <!-- Offcanvas sidebar para móvil -->
