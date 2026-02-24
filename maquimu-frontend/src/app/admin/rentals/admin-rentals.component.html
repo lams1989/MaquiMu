@@ -107,9 +107,16 @@
 
                                                 <!-- Finalizar (solo ACTIVO) -->
                                                 <a *ngIf="alquiler.estado === 'ACTIVO'"
-                                                   href="javascript:;" class="text-secondary font-weight-bold text-xs"
+                                                   href="javascript:;" class="text-secondary font-weight-bold text-xs me-2"
                                                    (click)="finalizar(alquiler)" title="Finalizar alquiler">
                                                     Finalizar
+                                                </a>
+
+                                                <!-- Generar Factura (solo FINALIZADO) -->
+                                                <a *ngIf="alquiler.estado === 'FINALIZADO'"
+                                                   href="javascript:;" class="text-warning font-weight-bold text-xs"
+                                                   (click)="generarFactura(alquiler)" title="Generar factura">
+                                                    Facturar
                                                 </a>
                                             </td>
                                         </tr>

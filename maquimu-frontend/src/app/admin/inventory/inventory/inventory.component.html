@@ -25,6 +25,7 @@
                                 <table class="table align-items-center mb-0">
                                     <thead>
                                         <tr>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
                                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nombre Equipo</th>
                                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Marca</th>
                                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Modelo</th>
@@ -37,6 +38,9 @@
                                     </thead>
                                     <tbody>
                                         <tr *ngFor="let maquinaria of maquinarias">
+                                            <td>
+                                                <p class="text-xs font-weight-bold mb-0 px-2">{{ maquinaria.maquinariaId }}</p>
+                                            </td>
                                             <td>
                                                 <div class="d-flex px-2 py-1">
                                                     <div class="d-flex flex-column justify-content-center">

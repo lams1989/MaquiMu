@@ -1,0 +1,233 @@
+<div class="d-flex">
+  <!-- Sidebar -->
+  <app-sidebar></app-sidebar>
+
+  <!-- Main Content -->
+  <div class="flex-grow-1">
+    <!-- Navbar -->
+    <app-navbar></app-navbar>
+
+<div class="container-fluid py-4">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold mb-0">
+      <i class="bi bi-currency-dollar me-2"></i>Gestión Financiera
+    </h2>
+    <button class="btn btn-outline-primary btn-sm" (click)="cargarFacturas()" [disabled]="loading">
+      <i class="bi bi-arrow-clockwise me-1"></i>Actualizar
+    </button>
+  </div>
+
+  <!-- Tarjetas resumen -->
+  <div class="row g-3 mb-4" *ngIf="!loading && facturas.length > 0">
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm bg-warning bg-opacity-10">
+        <div class="card-body text-center">
+          <h6 class="text-muted mb-1">Pendiente de Cobro</h6>
+          <h4 class="fw-bold text-warning">{{ formatCurrency(getTotalPendiente()) }}</h4>
+          <small class="text-muted">facturas pendientes</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm bg-success bg-opacity-10">
+        <div class="card-body text-center">
+          <h6 class="text-muted mb-1">Total Cobrado</h6>
+          <h4 class="fw-bold text-success">{{ formatCurrency(getTotalPagado()) }}</h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm bg-primary bg-opacity-10">
+        <div class="card-body text-center">
+          <h6 class="text-muted mb-1">Total Facturas</h6>
+          <h4 class="fw-bold text-primary">{{ facturas.length }}</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtro -->
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-body py-3">
+      <div class="row align-items-center">
+        <div class="col-md-4">
+          <label for="filtroEstado" class="form-label fw-semibold mb-1">Filtrar por estado de pago</label>
+          <select id="filtroEstado" class="form-select" [(ngModel)]="filtroEstado" (ngModelChange)="aplicarFiltro()">
+            <option *ngFor="let e of estadosFiltro" [ngValue]="e.value">{{ e.label }}</option>
+          </select>
+        </div>
+        <div class="col-md-8 text-end mt-3 mt-md-0">
+          <span class="text-muted">
+            Mostrando <strong>{{ facturasFiltradas.length }}</strong> de <strong>{{ facturas.length }}</strong> facturas
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="mt-2 text-muted">Cargando facturas...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="errorMessage && !loading" class="alert alert-danger d-flex align-items-center" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    <div>{{ errorMessage }}</div>
+  </div>
+
+  <!-- Sin facturas -->
+  <div *ngIf="!loading && !errorMessage && facturas.length === 0" class="text-center py-5">
+    <i class="bi bi-receipt display-1 text-muted"></i>
+    <h5 class="mt-3 text-muted">No hay facturas registradas</h5>
+    <p class="text-muted">Las facturas se generan al finalizar alquileres desde la gestión de alquileres.</p>
+  </div>
+
+  <!-- Tabla de facturas -->
+  <div *ngIf="!loading && !errorMessage && facturasFiltradas.length > 0" class="card shadow-sm border-0">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0 align-middle">
+        <thead class="table-light">
+          <tr>
+            <th># Factura</th>
+            <th>Alquiler ID</th>
+            <th>Cliente ID</th>
+            <th>Fecha Emisión</th>
+            <th>Monto</th>
+            <th>Estado Pago</th>
+            <th class="text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let factura of facturasFiltradas">
+            <td><strong>{{ factura.facturaId }}</strong></td>
+            <td>{{ factura.alquilerId }}</td>
+            <td>{{ factura.clienteId }}</td>
+            <td>{{ factura.fechaEmision | date:'dd/MM/yyyy' }}</td>
+            <td class="fw-semibold">{{ formatCurrency(factura.monto) }}</td>
+            <td>
+              <span class="badge rounded-pill" [ngClass]="getBadgeClass(factura.estadoPago)">
+                {{ factura.estadoPago }}
+              </span>
+            </td>
+            <td class="text-center">
+              <div class="btn-group btn-group-sm">
+                <button class="btn btn-outline-primary" title="Ver detalle" (click)="verDetalle(factura)">
+                  <i class="bi bi-eye"></i>
+                </button>
+                <button class="btn btn-outline-success" title="Descargar PDF" (click)="descargarPdf(factura.facturaId!)">
+                  <i class="bi bi-file-earmark-pdf"></i>
+                </button>
+                <button class="btn btn-outline-warning" title="Cambiar estado"
+                        (click)="abrirCambiarEstado(factura)"
+                        *ngIf="factura.estadoPago !== 'ANULADO'">
+                  <i class="bi bi-pencil-square"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- Total visible -->
+    <div class="card-footer text-end bg-light">
+      <strong>Total mostrado: {{ formatCurrency(getTotalMonto()) }}</strong>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL DETALLE ===== -->
+<div *ngIf="showDetalle" class="modal-backdrop fade show"></div>
+<div *ngIf="showDetalle" class="modal fade show d-block" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">
+          <i class="bi bi-receipt me-2"></i>Detalle de Factura
+        </h5>
+        <button type="button" class="btn-close btn-close-white" (click)="cerrarDetalle()"></button>
+      </div>
+      <div class="modal-body" *ngIf="facturaDetalle">
+        <div class="row g-3">
+          <div class="col-6">
+            <label class="form-label text-muted small mb-0"># Factura</label>
+            <p class="fw-bold mb-0">{{ facturaDetalle.facturaId }}</p>
+          </div>
+          <div class="col-6">
+            <label class="form-label text-muted small mb-0">Estado Pago</label>
+            <p class="mb-0">
+              <span class="badge rounded-pill" [ngClass]="getBadgeClass(facturaDetalle.estadoPago)">
+                {{ facturaDetalle.estadoPago }}
+              </span>
+            </p>
+          </div>
+          <div class="col-6">
+            <label class="form-label text-muted small mb-0">Alquiler ID</label>
+            <p class="fw-bold mb-0">{{ facturaDetalle.alquilerId }}</p>
+          </div>
+          <div class="col-6">
+            <label class="form-label text-muted small mb-0">Cliente ID</label>
+            <p class="fw-bold mb-0">{{ facturaDetalle.clienteId }}</p>
+          </div>
+          <div class="col-6">
+            <label class="form-label text-muted small mb-0">Fecha Emisión</label>
+            <p class="fw-bold mb-0">{{ facturaDetalle.fechaEmision | date:'dd/MM/yyyy' }}</p>
+          </div>
+          <div class="col-6">
+            <label class="form-label text-muted small mb-0">Monto</label>
+            <p class="fw-bold text-success mb-0">{{ formatCurrency(facturaDetalle.monto) }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-success btn-sm" (click)="descargarPdf(facturaDetalle!.facturaId!)">
+          <i class="bi bi-file-earmark-pdf me-1"></i>Descargar PDF
+        </button>
+        <button class="btn btn-secondary" (click)="cerrarDetalle()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL CAMBIAR ESTADO ===== -->
+<div *ngIf="showCambiarEstado" class="modal-backdrop fade show"></div>
+<div *ngIf="showCambiarEstado" class="modal fade show d-block" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-warning">
+        <h5 class="modal-title">
+          <i class="bi bi-pencil-square me-2"></i>Cambiar Estado de Pago
+        </h5>
+        <button type="button" class="btn-close" (click)="cerrarCambiarEstado()"></button>
+      </div>
+      <div class="modal-body" *ngIf="facturaEstado">
+        <p>Factura <strong>#{{ facturaEstado.facturaId }}</strong> — Monto: <strong>{{ formatCurrency(facturaEstado.monto) }}</strong></p>
+        <p>Estado actual:
+          <span class="badge rounded-pill" [ngClass]="getBadgeClass(facturaEstado.estadoPago)">
+            {{ facturaEstado.estadoPago }}
+          </span>
+        </p>
+        <div class="mb-3">
+          <label for="nuevoEstado" class="form-label fw-semibold">Nuevo estado</label>
+          <select id="nuevoEstado" class="form-select" [(ngModel)]="nuevoEstado">
+            <option value="PAGADO" *ngIf="facturaEstado.estadoPago === 'PENDIENTE'">PAGADO</option>
+            <option value="ANULADO">ANULADO</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="cerrarCambiarEstado()" [disabled]="procesandoEstado">Cancelar</button>
+        <button class="btn btn-primary" (click)="confirmarCambiarEstado()" [disabled]="procesandoEstado">
+          <span *ngIf="procesandoEstado" class="spinner-border spinner-border-sm me-1"></span>
+          Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+  </div>
+</div>

@@ -2,6 +2,7 @@ import { Alquiler, EstadoAlquiler } from '@core/models/alquiler.model';
 import { AlquilerService } from '@core/services/alquiler.service';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { FacturaService } from '@core/services/factura.service';
 import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from '@shared/navbar/navbar.component';
 import { SidebarComponent } from '@shared/sidebar/sidebar.component';
@@ -37,7 +38,10 @@ export class AdminRentalsComponent implements OnInit {
     { value: 'CANCELADO', label: 'Cancelados' }
   ];
 
-  constructor(private alquilerService: AlquilerService) {}
+  constructor(
+    private alquilerService: AlquilerService,
+    private facturaService: FacturaService
+  ) {}
 
   ngOnInit(): void {
     this.cargarAlquileres();
@@ -132,6 +136,22 @@ export class AdminRentalsComponent implements OnInit {
       error: (error) => {
         console.error('Error al finalizar alquiler', error);
         alert('Error al finalizar el alquiler: ' + (error.error?.message || error.message));
+      }
+    });
+  }
+
+  generarFactura(alquiler: Alquiler): void {
+    if (!confirm('¿Desea generar la factura para este alquiler?')) return;
+    this.facturaService.generarFactura(alquiler.alquilerId!).subscribe({
+      next: () => {
+        alert('Factura generada exitosamente.');
+      },
+      error: (error) => {
+        console.error('Error al generar factura', error);
+        const msg = error.status === 409
+          ? 'Ya existe una factura para este alquiler.'
+          : 'Error al generar la factura: ' + (error.error?.message || error.message);
+        alert(msg);
       }
     });
   }

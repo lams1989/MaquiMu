@@ -1,0 +1,17 @@
+/* Financial Component Styles */
+
+.table th {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #6c757d;
+}
+
+.badge.rounded-pill {
+  font-size: 0.78rem;
+  padding: 0.35em 0.75em;
+}
+
+.card-footer {
+  font-size: 0.95rem;
+}

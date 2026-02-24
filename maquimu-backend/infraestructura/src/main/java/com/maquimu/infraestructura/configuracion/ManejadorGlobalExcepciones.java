@@ -18,6 +18,11 @@ public class ManejadorGlobalExcepciones {
         return construirRespuesta(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<Map<String, Object>> manejarIllegalState(IllegalStateException ex) {
+        return construirRespuesta(HttpStatus.CONFLICT, ex.getMessage());
+    }
+
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<Map<String, Object>> manejarBadCredentials(BadCredentialsException ex) {
         return construirRespuesta(HttpStatus.UNAUTHORIZED, "Credenciales inválidas");
