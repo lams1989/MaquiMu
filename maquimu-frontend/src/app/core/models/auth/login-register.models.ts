@@ -5,6 +5,7 @@ export interface Usuario {
     nombreCompleto: string;
     email: string;
     rol: 'OPERARIO' | 'CLIENTE';
+    estado?: 'PENDIENTE_APROBACION' | 'ACTIVO' | 'RECHAZADO';
     clienteId?: number; // ID del cliente asociado si el rol es CLIENTE
 }
 
@@ -14,8 +15,8 @@ export interface RegisterRequest {
     nombreCompleto?: string;
     email: string;
     password: string;
-    identificacion: string; // Campo nuevo requerido para clientes
-    rol: 'OPERARIO' | 'CLIENTE'; // Default for auto-registration is CLIENTE, but backend allows OPERARIO
+    identificacion: string;
+    rol: 'CLIENTE'; // Solo clientes se auto-registran
 }
 
 export interface LoginRequest {
@@ -26,4 +27,10 @@ export interface LoginRequest {
 export interface AuthResponse {
     token: string;
     usuario: Usuario;
+}
+
+export interface LoginErrorResponse {
+    estado?: 'PENDIENTE_APROBACION' | 'RECHAZADO';
+    message?: string;
+    motivoRechazo?: string;
 }

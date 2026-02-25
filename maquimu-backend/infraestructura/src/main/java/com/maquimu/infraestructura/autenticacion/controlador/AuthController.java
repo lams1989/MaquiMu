@@ -5,13 +5,16 @@ import com.maquimu.aplicacion.autenticacion.comando.manejador.ManejadorRegistrar
 import com.maquimu.aplicacion.autenticacion.consulta.ConsultaAutenticarUsuario;
 import com.maquimu.aplicacion.autenticacion.consulta.RespuestaAutenticacion;
 import com.maquimu.aplicacion.autenticacion.consulta.manejador.ManejadorAutenticarUsuario;
+import com.maquimu.dominio.autenticacion.excepcion.CuentaNoActivaException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -25,12 +28,24 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> registrar(@RequestBody ComandoRegistrarUsuario comando) {
         manejadorRegistrarUsuario.ejecutar(comando);
-        return ResponseEntity.ok(Map.of("mensaje", "Usuario registrado exitosamente"));
+        return ResponseEntity.ok(Map.of(
+                "mensaje", "Tu cuenta ha sido creada exitosamente. Un operario la revisará en un plazo de 1 a 3 días hábiles."
+        ));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<RespuestaAutenticacion> login(@RequestBody ConsultaAutenticarUsuario consulta) {
-        RespuestaAutenticacion respuesta = manejadorAutenticarUsuario.ejecutar(consulta);
-        return ResponseEntity.ok(respuesta);
+    public ResponseEntity<?> login(@RequestBody ConsultaAutenticarUsuario consulta) {
+        try {
+            RespuestaAutenticacion respuesta = manejadorAutenticarUsuario.ejecutar(consulta);
+            return ResponseEntity.ok(respuesta);
+        } catch (CuentaNoActivaException ex) {
+            Map<String, Object> body = new HashMap<>();
+            body.put("estado", ex.getEstado().name());
+            body.put("message", ex.getMessage());
+            if (ex.getMotivoRechazo() != null) {
+                body.put("motivoRechazo", ex.getMotivoRechazo());
+            }
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body);
+        }
     }
 }

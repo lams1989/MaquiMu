@@ -18,4 +18,5 @@ export type NotificationType =
   | 'rental_finalized'
   | 'invoice_generated'
   | 'invoice_paid'
+  | 'registration_pending'
   | 'system';

@@ -5,6 +5,7 @@ import { BehaviorSubject, Observable, Subscription, timer } from 'rxjs';
 import { FacturaService } from './factura.service';
 import { Inject, Injectable, OnDestroy, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { UsuarioService } from './usuario.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,7 @@ export class NotificationService implements OnDestroy {
   /** Tracking maps to detect state changes between polls */
   private knownRentalStates = new Map<number, string>();
   private knownInvoiceIds = new Set<number>();
+  private knownPendingUserIds = new Set<number>();
   private firstPoll = true;
 
   private readonly STORAGE_KEY = 'maquimu_notifications';
@@ -29,6 +31,7 @@ export class NotificationService implements OnDestroy {
     private authService: AuthService,
     private alquilerService: AlquilerService,
     private facturaService: FacturaService,
+    private usuarioService: UsuarioService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
@@ -152,6 +155,53 @@ export class NotificationService implements OnDestroy {
           if (r.alquilerId != null) this.knownRentalStates.set(r.alquilerId, r.estado);
         });
         this.firstPoll = false;
+      }
+    });
+
+    // Poll for pending user registrations
+    this.pollPendingRegistrations();
+  }
+
+  // ===== Pending registrations poll (admin only) =====
+  private pollPendingRegistrations(): void {
+    this.usuarioService.getUsuariosPendientes().subscribe({
+      next: (users) => {
+        if (this.knownPendingUserIds.size === 0 && users.length > 0) {
+          // First time — seed known IDs and show summary
+          users.forEach(u => this.knownPendingUserIds.add(u.usuarioId));
+          this.push({
+            id: `registration-pending-summary-${Date.now()}`,
+            type: 'registration_pending',
+            title: 'Registros pendientes',
+            message: `Hay ${users.length} registro(s) de cliente pendientes de aprobación.`,
+            icon: 'bi-person-plus-fill',
+            iconColor: '#d97706',
+            timestamp: new Date(),
+            read: false,
+            routerLink: '/admin/clients'
+          });
+        } else {
+          // Detect new pending users
+          users.forEach(u => {
+            if (!this.knownPendingUserIds.has(u.usuarioId)) {
+              this.knownPendingUserIds.add(u.usuarioId);
+              this.push({
+                id: `registration-new-${u.usuarioId}-${Date.now()}`,
+                type: 'registration_pending',
+                title: 'Nuevo registro de cliente',
+                message: `Nuevo registro pendiente de aprobación: ${u.nombreCompleto}.`,
+                icon: 'bi-person-plus-fill',
+                iconColor: '#d97706',
+                timestamp: new Date(),
+                read: false,
+                routerLink: '/admin/clients'
+              });
+            }
+          });
+        }
+        // Update known set to current pending users (remove approved/rejected)
+        const currentIds = new Set(users.map(u => u.usuarioId));
+        this.knownPendingUserIds = currentIds;
       }
     });
   }
@@ -301,6 +351,7 @@ export class NotificationService implements OnDestroy {
   private clear(): void {
     this.knownRentalStates.clear();
     this.knownInvoiceIds.clear();
+    this.knownPendingUserIds.clear();
     this.firstPoll = true;
     this.notificationsSubject.next([]);
     if (this.isBrowser) {

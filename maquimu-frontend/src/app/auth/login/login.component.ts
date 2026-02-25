@@ -1,20 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { AuthService } from '../../core/services/auth/auth.service';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../../core/services/auth/auth.service'; // Adjust path if necessary
-import { RouterLink } from '@angular/router'; // Import RouterLink for the template
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink], // Add ReactiveFormsModule and RouterLink
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   errorMessage: string = '';
+  estadoCuenta: string = '';
+  motivoRechazo: string = '';
   isLoading: boolean = false;
 
   constructor(
@@ -38,6 +40,8 @@ export class LoginComponent implements OnInit {
 
     this.isLoading = true;
     this.errorMessage = '';
+    this.estadoCuenta = '';
+    this.motivoRechazo = '';
 
     const { email, password } = this.loginForm.value;
 
@@ -50,12 +54,19 @@ export class LoginComponent implements OnInit {
         } else if (userRole === 'CLIENTE') {
           this.router.navigate(['/client/portal']);
         } else {
-          this.router.navigate(['/']); // Fallback to home or a default route
+          this.router.navigate(['/']);
         }
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = err.error?.message || 'Credenciales inválidas. Intente de nuevo.';
+        if (err.status === 403 && err.error?.estado) {
+          this.estadoCuenta = err.error.estado;
+          this.errorMessage = err.error.message || '';
+          this.motivoRechazo = err.error.motivoRechazo || '';
+        } else {
+          this.estadoCuenta = '';
+          this.errorMessage = err.error?.message || 'Credenciales inválidas. Intente de nuevo.';
+        }
       }
     });
   }

@@ -33,7 +33,16 @@
           </div>
         </div>
 
-        <div *ngIf="errorMessage" class="alert alert-danger py-2 mb-3">{{ errorMessage }}</div>
+        <div *ngIf="errorMessage && estadoCuenta === 'PENDIENTE_APROBACION'" class="alert alert-warning py-2 mb-3">
+          <i class="bi bi-hourglass-split me-2"></i>{{ errorMessage }}
+        </div>
+
+        <div *ngIf="errorMessage && estadoCuenta === 'RECHAZADO'" class="alert alert-danger py-2 mb-3">
+          <i class="bi bi-x-circle me-2"></i>{{ errorMessage }}
+          <div *ngIf="motivoRechazo" class="mt-1 small"><strong>Motivo:</strong> {{ motivoRechazo }}</div>
+        </div>
+
+        <div *ngIf="errorMessage && !estadoCuenta" class="alert alert-danger py-2 mb-3">{{ errorMessage }}</div>
 
         <button type="submit" class="btn btn-login w-100 mb-3" [disabled]="loginForm.invalid || isLoading">
           <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>

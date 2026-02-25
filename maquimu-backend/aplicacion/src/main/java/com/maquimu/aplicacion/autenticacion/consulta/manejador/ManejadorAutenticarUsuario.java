@@ -2,6 +2,8 @@ package com.maquimu.aplicacion.autenticacion.consulta.manejador;
 
 import com.maquimu.aplicacion.autenticacion.consulta.ConsultaAutenticarUsuario;
 import com.maquimu.aplicacion.autenticacion.consulta.RespuestaAutenticacion;
+import com.maquimu.dominio.autenticacion.excepcion.CuentaNoActivaException;
+import com.maquimu.dominio.autenticacion.modelo.EstadoUsuario;
 import com.maquimu.dominio.autenticacion.modelo.RolUsuario;
 import com.maquimu.dominio.autenticacion.modelo.Usuario;
 import com.maquimu.dominio.autenticacion.puerto.dao.UsuarioDao;
@@ -37,6 +39,21 @@ public class ManejadorAutenticarUsuario {
         // Retrieve the full Usuario object from the database using email from UserDetails
         Usuario usuario = usuarioDao.buscarPorEmail(userDetails.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado despues de autenticacion"));
+
+        // Validar estado de la cuenta antes de generar token
+        if (usuario.getEstado() == EstadoUsuario.PENDIENTE_APROBACION) {
+            throw new CuentaNoActivaException(
+                    EstadoUsuario.PENDIENTE_APROBACION,
+                    "Tu cuenta aún está pendiente de aprobación. Por favor espera de 1 a 3 días hábiles."
+            );
+        }
+        if (usuario.getEstado() == EstadoUsuario.RECHAZADO) {
+            throw new CuentaNoActivaException(
+                    EstadoUsuario.RECHAZADO,
+                    "Tu cuenta ha sido rechazada. Contacta al administrador para más información.",
+                    usuario.getMotivoRechazo()
+            );
+        }
 
         // Si el usuario es CLIENTE, buscar su clienteId
         if (usuario.getRol() == RolUsuario.CLIENTE) {

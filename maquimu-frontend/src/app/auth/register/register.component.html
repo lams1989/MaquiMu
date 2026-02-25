@@ -9,7 +9,23 @@
         <h3 class="fw-bold mb-1" style="color: var(--text-dark);">Crear Cuenta</h3>
         <p class="text-muted">Regístrate para acceder a MaquiMu</p>
       </div>
-      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+      <!-- Mensaje de éxito: Registro pendiente de aprobación -->
+      <div *ngIf="registroExitoso" class="text-center">
+        <div class="alert alert-warning py-3 mb-4">
+          <i class="bi bi-hourglass-split me-2 fs-4"></i>
+          <div class="mt-2">
+            <strong>¡Cuenta creada!</strong>
+            <p class="mb-0 mt-1">{{ successMessage }}</p>
+          </div>
+        </div>
+        <button class="btn btn-login w-100" (click)="volverAlLogin()">
+          <i class="bi bi-arrow-left me-2"></i>Volver al Login
+        </button>
+      </div>
+
+      <!-- Formulario de registro -->
+      <form *ngIf="!registroExitoso" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
 
         <div class="row g-3 mb-3">
           <div class="col-md-6">
@@ -89,14 +105,6 @@
               Las contraseñas no coinciden.
             </div>
           </div>
-        </div>
-
-        <div class="mb-3">
-          <label for="rol" class="form-label">Tipo de Usuario</label>
-          <select id="rol" formControlName="rol" class="form-select">
-            <option value="CLIENTE">Cliente</option>
-            <option value="OPERARIO">Operario</option>
-          </select>
         </div>
 
         <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>

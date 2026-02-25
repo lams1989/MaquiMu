@@ -1,5 +1,6 @@
 package com.maquimu.infraestructura.autenticacion.adaptador.entidad;
 
+import com.maquimu.dominio.autenticacion.modelo.EstadoUsuario;
 import com.maquimu.dominio.autenticacion.modelo.RolUsuario;
 import com.maquimu.dominio.autenticacion.modelo.Usuario;
 import jakarta.persistence.*;
@@ -37,12 +38,22 @@ public class UsuarioEntity {
     @Column(name = "rol", nullable = false, columnDefinition = "ENUM('OPERARIO', 'CLIENTE')")
     private RolUsuario rol;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado_cuenta", nullable = false, columnDefinition = "ENUM('PENDIENTE_APROBACION', 'ACTIVO', 'RECHAZADO')")
+    private EstadoUsuario estadoCuenta;
+
+    @Column(name = "motivo_rechazo", length = 500)
+    private String motivoRechazo;
+
     @Column(name = "fecha_creacion", updatable = false)
     private LocalDateTime fechaCreacion;
 
     @PrePersist
     protected void onCreate() {
         fechaCreacion = LocalDateTime.now();
+        if (estadoCuenta == null) {
+            estadoCuenta = EstadoUsuario.ACTIVO;
+        }
     }
 
     public Usuario toDomain() {
@@ -52,6 +63,8 @@ public class UsuarioEntity {
                 .email(this.email)
                 .passwordHash(this.passwordHash)
                 .rol(this.rol)
+                .estado(this.estadoCuenta)
+                .motivoRechazo(this.motivoRechazo)
                 .fechaCreacion(this.fechaCreacion)
                 .build();
     }
@@ -63,6 +76,8 @@ public class UsuarioEntity {
                 .email(usuario.getEmail())
                 .passwordHash(usuario.getPasswordHash())
                 .rol(usuario.getRol())
+                .estadoCuenta(usuario.getEstado())
+                .motivoRechazo(usuario.getMotivoRechazo())
                 .fechaCreacion(usuario.getFechaCreacion())
                 .build();
     }

@@ -14,7 +14,9 @@ import { Router, RouterModule } from '@angular/router';
 export class RegisterComponent implements OnInit {
   registerForm!: FormGroup;
   errorMessage: string = '';
+  successMessage: string = '';
   isLoading: boolean = false;
+  registroExitoso: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -29,8 +31,7 @@ export class RegisterComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]],
-      identificacion: ['', [Validators.required, Validators.minLength(5)]], // Campo nuevo requerido
-      rol: ['CLIENTE', Validators.required] // Por defecto, el auto-registro es para Clientes
+      identificacion: ['', [Validators.required, Validators.minLength(5)]]
     }, { validator: this.passwordMatchValidator });
   }
 
@@ -48,20 +49,25 @@ export class RegisterComponent implements OnInit {
 
     this.isLoading = true;
     this.errorMessage = '';
+    this.successMessage = '';
 
-    const { nombre, apellido, email, password, identificacion, rol } = this.registerForm.value;
+    const { nombre, apellido, email, password, identificacion } = this.registerForm.value;
     const nombreCompleto = `${nombre?.trim() ?? ''} ${apellido?.trim() ?? ''}`.trim();
 
-    this.authService.register({ nombre, apellido, nombreCompleto, email, password, identificacion, rol }).subscribe({
-      next: () => {
+    this.authService.register({ nombre, apellido, nombreCompleto, email, password, identificacion, rol: 'CLIENTE' }).subscribe({
+      next: (response: any) => {
         this.isLoading = false;
-        // Redirigir al login con un mensaje de éxito
-        this.router.navigate(['/auth/login'], { queryParams: { registered: 'true' } });
+        this.registroExitoso = true;
+        this.successMessage = response?.mensaje || 'Tu cuenta ha sido creada exitosamente. Un operario la revisará en un plazo de 1 a 3 días hábiles.';
       },
       error: (err: any) => {
         this.isLoading = false;
         this.errorMessage = err.error?.message || 'Ocurrió un error durante el registro. Intente de nuevo.';
       }
     });
+  }
+
+  volverAlLogin(): void {
+    this.router.navigate(['/auth/login']);
   }
 }
