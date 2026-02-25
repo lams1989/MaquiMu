@@ -39,7 +39,7 @@ public class UsuarioEntity {
     private RolUsuario rol;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "estado_cuenta", nullable = false, columnDefinition = "ENUM('PENDIENTE_APROBACION', 'ACTIVO', 'RECHAZADO')")
+    @Column(name = "estado_cuenta", nullable = false, columnDefinition = "ENUM('PENDIENTE_APROBACION', 'ACTIVO', 'RECHAZADO', 'RESTABLECER')")
     private EstadoUsuario estadoCuenta;
 
     @Column(name = "motivo_rechazo", length = 500)

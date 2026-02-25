@@ -16,11 +16,23 @@ export class UsuarioService {
     return this.http.get<UsuarioPendiente[]>(`${this.apiUrl}/pendientes`);
   }
 
+  getUsuariosRestablecer(): Observable<UsuarioPendiente[]> {
+    return this.http.get<UsuarioPendiente[]>(`${this.apiUrl}/restablecer`);
+  }
+
   aprobarUsuario(usuarioId: number): Observable<any> {
     return this.http.patch(`${this.apiUrl}/${usuarioId}/aprobar`, {});
   }
 
   rechazarUsuario(usuarioId: number, motivo: string): Observable<any> {
     return this.http.patch(`${this.apiUrl}/${usuarioId}/rechazar`, { motivo });
+  }
+
+  cambiarPassword(passwordActual: string, passwordNueva: string): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/cambiar-password`, { passwordActual, passwordNueva });
+  }
+
+  asignarPasswordTemporal(usuarioId: number, passwordTemporal: string): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/${usuarioId}/asignar-password`, { passwordTemporal });
   }
 }

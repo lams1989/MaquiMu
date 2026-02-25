@@ -5,7 +5,7 @@ export interface Usuario {
     nombreCompleto: string;
     email: string;
     rol: 'OPERARIO' | 'CLIENTE';
-    estado?: 'PENDIENTE_APROBACION' | 'ACTIVO' | 'RECHAZADO';
+    estado?: 'PENDIENTE_APROBACION' | 'ACTIVO' | 'RECHAZADO' | 'RESTABLECER';
     clienteId?: number; // ID del cliente asociado si el rol es CLIENTE
 }
 
@@ -30,7 +30,7 @@ export interface AuthResponse {
 }
 
 export interface LoginErrorResponse {
-    estado?: 'PENDIENTE_APROBACION' | 'RECHAZADO';
+    estado?: 'PENDIENTE_APROBACION' | 'RECHAZADO' | 'RESTABLECER';
     message?: string;
     motivoRechazo?: string;
 }

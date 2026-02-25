@@ -25,12 +25,23 @@ export class ClientsComponent implements OnInit {
   errorMessage = '';
 
   // Tab y aprobación
-  activeTab: 'clientes' | 'pendientes' = 'clientes';
+  activeTab: 'clientes' | 'pendientes' | 'restablecer' = 'clientes';
   pendientes: UsuarioPendiente[] = [];
+  restablecer: UsuarioPendiente[] = [];
   showRejectModal = false;
   usuarioARechazar: UsuarioPendiente | null = null;
   motivoRechazo = '';
   pendientesLoading = false;
+  restablecerLoading = false;
+
+  // Asignar password modal
+  showAssignPasswordModal = false;
+  usuarioAsignarPassword: UsuarioPendiente | null = null;
+  passwordTemporal = '';
+  confirmPasswordTemporal = '';
+  assignPasswordError = '';
+  assignPasswordLoading = false;
+  assignPasswordSuccess = false;
 
   constructor(
     private clienteService: ClienteService,
@@ -40,14 +51,17 @@ export class ClientsComponent implements OnInit {
   ngOnInit(): void {
     this.loadClientes();
     this.loadPendientes();
+    this.loadRestablecer();
   }
 
   // ========== Tab navigation ==========
 
-  setActiveTab(tab: 'clientes' | 'pendientes'): void {
+  setActiveTab(tab: 'clientes' | 'pendientes' | 'restablecer'): void {
     this.activeTab = tab;
     if (tab === 'pendientes') {
       this.loadPendientes();
+    } else if (tab === 'restablecer') {
+      this.loadRestablecer();
     }
   }
 
@@ -171,5 +185,66 @@ export class ClientsComponent implements OnInit {
       month: '2-digit',
       day: '2-digit'
     });
+  }
+
+  // ========== Restablecimiento de contraseña ==========
+
+  loadRestablecer(): void {
+    this.restablecerLoading = true;
+    this.usuarioService.getUsuariosRestablecer().subscribe({
+      next: (data: UsuarioPendiente[]) => {
+        this.restablecer = data;
+        this.restablecerLoading = false;
+      },
+      error: (error: any) => {
+        console.error('Error al cargar solicitudes de restablecimiento', error);
+        this.restablecerLoading = false;
+      }
+    });
+  }
+
+  abrirModalAsignarPassword(usuario: UsuarioPendiente): void {
+    this.usuarioAsignarPassword = usuario;
+    this.passwordTemporal = '';
+    this.confirmPasswordTemporal = '';
+    this.assignPasswordError = '';
+    this.assignPasswordSuccess = false;
+    this.showAssignPasswordModal = true;
+  }
+
+  generarPasswordAutomatica(): void {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+    let result = '';
+    for (let i = 0; i < 8; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    this.passwordTemporal = result;
+    this.confirmPasswordTemporal = result;
+  }
+
+  confirmarAsignarPassword(): void {
+    if (!this.usuarioAsignarPassword || !this.passwordTemporal || this.passwordTemporal.length < 6 || this.passwordTemporal !== this.confirmPasswordTemporal) return;
+
+    this.assignPasswordLoading = true;
+    this.assignPasswordError = '';
+
+    this.usuarioService.asignarPasswordTemporal(this.usuarioAsignarPassword.usuarioId, this.passwordTemporal).subscribe({
+      next: () => {
+        this.assignPasswordLoading = false;
+        this.assignPasswordSuccess = true;
+        this.loadRestablecer();
+      },
+      error: (error: any) => {
+        this.assignPasswordLoading = false;
+        this.assignPasswordError = error.error?.message || 'No se pudo asignar la contraseña temporal.';
+      }
+    });
+  }
+
+  cerrarModalAsignarPassword(): void {
+    this.showAssignPasswordModal = false;
+    this.usuarioAsignarPassword = null;
+    this.passwordTemporal = '';
+    this.confirmPasswordTemporal = '';
   }
 }

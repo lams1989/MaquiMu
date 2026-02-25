@@ -48,6 +48,10 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/register`, userData);
   }
 
+  solicitarRestablecimiento(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/solicitar-restablecimiento`, { email });
+  }
+
   getToken(): string | null {
     return this.isBrowser ? localStorage.getItem('jwtToken') : null;
   }

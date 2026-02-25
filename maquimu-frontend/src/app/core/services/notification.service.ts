@@ -22,6 +22,7 @@ export class NotificationService implements OnDestroy {
   private knownRentalStates = new Map<number, string>();
   private knownInvoiceIds = new Set<number>();
   private knownPendingUserIds = new Set<number>();
+  private knownResetUserIds = new Set<number>();
   private firstPoll = true;
 
   private readonly STORAGE_KEY = 'maquimu_notifications';
@@ -174,6 +175,9 @@ export class NotificationService implements OnDestroy {
 
     // Poll for pending user registrations
     this.pollPendingRegistrations();
+
+    // Poll for password reset requests
+    this.pollResetRequests();
   }
 
   // ===== Pending registrations poll (admin only) =====
@@ -216,6 +220,47 @@ export class NotificationService implements OnDestroy {
         // Update known set to current pending users (remove approved/rejected)
         const currentIds = new Set(users.map(u => u.usuarioId));
         this.knownPendingUserIds = currentIds;
+      }
+    });
+  }
+
+  // ===== Password reset requests poll (admin only) =====
+  private pollResetRequests(): void {
+    this.usuarioService.getUsuariosRestablecer().subscribe({
+      next: (users) => {
+        if (this.knownResetUserIds.size === 0 && users.length > 0) {
+          users.forEach(u => this.knownResetUserIds.add(u.usuarioId));
+          this.push({
+            id: `reset-pending-summary-${Date.now()}`,
+            type: 'password_reset_request',
+            title: 'Solicitudes de restablecimiento',
+            message: `Hay ${users.length} solicitud(es) de restablecimiento de contraseña.`,
+            icon: 'bi-key-fill',
+            iconColor: '#6366f1',
+            timestamp: new Date(),
+            read: false,
+            routerLink: '/admin/clients'
+          });
+        } else {
+          users.forEach(u => {
+            if (!this.knownResetUserIds.has(u.usuarioId)) {
+              this.knownResetUserIds.add(u.usuarioId);
+              this.push({
+                id: `reset-new-${u.usuarioId}-${Date.now()}`,
+                type: 'password_reset_request',
+                title: 'Solicitud de restablecimiento',
+                message: `Solicitud de restablecimiento de contraseña: ${u.nombreCompleto} (${u.email}).`,
+                icon: 'bi-key-fill',
+                iconColor: '#6366f1',
+                timestamp: new Date(),
+                read: false,
+                routerLink: '/admin/clients'
+              });
+            }
+          });
+        }
+        const currentIds = new Set(users.map(u => u.usuarioId));
+        this.knownResetUserIds = currentIds;
       }
     });
   }
@@ -389,6 +434,7 @@ export class NotificationService implements OnDestroy {
     this.knownRentalStates.clear();
     this.knownInvoiceIds.clear();
     this.knownPendingUserIds.clear();
+    this.knownResetUserIds.clear();
     this.firstPoll = true;
     this.notificationsSubject.next([]);
     if (this.isBrowser) {

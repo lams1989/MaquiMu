@@ -35,10 +35,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #1e3a5f, #2d5a87);
-    border-radius: 10px;
-    box-shadow: 0 2px 12px rgba(30, 58, 95, 0.4);
-    transition: transform 250ms ease, box-shadow 250ms ease;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    transition: transform 250ms ease;
 }
 
 .brand-logo-sm {
@@ -48,12 +48,14 @@
 }
 
 .brand-link:hover .brand-logo {
-    transform: scale(1.05);
-    box-shadow: 0 4px 18px rgba(45, 90, 135, 0.5);
+    transform: scale(1.08);
+    box-shadow: none;
 }
 
 .brand-logo img {
-    filter: brightness(1.15);
+    height: 34px;
+    width: auto;
+    filter: drop-shadow(0 1px 4px rgba(96, 165, 250, 0.35));
 }
 
 .brand-name {
@@ -161,13 +163,14 @@
 .sidebar-pro {
     display: flex;
     flex-direction: column;
-    width: 260px;
+    width: 210px;
     min-height: calc(100vh - 60px);
     background: #1e293b;
     border-right: 1px solid rgba(255, 255, 255, 0.06);
     position: sticky;
     top: 60px;
     overflow-y: auto;
+    flex-shrink: 0;
 }
 
 .sidebar-menu {
@@ -289,4 +292,59 @@
     padding: 1rem 1.25rem;
     color: #f8fafc;
     font-weight: 600;
+}
+
+/* — User Dropdown — */
+.user-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: #1e293b;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    min-width: 200px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    z-index: 1050;
+    overflow: hidden;
+}
+
+.user-dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.875rem;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 150ms ease;
+}
+
+.user-dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+}
+
+.user-dropdown-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 0;
+}
+
+/* — Responsive — */
+@media (max-width: 768px) {
+    .navbar-pro {
+        padding: 0 0.75rem;
+    }
+
+    .brand-name {
+        display: none;
+    }
+
+    .role-chip-client {
+        display: none;
+    }
+
+    main.flex-grow-1 {
+        padding: 1rem !important;
+    }
 }

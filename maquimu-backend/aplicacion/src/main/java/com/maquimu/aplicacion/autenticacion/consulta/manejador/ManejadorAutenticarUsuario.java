@@ -54,6 +54,12 @@ public class ManejadorAutenticarUsuario {
                     usuario.getMotivoRechazo()
             );
         }
+        if (usuario.getEstado() == EstadoUsuario.RESTABLECER) {
+            throw new CuentaNoActivaException(
+                    EstadoUsuario.RESTABLECER,
+                    "Tu cuenta tiene una solicitud de restablecimiento de contraseña en proceso. Espera a que un operario te asigne una contraseña temporal."
+            );
+        }
 
         // Si el usuario es CLIENTE, buscar su clienteId
         if (usuario.getRol() == RolUsuario.CLIENTE) {

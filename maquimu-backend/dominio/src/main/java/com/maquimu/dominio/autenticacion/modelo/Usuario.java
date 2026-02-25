@@ -41,4 +41,29 @@ public class Usuario {
         this.estado = EstadoUsuario.RECHAZADO;
         this.motivoRechazo = motivo;
     }
+
+    public void solicitarRestablecimiento() {
+        if (this.estado != EstadoUsuario.ACTIVO) {
+            throw new IllegalStateException("Solo se puede solicitar restablecimiento de contraseña en estado ACTIVO. Estado actual: " + this.estado);
+        }
+        this.estado = EstadoUsuario.RESTABLECER;
+    }
+
+    public void resolverRestablecimiento(String nuevoPasswordHash) {
+        if (this.estado != EstadoUsuario.RESTABLECER) {
+            throw new IllegalStateException("Solo se puede resolver restablecimiento en estado RESTABLECER. Estado actual: " + this.estado);
+        }
+        if (nuevoPasswordHash == null || nuevoPasswordHash.isBlank()) {
+            throw new IllegalArgumentException("La nueva contraseña es requerida");
+        }
+        this.passwordHash = nuevoPasswordHash;
+        this.estado = EstadoUsuario.ACTIVO;
+    }
+
+    public void cambiarPassword(String nuevoPasswordHash) {
+        if (nuevoPasswordHash == null || nuevoPasswordHash.isBlank()) {
+            throw new IllegalArgumentException("La nueva contraseña es requerida");
+        }
+        this.passwordHash = nuevoPasswordHash;
+    }
 }

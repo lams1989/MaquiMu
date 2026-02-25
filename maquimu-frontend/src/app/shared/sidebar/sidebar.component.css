@@ -5,13 +5,14 @@
 .sidebar-pro {
     display: flex;
     flex-direction: column;
-    width: 260px;
+    width: 210px;
     min-height: calc(100vh - 60px);
     background: #1e293b;
     border-right: 1px solid rgba(255, 255, 255, 0.06);
     position: sticky;
     top: 60px;
     overflow-y: auto;
+    flex-shrink: 0;
 }
 
 /* — Menu — */

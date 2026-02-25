@@ -37,6 +37,12 @@
                         <span *ngIf="pendientes.length > 0" class="badge bg-warning text-dark ms-1">{{ pendientes.length }}</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" [class.active]="activeTab === 'restablecer'" (click)="setActiveTab('restablecer')" style="cursor: pointer;">
+                        <i class="bi bi-key me-1"></i>Solicitudes de Restablecimiento
+                        <span *ngIf="restablecer.length > 0" class="badge bg-info text-dark ms-1">{{ restablecer.length }}</span>
+                    </a>
+                </li>
             </ul>
 
             <!-- Tab: Clientes -->
@@ -157,6 +163,62 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Tab: Solicitudes de Restablecimiento -->
+            <div *ngIf="activeTab === 'restablecer'">
+                <div class="card border-0">
+                    <div class="card-body p-0">
+                        <div *ngIf="restablecerLoading" class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Cargando...</span>
+                            </div>
+                        </div>
+                        <div *ngIf="!restablecerLoading" class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre Completo</th>
+                                        <th>Email</th>
+                                        <th>Fecha Solicitud</th>
+                                        <th>Estado</th>
+                                        <th class="text-center">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let usuario of restablecer">
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="client-avatar me-2" style="background: #dbeafe;">
+                                                    <i class="bi bi-key-fill" style="color: #2563eb;"></i>
+                                                </div>
+                                                <span class="fw-semibold">{{ usuario.nombreCompleto }}</span>
+                                            </div>
+                                        </td>
+                                        <td>{{ usuario.email }}</td>
+                                        <td>{{ formatDate(usuario.fechaCreacion) }}</td>
+                                        <td>
+                                            <span class="badge bg-info text-dark">
+                                                <i class="bi bi-key me-1"></i>Restablecer
+                                            </span>
+                                        </td>
+                                        <td class="text-center">
+                                            <button class="btn btn-outline-primary btn-sm" title="Asignar Contraseña" (click)="abrirModalAsignarPassword(usuario)">
+                                                <i class="bi bi-key me-1"></i>Asignar Contraseña
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="restablecer.length === 0">
+                                        <td colspan="5" class="text-center py-5">
+                                            <i class="bi bi-shield-check display-4 text-success d-block mb-2"></i>
+                                            <p class="text-muted mb-0">No hay solicitudes de restablecimiento.</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -207,6 +269,60 @@
                 <button type="button" class="btn btn-danger" (click)="confirmarRechazo()" [disabled]="!motivoRechazo.trim()">
                     <i class="bi bi-x-lg me-1"></i>Rechazar
                 </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Asignar Contraseña Temporal -->
+<div *ngIf="showAssignPasswordModal" class="modal-backdrop fade show"></div>
+<div *ngIf="showAssignPasswordModal" class="modal fade show d-block" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-key text-primary me-2"></i>Asignar Contraseña Temporal</h5>
+                <button type="button" class="btn-close" (click)="cerrarModalAsignarPassword()"></button>
+            </div>
+            <div class="modal-body">
+                <div *ngIf="!assignPasswordSuccess">
+                    <div class="mb-3 p-3 bg-light rounded">
+                        <p class="mb-1"><strong>Usuario:</strong> {{ usuarioAsignarPassword?.nombreCompleto }}</p>
+                        <p class="mb-0"><strong>Email:</strong> {{ usuarioAsignarPassword?.email }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <label for="passwordTemporal" class="form-label">Contraseña Temporal</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="passwordTemporal"
+                                   [(ngModel)]="passwordTemporal" placeholder="Mínimo 6 caracteres"
+                                   [ngClass]="{'is-invalid': passwordTemporal && passwordTemporal.length < 6}">
+                            <button class="btn btn-outline-secondary" type="button" (click)="generarPasswordAutomatica()" title="Generar automáticamente">
+                                <i class="bi bi-shuffle me-1"></i>Generar
+                            </button>
+                        </div>
+                        <div *ngIf="passwordTemporal && passwordTemporal.length < 6" class="text-danger small mt-1">Mínimo 6 caracteres</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmPasswordTemp" class="form-label">Confirmar Contraseña</label>
+                        <input type="text" class="form-control" id="confirmPasswordTemp"
+                               [(ngModel)]="confirmPasswordTemporal" placeholder="Repite la contraseña temporal"
+                               [ngClass]="{'is-invalid': confirmPasswordTemporal && confirmPasswordTemporal !== passwordTemporal}">
+                        <div *ngIf="confirmPasswordTemporal && confirmPasswordTemporal !== passwordTemporal" class="text-danger small mt-1">Las contraseñas no coinciden</div>
+                    </div>
+                    <div *ngIf="assignPasswordError" class="alert alert-danger py-2">{{ assignPasswordError }}</div>
+                </div>
+                <div *ngIf="assignPasswordSuccess" class="text-center py-3">
+                    <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+                    <p class="mt-3 fw-semibold">Contraseña temporal asignada y enviada al correo {{ usuarioAsignarPassword?.email }}.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button *ngIf="!assignPasswordSuccess" type="button" class="btn btn-outline-secondary" (click)="cerrarModalAsignarPassword()">Cancelar</button>
+                <button *ngIf="!assignPasswordSuccess" type="button" class="btn btn-primary" (click)="confirmarAsignarPassword()"
+                        [disabled]="assignPasswordLoading || !passwordTemporal || passwordTemporal.length < 6 || passwordTemporal !== confirmPasswordTemporal">
+                    <span *ngIf="assignPasswordLoading" class="spinner-border spinner-border-sm me-2" role="status"></span>
+                    {{ assignPasswordLoading ? 'Asignando...' : 'Asignar y Enviar' }}
+                </button>
+                <button *ngIf="assignPasswordSuccess" type="button" class="btn btn-primary" (click)="cerrarModalAsignarPassword()">Aceptar</button>
             </div>
         </div>
     </div>
