@@ -27,6 +27,13 @@ public class ManejadorRegistrarUsuario {
 
     @Transactional
     public void ejecutar(ComandoRegistrarUsuario comando) {
+        String nombre = comando.getNombreNormalizado();
+        String apellido = comando.getApellidoNormalizado();
+
+        if (nombre == null || nombre.isBlank() || apellido == null || apellido.isBlank()) {
+            throw new IllegalArgumentException("El nombre y apellido son requeridos");
+        }
+
         // 1. Validar email único
         if (usuarioDao.existePorEmail(comando.getEmail())) {
             throw new IllegalArgumentException("El email ya está registrado: " + comando.getEmail());
@@ -50,7 +57,7 @@ public class ManejadorRegistrarUsuario {
 
         // 6. Si el rol es CLIENTE, crear automáticamente el registro en la tabla clientes
         if (comando.getRol() == RolUsuario.CLIENTE) {
-            Cliente cliente = fabricaCliente.crearDesdeUsuario(usuarioGuardado, comando.getIdentificacion());
+            Cliente cliente = fabricaCliente.crearDesdeUsuario(usuarioGuardado, comando.getIdentificacion(), nombre, apellido);
             clienteRepositorio.guardar(cliente);
         }
     }

@@ -28,13 +28,16 @@ public class ClienteEntity {
     @Column(name = "nombre_cliente", nullable = false)
     private String nombreCliente;
 
+    @Column(name = "apellido", nullable = true)
+    private String apellido;
+
     @Column(nullable = false, unique = true)
     private String identificacion;
 
     @Column(nullable = true)
     private String telefono;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(columnDefinition = "TEXT")
@@ -48,6 +51,7 @@ public class ClienteEntity {
                 cliente.getClienteId(),
                 cliente.getUsuarioId(),
                 cliente.getNombreCliente(),
+                cliente.getApellido(),
                 cliente.getIdentificacion(),
                 cliente.getTelefono(),
                 cliente.getEmail(),
@@ -61,6 +65,7 @@ public class ClienteEntity {
                 .clienteId(clienteId)
                 .usuarioId(usuarioId)
                 .nombreCliente(nombreCliente)
+                .apellido(apellido)
                 .identificacion(identificacion)
                 .telefono(telefono)
                 .email(email)

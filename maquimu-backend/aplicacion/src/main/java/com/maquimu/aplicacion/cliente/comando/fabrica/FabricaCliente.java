@@ -15,6 +15,7 @@ public class FabricaCliente {
         return Cliente.builder()
                 .usuarioId(comando.getUsuarioId())
                 .nombreCliente(comando.getNombreCliente())
+                .apellido(comando.getApellido())
                 .identificacion(comando.getIdentificacion())
                 .telefono(comando.getTelefono())
                 .email(comando.getEmail())
@@ -27,10 +28,11 @@ public class FabricaCliente {
      * Crea un Cliente a partir de un Usuario registrado con rol CLIENTE.
      * Usa los datos del usuario para llenar los campos del cliente.
      */
-    public Cliente crearDesdeUsuario(Usuario usuario, String identificacion) {
+    public Cliente crearDesdeUsuario(Usuario usuario, String identificacion, String nombre, String apellido) {
         return Cliente.builder()
                 .usuarioId(usuario.getId())
-                .nombreCliente(usuario.getNombreCompleto())
+                .nombreCliente(nombre)
+                .apellido(apellido)
                 .identificacion(identificacion)
                 .telefono(null) // Se puede completar después
                 .email(usuario.getEmail())
@@ -44,6 +46,7 @@ public class FabricaCliente {
                 .clienteId(clienteExistente.getClienteId())
                 .usuarioId(clienteExistente.getUsuarioId())
                 .nombreCliente(comando.getNombreCliente())
+            .apellido(comando.getApellido())
                 .identificacion(comando.getIdentificacion())
                 .telefono(comando.getTelefono())
                 .email(comando.getEmail())

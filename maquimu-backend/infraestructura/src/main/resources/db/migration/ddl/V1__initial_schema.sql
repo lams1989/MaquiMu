@@ -20,6 +20,7 @@ CREATE TABLE `clientes` (
   `cliente_id` BIGINT NOT NULL AUTO_INCREMENT,
   `usuario_id` BIGINT NULL,
   `nombre_cliente` VARCHAR(255) NOT NULL,
+  `apellido` VARCHAR(100) NULL,
   `identificacion` VARCHAR(45) NOT NULL,
   `telefono` VARCHAR(20) NULL,
   `email` VARCHAR(100) NOT NULL,
@@ -27,6 +28,7 @@ CREATE TABLE `clientes` (
   `fecha_registro` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`cliente_id`),
   UNIQUE INDEX `identificacion_UNIQUE` (`identificacion` ASC),
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC),
   UNIQUE INDEX `usuario_id_UNIQUE` (`usuario_id` ASC),
   INDEX `fk_clientes_usuarios_idx` (`usuario_id` ASC),
   CONSTRAINT `fk_clientes_usuarios`

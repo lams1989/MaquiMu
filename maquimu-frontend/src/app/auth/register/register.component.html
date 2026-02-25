@@ -11,16 +11,31 @@
       </div>
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
 
-        <div class="mb-3">
-          <label for="nombreCompleto" class="form-label">Nombre Completo</label>
-          <div class="input-group">
-            <span class="input-group-text"><i class="bi bi-person"></i></span>
-            <input type="text" id="nombreCompleto" formControlName="nombreCompleto" class="form-control" placeholder="Tu nombre completo"
-                   [ngClass]="{ 'is-invalid': registerForm.get('nombreCompleto')?.touched && registerForm.get('nombreCompleto')?.invalid }">
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <label for="nombre" class="form-label">Nombre</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-person"></i></span>
+              <input type="text" id="nombre" formControlName="nombre" class="form-control" placeholder="Tu nombre"
+                     [ngClass]="{ 'is-invalid': registerForm.get('nombre')?.touched && registerForm.get('nombre')?.invalid }">
+            </div>
+            <div *ngIf="registerForm.get('nombre')?.touched && registerForm.get('nombre')?.invalid" class="text-danger small mt-1">
+              <div *ngIf="registerForm.get('nombre')?.errors?.['required']">El nombre es requerido.</div>
+              <div *ngIf="registerForm.get('nombre')?.errors?.['minlength']">Debe tener al menos 2 caracteres.</div>
+            </div>
           </div>
-          <div *ngIf="registerForm.get('nombreCompleto')?.touched && registerForm.get('nombreCompleto')?.invalid" class="text-danger small mt-1">
-            <div *ngIf="registerForm.get('nombreCompleto')?.errors?.['required']">El nombre es requerido.</div>
-            <div *ngIf="registerForm.get('nombreCompleto')?.errors?.['minlength']">Debe tener al menos 3 caracteres.</div>
+
+          <div class="col-md-6">
+            <label for="apellido" class="form-label">Apellido</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-person"></i></span>
+              <input type="text" id="apellido" formControlName="apellido" class="form-control" placeholder="Tu apellido"
+                     [ngClass]="{ 'is-invalid': registerForm.get('apellido')?.touched && registerForm.get('apellido')?.invalid }">
+            </div>
+            <div *ngIf="registerForm.get('apellido')?.touched && registerForm.get('apellido')?.invalid" class="text-danger small mt-1">
+              <div *ngIf="registerForm.get('apellido')?.errors?.['required']">El apellido es requerido.</div>
+              <div *ngIf="registerForm.get('apellido')?.errors?.['minlength']">Debe tener al menos 2 caracteres.</div>
+            </div>
           </div>
         </div>
 

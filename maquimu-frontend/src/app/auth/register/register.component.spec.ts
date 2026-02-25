@@ -44,17 +44,174 @@ describe('RegisterComponent', () => {
     expect(component.registerForm.get('rol')?.value).toBe('CLIENTE');
   });
 
-  it('should validate nombreCompleto as required with minimum length', () => {
-    const nombreControl = component.registerForm.get('nombreCompleto');
+  it('should validate nombre as required with minimum length', () => {
+    const nombreControl = component.registerForm.get('nombre');
 
     nombreControl?.setValue('');
     expect(nombreControl?.hasError('required')).toBe(true);
 
-    nombreControl?.setValue('AB');
+    nombreControl?.setValue('A');
     expect(nombreControl?.hasError('minlength')).toBe(true);
 
-    nombreControl?.setValue('Juan Pérez');
+    nombreControl?.setValue('Juan');
     expect(nombreControl?.valid).toBe(true);
+  });
+
+  it('should validate apellido as required with minimum length', () => {
+    const apellidoControl = component.registerForm.get('apellido');
+
+    apellidoControl?.setValue('');
+    expect(apellidoControl?.hasError('required')).toBe(true);
+
+    apellidoControl?.setValue('P');
+    expect(apellidoControl?.hasError('minlength')).toBe(true);
+
+    apellidoControl?.setValue('Pérez');
+    expect(apellidoControl?.valid).toBe(true);
+  });
+
+  it('should build nombreCompleto from nombre and apellido on submit', () => {
+    authService.register.and.returnValue(of({ mensaje: 'Usuario registrado exitosamente' }));
+
+    component.registerForm.patchValue({
+      nombre: 'Juan',
+      apellido: 'Pérez',
+      email: 'juan@example.com',
+      password: 'password123',
+      confirmPassword: 'password123',
+      identificacion: '123456789',
+      rol: 'CLIENTE'
+    });
+
+    component.onSubmit();
+
+    expect(authService.register).toHaveBeenCalledWith({
+      nombre: 'Juan',
+      apellido: 'Pérez',
+      nombreCompleto: 'Juan Pérez',
+      email: 'juan@example.com',
+      password: 'password123',
+      identificacion: '123456789',
+      rol: 'CLIENTE'
+    });
+  });
+
+  it('should trim nombre and apellido before building nombreCompleto', () => {
+    authService.register.and.returnValue(of({ mensaje: 'Usuario registrado exitosamente' }));
+
+    component.registerForm.patchValue({
+      nombre: '  Juan  ',
+      apellido: '  Pérez  ',
+      email: 'juan@example.com',
+      password: 'password123',
+      confirmPassword: 'password123',
+      identificacion: '123456789',
+      rol: 'CLIENTE'
+    });
+
+    component.onSubmit();
+
+    expect(authService.register).toHaveBeenCalledWith(
+      jasmine.objectContaining({ nombreCompleto: 'Juan Pérez' })
+    );
+  });
+
+  it('should handle apellido with spaces correctly', () => {
+    authService.register.and.returnValue(of({ mensaje: 'Usuario registrado exitosamente' }));
+
+    component.registerForm.patchValue({
+      nombre: 'María',
+      apellido: 'de la Cruz',
+      email: 'maria@example.com',
+      password: 'password123',
+      confirmPassword: 'password123',
+      identificacion: '123456789',
+      rol: 'CLIENTE'
+    });
+
+    component.onSubmit();
+
+    expect(authService.register).toHaveBeenCalledWith(
+      jasmine.objectContaining({ nombreCompleto: 'María de la Cruz' })
+    );
+  });
+
+  it('should not submit if nombre and apellido are invalid', () => {
+    component.registerForm.patchValue({
+      nombre: '',
+      apellido: '',
+      email: 'valid@example.com',
+      password: 'password123',
+      confirmPassword: 'password123',
+      identificacion: '123456789',
+      rol: 'CLIENTE'
+    });
+
+    component.onSubmit();
+
+    expect(authService.register).not.toHaveBeenCalled();
+    expect(component.registerForm.get('nombre')?.hasError('required')).toBe(true);
+    expect(component.registerForm.get('apellido')?.hasError('required')).toBe(true);
+  });
+
+  it('should preserve OPERARIO role when submitting with nombre and apellido', () => {
+    authService.register.and.returnValue(of({ mensaje: 'Éxito' }));
+
+    component.registerForm.patchValue({
+      nombre: 'Carlos',
+      apellido: 'Operario',
+      email: 'operario@example.com',
+      password: 'password123',
+      confirmPassword: 'password123',
+      identificacion: '987654321',
+      rol: 'OPERARIO'
+    });
+
+    component.onSubmit();
+
+    expect(authService.register).toHaveBeenCalledWith(
+      jasmine.objectContaining({ rol: 'OPERARIO', nombreCompleto: 'Carlos Operario' })
+    );
+  });
+
+  it('should create nombreCompleto when apellido has accent characters', () => {
+    authService.register.and.returnValue(of({ mensaje: 'Éxito' }));
+
+    component.registerForm.patchValue({
+      nombre: 'José',
+      apellido: 'Muñoz',
+      email: 'jose@example.com',
+      password: 'password123',
+      confirmPassword: 'password123',
+      identificacion: '123456789',
+      rol: 'CLIENTE'
+    });
+
+    component.onSubmit();
+
+    expect(authService.register).toHaveBeenCalledWith(
+      jasmine.objectContaining({ nombreCompleto: 'José Muñoz' })
+    );
+  });
+
+  it('should allow submit when nombre and apellido are valid', () => {
+    authService.register.and.returnValue(of({ mensaje: 'Éxito' }));
+
+    component.registerForm.patchValue({
+      nombre: 'Laura',
+      apellido: 'Martínez',
+      email: 'laura@example.com',
+      password: 'password123',
+      confirmPassword: 'password123',
+      identificacion: '123456789',
+      rol: 'CLIENTE'
+    });
+
+    component.onSubmit();
+
+    expect(authService.register).toHaveBeenCalled();
+    expect(component.registerForm.get('nombre')?.valid).toBe(true);
+    expect(component.registerForm.get('apellido')?.valid).toBe(true);
   });
 
   it('should validate email field as required and valid format', () => {
@@ -116,7 +273,8 @@ describe('RegisterComponent', () => {
 
   it('should not submit if form is invalid', () => {
     component.registerForm.patchValue({
-      nombreCompleto: '',
+      nombre: '',
+      apellido: '',
       email: 'invalid',
       password: '123',
       confirmPassword: '123',
@@ -133,7 +291,8 @@ describe('RegisterComponent', () => {
     authService.register.and.returnValue(of({ mensaje: 'Usuario registrado exitosamente' }));
 
     component.registerForm.patchValue({
-      nombreCompleto: 'Juan Pérez',
+      nombre: 'Juan',
+      apellido: 'Pérez',
       email: 'juan@example.com',
       password: 'password123',
       confirmPassword: 'password123',
@@ -144,6 +303,8 @@ describe('RegisterComponent', () => {
     component.onSubmit();
 
     expect(authService.register).toHaveBeenCalledWith({
+      nombre: 'Juan',
+      apellido: 'Pérez',
       nombreCompleto: 'Juan Pérez',
       email: 'juan@example.com',
       password: 'password123',
@@ -156,7 +317,8 @@ describe('RegisterComponent', () => {
     authService.register.and.returnValue(of({ mensaje: 'Éxito' }));
 
     component.registerForm.patchValue({
-      nombreCompleto: 'Test User',
+      nombre: 'Test',
+      apellido: 'User',
       email: 'test@example.com',
       password: 'password123',
       confirmPassword: 'password123',
@@ -181,7 +343,8 @@ describe('RegisterComponent', () => {
     authService.register.and.returnValue(throwError(() => errorResponse));
 
     component.registerForm.patchValue({
-      nombreCompleto: 'Test User',
+      nombre: 'Test',
+      apellido: 'User',
       email: 'duplicate@example.com',
       password: 'password123',
       confirmPassword: 'password123',
@@ -199,7 +362,8 @@ describe('RegisterComponent', () => {
     authService.register.and.returnValue(throwError(() => ({ error: {} })));
 
     component.registerForm.patchValue({
-      nombreCompleto: 'Test User',
+      nombre: 'Test',
+      apellido: 'User',
       email: 'test@example.com',
       password: 'password123',
       confirmPassword: 'password123',
@@ -217,7 +381,8 @@ describe('RegisterComponent', () => {
     authService.register.and.returnValue(of({ mensaje: 'Éxito' }));
 
     component.registerForm.patchValue({
-      nombreCompleto: 'Test User',
+      nombre: 'Test',
+      apellido: 'User',
       email: 'test@example.com',
       password: 'password123',
       confirmPassword: 'password123',
@@ -237,7 +402,8 @@ describe('RegisterComponent', () => {
     authService.register.and.returnValue(of({ mensaje: 'Éxito' }));
 
     component.registerForm.patchValue({
-      nombreCompleto: 'Test User',
+      nombre: 'Test',
+      apellido: 'User',
       email: 'test@example.com',
       password: 'password123',
       confirmPassword: 'password123',
@@ -254,7 +420,8 @@ describe('RegisterComponent', () => {
     authService.register.and.returnValue(of({ mensaje: 'Éxito' }));
 
     component.registerForm.patchValue({
-      nombreCompleto: 'Operario Test',
+      nombre: 'Operario',
+      apellido: 'Test',
       email: 'operario@example.com',
       password: 'password123',
       confirmPassword: 'password123',

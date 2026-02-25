@@ -22,7 +22,13 @@ public class ManejadorActualizarCliente {
         Cliente clienteExistente = clienteDao.buscarPorId(comando.getClienteId())
                 .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado con ID: " + comando.getClienteId()));
 
-        validarIdentificacionUnica(comando.getIdentificacion(), comando.getClienteId());
+        if (comando.getIdentificacion() != null) {
+            validarIdentificacionUnica(comando.getIdentificacion(), comando.getClienteId());
+        }
+
+        if (comando.getEmail() != null) {
+            validarEmailUnico(comando.getEmail(), comando.getClienteId());
+        }
 
         Cliente clienteActualizado = fabricaCliente.actualizar(clienteExistente, comando);
         clienteRepositorio.guardar(clienteActualizado);
@@ -33,6 +39,15 @@ public class ManejadorActualizarCliente {
                 .ifPresent(cliente -> {
                     if (!cliente.getClienteId().equals(clienteId)) {
                         throw new IllegalArgumentException("Ya existe otro cliente con la identificación: " + identificacion);
+                    }
+                });
+    }
+
+    private void validarEmailUnico(String email, Long clienteId) {
+        clienteDao.buscarPorEmail(email)
+                .ifPresent(cliente -> {
+                    if (!cliente.getClienteId().equals(clienteId)) {
+                        throw new IllegalArgumentException("Ya existe otro cliente con el email: " + email);
                     }
                 });
     }

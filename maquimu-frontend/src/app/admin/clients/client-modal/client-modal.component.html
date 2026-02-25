@@ -62,6 +62,25 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- Apellido -->
+                        <div class="col-md-6 mb-3">
+                            <label for="apellido" class="form-label">
+                                {{ clientForm.get('tipoCliente')?.value === 'NATURAL' ? 'Apellido' : 'Apellido (Opcional)' }}
+                                <span class="text-danger" *ngIf="clientForm.get('tipoCliente')?.value === 'NATURAL'">*</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-person-vcard"></i></span>
+                                <input type="text" id="apellido" formControlName="apellido" class="form-control"
+                                       placeholder="Apellido del cliente"
+                                       [class.is-invalid]="clientForm.get('apellido')?.invalid && clientForm.get('apellido')?.touched">
+                                <div *ngIf="clientForm.get('apellido')?.invalid && clientForm.get('apellido')?.touched" class="invalid-feedback">
+                                    El apellido es requerido para persona natural.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
                         <!-- Identificación -->
                         <div class="col-md-6 mb-3">
                             <label for="identificacion" class="form-label">
@@ -75,6 +94,19 @@
                                        [class.is-invalid]="clientForm.get('identificacion')?.invalid && clientForm.get('identificacion')?.touched">
                                 <div *ngIf="clientForm.get('identificacion')?.invalid && clientForm.get('identificacion')?.touched" class="invalid-feedback">
                                     La identificación es requerida.
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Teléfono -->
+                        <div class="col-md-6 mb-3">
+                            <label for="telefono" class="form-label">Teléfono / Celular <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                                <input type="tel" id="telefono" formControlName="telefono" class="form-control"
+                                       placeholder="300 123 4567"
+                                       [class.is-invalid]="clientForm.get('telefono')?.invalid && clientForm.get('telefono')?.touched">
+                                <div *ngIf="clientForm.get('telefono')?.invalid && clientForm.get('telefono')?.touched" class="invalid-feedback">
+                                    El teléfono es requerido.
                                 </div>
                             </div>
                         </div>
@@ -94,19 +126,6 @@
                                 </div>
                                 <div *ngIf="clientForm.get('email')?.errors?.['email'] && clientForm.get('email')?.touched" class="invalid-feedback">
                                     Ingrese un correo electrónico válido.
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Teléfono -->
-                        <div class="col-md-6 mb-3">
-                            <label for="telefono" class="form-label">Teléfono / Celular <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-telephone"></i></span>
-                                <input type="tel" id="telefono" formControlName="telefono" class="form-control"
-                                       placeholder="300 123 4567"
-                                       [class.is-invalid]="clientForm.get('telefono')?.invalid && clientForm.get('telefono')?.touched">
-                                <div *ngIf="clientForm.get('telefono')?.invalid && clientForm.get('telefono')?.touched" class="invalid-feedback">
-                                    El teléfono es requerido.
                                 </div>
                             </div>
                         </div>

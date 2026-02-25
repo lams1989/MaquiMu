@@ -20,6 +20,7 @@ public class ManejadorCrearCliente {
     @Transactional
     public Long ejecutar(ComandoCrearCliente comando) {
         validarIdentificacionUnica(comando.getIdentificacion());
+        validarEmailUnico(comando.getEmail());
         Cliente cliente = fabricaCliente.crear(comando);
         Cliente clienteGuardado = clienteRepositorio.guardar(cliente);
         return clienteGuardado.getClienteId();
@@ -28,6 +29,12 @@ public class ManejadorCrearCliente {
     private void validarIdentificacionUnica(String identificacion) {
         if (clienteDao.existePorIdentificacion(identificacion)) {
             throw new IllegalArgumentException("Ya existe un cliente con la identificación: " + identificacion);
+        }
+    }
+
+    private void validarEmailUnico(String email) {
+        if (clienteDao.existePorEmail(email)) {
+            throw new IllegalArgumentException("Ya existe un cliente con el email: " + email);
         }
     }
 }

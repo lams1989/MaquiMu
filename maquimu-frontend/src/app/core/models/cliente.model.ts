@@ -1,6 +1,7 @@
 export interface Cliente {
   clienteId: number;
   nombreCliente: string;
+  apellido?: string;
   identificacion: string;
   telefono?: string;
   email: string;
@@ -10,6 +11,7 @@ export interface Cliente {
 
 export interface CrearClienteRequest {
   nombreCliente: string;
+  apellido?: string;
   identificacion: string;
   telefono?: string;
   email: string;
@@ -18,6 +20,7 @@ export interface CrearClienteRequest {
 
 export interface ActualizarClienteRequest {
   nombreCliente?: string;
+  apellido?: string;
   identificacion?: string;
   telefono?: string;
   email?: string;

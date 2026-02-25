@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class ComandoCrearCliente {
     private Long usuarioId;
     private String nombreCliente;
+    private String apellido;
     private String identificacion;
     private String telefono;
     private String email;

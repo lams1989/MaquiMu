@@ -24,7 +24,8 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.registerForm = this.fb.group({
-      nombreCompleto: ['', [Validators.required, Validators.minLength(3)]],
+      nombre: ['', [Validators.required, Validators.minLength(2)]],
+      apellido: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]],
@@ -48,9 +49,10 @@ export class RegisterComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
 
-    const { nombreCompleto, email, password, identificacion, rol } = this.registerForm.value;
+    const { nombre, apellido, email, password, identificacion, rol } = this.registerForm.value;
+    const nombreCompleto = `${nombre?.trim() ?? ''} ${apellido?.trim() ?? ''}`.trim();
 
-    this.authService.register({ nombreCompleto, email, password, identificacion, rol }).subscribe({
+    this.authService.register({ nombre, apellido, nombreCompleto, email, password, identificacion, rol }).subscribe({
       next: () => {
         this.isLoading = false;
         // Redirigir al login con un mensaje de éxito

@@ -30,13 +30,15 @@ CREATE TABLE `usuarios` (
 CREATE TABLE `clientes` (
   `cliente_id` INT NOT NULL AUTO_INCREMENT,
   `nombre_cliente` VARCHAR(255) NOT NULL,
+  `apellido` VARCHAR(100) NULL,
   `identificacion` VARCHAR(45) NOT NULL,
   `telefono` VARCHAR(20) NULL,
   `email` VARCHAR(100) NOT NULL,
   `direccion` VARCHAR(255) NULL,
   `fecha_registro` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`cliente_id`),
-  UNIQUE INDEX `identificacion_UNIQUE` (`identificacion` ASC)
+  UNIQUE INDEX `identificacion_UNIQUE` (`identificacion` ASC),
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC)
 ) ENGINE = InnoDB;
 
 

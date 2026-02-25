@@ -90,6 +90,8 @@ describe('AuthService', () => {
   describe('register()', () => {
     it('should call POST endpoint with registration data', (done) => {
       const registerRequest: RegisterRequest = {
+        nombre: 'New',
+        apellido: 'User',
         nombreCompleto: 'New User',
         email: 'newuser@example.com',
         password: 'password123',

@@ -51,9 +51,34 @@ class ManejadorCrearClienteTest {
 
         assertEquals("Ya existe un cliente con la identificación: 1234567890", exception.getMessage());
         verify(clienteDao, times(1)).existePorIdentificacion("1234567890");
+                verify(clienteDao, never()).existePorEmail(anyString());
         verify(fabricaCliente, never()).crear(any(ComandoCrearCliente.class));
         verify(clienteRepositorio, never()).guardar(any(Cliente.class));
     }
+
+        @Test
+        void ejecutar_emailExistente_deberiaLanzarExcepcion() {
+                ComandoCrearCliente comando = ComandoCrearCliente.builder()
+                                .nombreCliente("Juan Pérez")
+                                .identificacion("1234567890")
+                                .email("juan@example.com")
+                                .telefono("3001234567")
+                                .direccion("Calle 123")
+                                .build();
+
+                when(clienteDao.existePorIdentificacion("1234567890")).thenReturn(false);
+                when(clienteDao.existePorEmail("juan@example.com")).thenReturn(true);
+
+                Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+                        manejadorCrearCliente.ejecutar(comando);
+                });
+
+                assertEquals("Ya existe un cliente con el email: juan@example.com", exception.getMessage());
+                verify(clienteDao, times(1)).existePorIdentificacion("1234567890");
+                verify(clienteDao, times(1)).existePorEmail("juan@example.com");
+                verify(fabricaCliente, never()).crear(any(ComandoCrearCliente.class));
+                verify(clienteRepositorio, never()).guardar(any(Cliente.class));
+        }
 
     @Test
     void ejecutar_identificacionNoExistente_deberiaCrearClienteCorrectamente() {
@@ -85,6 +110,7 @@ class ManejadorCrearClienteTest {
                 .build();
 
         when(clienteDao.existePorIdentificacion("1234567890")).thenReturn(false);
+        when(clienteDao.existePorEmail("juan@example.com")).thenReturn(false);
         when(fabricaCliente.crear(comando)).thenReturn(nuevoCliente);
         when(clienteRepositorio.guardar(nuevoCliente)).thenReturn(clienteGuardado);
 
@@ -93,6 +119,7 @@ class ManejadorCrearClienteTest {
         assertNotNull(clienteId);
         assertEquals(1L, clienteId);
         verify(clienteDao, times(1)).existePorIdentificacion("1234567890");
+                verify(clienteDao, times(1)).existePorEmail("juan@example.com");
         verify(fabricaCliente, times(1)).crear(comando);
         verify(clienteRepositorio, times(1)).guardar(nuevoCliente);
     }
@@ -123,6 +150,7 @@ class ManejadorCrearClienteTest {
                 .build();
 
         when(clienteDao.existePorIdentificacion("9876543210")).thenReturn(false);
+        when(clienteDao.existePorEmail("maria@example.com")).thenReturn(false);
         when(fabricaCliente.crear(comando)).thenReturn(nuevoCliente);
         when(clienteRepositorio.guardar(nuevoCliente)).thenReturn(clienteGuardado);
 

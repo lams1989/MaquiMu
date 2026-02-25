@@ -30,15 +30,21 @@ export class ClientModalComponent implements OnInit {
   }
 
   initializeForm(): void {
+    const tipoClienteInicial = this.cliente?.apellido ? 'NATURAL' : 'JURIDICA';
+
     this.clientForm = this.fb.group({
-      tipoCliente: ['JURIDICA'],
+      tipoCliente: [tipoClienteInicial],
       nombreCliente: [this.cliente?.nombreCliente || '', Validators.required],
+      apellido: [this.cliente?.apellido || ''],
       identificacion: [this.cliente?.identificacion || '', Validators.required],
       telefono: [this.cliente?.telefono || '', Validators.required],
       email: [this.cliente?.email || '', [Validators.required, Validators.email]],
       direccion: [this.cliente?.direccion || '', Validators.required],
       autorizaDatos: [this.isEditMode ? true : false, Validators.requiredTrue]
     });
+
+    this.actualizarValidacionApellido();
+    this.clientForm.get('tipoCliente')?.valueChanges.subscribe(() => this.actualizarValidacionApellido());
   }
 
   saveClient(): void {
@@ -54,6 +60,7 @@ export class ClientModalComponent implements OnInit {
     if (this.isEditMode && this.cliente) {
       const updateRequest: ActualizarClienteRequest = {
         nombreCliente: formValue.nombreCliente,
+        apellido: formValue.apellido,
         identificacion: formValue.identificacion,
         telefono: formValue.telefono,
         email: formValue.email,
@@ -72,6 +79,7 @@ export class ClientModalComponent implements OnInit {
     } else {
       const createRequest: CrearClienteRequest = {
         nombreCliente: formValue.nombreCliente,
+        apellido: formValue.apellido,
         identificacion: formValue.identificacion,
         telefono: formValue.telefono,
         email: formValue.email,
@@ -92,5 +100,22 @@ export class ClientModalComponent implements OnInit {
 
   cancel(): void {
     this.close.emit();
+  }
+
+  private actualizarValidacionApellido(): void {
+    const apellidoControl = this.clientForm.get('apellido');
+    const tipoCliente = this.clientForm.get('tipoCliente')?.value;
+
+    if (!apellidoControl) {
+      return;
+    }
+
+    if (tipoCliente === 'NATURAL') {
+      apellidoControl.setValidators([Validators.required]);
+    } else {
+      apellidoControl.clearValidators();
+    }
+
+    apellidoControl.updateValueAndValidity();
   }
 }

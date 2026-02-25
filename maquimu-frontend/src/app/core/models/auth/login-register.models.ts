@@ -9,7 +9,9 @@ export interface Usuario {
 }
 
 export interface RegisterRequest {
-    nombreCompleto: string;
+    nombre: string;
+    apellido: string;
+    nombreCompleto?: string;
     email: string;
     password: string;
     identificacion: string; // Campo nuevo requerido para clientes

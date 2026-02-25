@@ -53,7 +53,8 @@ class ManejadorRegistrarUsuarioTest {
 
     private ComandoRegistrarUsuario crearComandoOperario() {
         return ComandoRegistrarUsuario.builder()
-                .nombreCompleto("Juan Pérez")
+                .nombre("Juan")
+                .apellido("Pérez")
                 .email("juan@maquimu.com")
                 .password("password123")
                 .rol(RolUsuario.OPERARIO)
@@ -62,7 +63,8 @@ class ManejadorRegistrarUsuarioTest {
 
     private ComandoRegistrarUsuario crearComandoCliente() {
         return ComandoRegistrarUsuario.builder()
-                .nombreCompleto("María López")
+                .nombre("María")
+                .apellido("López")
                 .email("maria@correo.com")
                 .password("clave456")
                 .rol(RolUsuario.CLIENTE)
@@ -148,7 +150,7 @@ class ManejadorRegistrarUsuarioTest {
 
             manejadorRegistrarUsuario.ejecutar(comando);
 
-            verify(fabricaCliente, never()).crearDesdeUsuario(any(), any());
+            verify(fabricaCliente, never()).crearDesdeUsuario(any(), any(), any(), any());
             verify(clienteRepositorio, never()).guardar(any());
         }
     }
@@ -167,7 +169,8 @@ class ManejadorRegistrarUsuarioTest {
             Usuario usuarioGuardado = crearUsuarioGuardado(2L, "María López", "maria@correo.com", RolUsuario.CLIENTE);
             Cliente clienteCreado = Cliente.builder()
                     .usuarioId(2L)
-                    .nombreCliente("María López")
+                    .nombreCliente("María")
+                    .apellido("López")
                     .identificacion("1234567890")
                     .email("maria@correo.com")
                     .fechaRegistro(LocalDateTime.now())
@@ -177,11 +180,11 @@ class ManejadorRegistrarUsuarioTest {
             when(servicioHashing.hashear(comando.getPassword())).thenReturn("hashedPassword");
             when(fabricaUsuario.crear(comando, "hashedPassword")).thenReturn(usuarioCreado);
             when(usuarioRepositorio.guardar(usuarioCreado)).thenReturn(usuarioGuardado);
-            when(fabricaCliente.crearDesdeUsuario(usuarioGuardado, "1234567890")).thenReturn(clienteCreado);
+            when(fabricaCliente.crearDesdeUsuario(usuarioGuardado, "1234567890", "María", "López")).thenReturn(clienteCreado);
 
             assertDoesNotThrow(() -> manejadorRegistrarUsuario.ejecutar(comando));
 
-            verify(fabricaCliente).crearDesdeUsuario(usuarioGuardado, "1234567890");
+            verify(fabricaCliente).crearDesdeUsuario(usuarioGuardado, "1234567890", "María", "López");
             verify(clienteRepositorio).guardar(clienteCreado);
         }
 
@@ -189,7 +192,8 @@ class ManejadorRegistrarUsuarioTest {
         @DisplayName("Debe lanzar excepción si el cliente no tiene identificación")
         void ejecutar_clienteSinIdentificacion_deberiaLanzarExcepcion() {
             ComandoRegistrarUsuario comando = ComandoRegistrarUsuario.builder()
-                    .nombreCompleto("María López")
+                    .nombre("María")
+                    .apellido("López")
                     .email("maria@correo.com")
                     .password("clave456")
                     .rol(RolUsuario.CLIENTE)
@@ -211,7 +215,8 @@ class ManejadorRegistrarUsuarioTest {
         @DisplayName("Debe lanzar excepción si la identificación está en blanco")
         void ejecutar_clienteIdentificacionBlank_deberiaLanzarExcepcion() {
             ComandoRegistrarUsuario comando = ComandoRegistrarUsuario.builder()
-                    .nombreCompleto("María López")
+                    .nombre("María")
+                    .apellido("López")
                     .email("maria@correo.com")
                     .password("clave456")
                     .rol(RolUsuario.CLIENTE)
@@ -228,6 +233,26 @@ class ManejadorRegistrarUsuarioTest {
             assertEquals("La identificación es requerida para usuarios con rol CLIENTE", exception.getMessage());
         }
     }
+
+        @Test
+        @DisplayName("Debe lanzar excepción cuando falta apellido")
+        void ejecutar_sinApellido_deberiaLanzarExcepcion() {
+        ComandoRegistrarUsuario comando = ComandoRegistrarUsuario.builder()
+            .nombre("Juan")
+            .apellido(" ")
+            .email("juan@maquimu.com")
+            .password("password123")
+            .rol(RolUsuario.OPERARIO)
+            .build();
+
+        IllegalArgumentException exception = assertThrows(
+            IllegalArgumentException.class,
+            () -> manejadorRegistrarUsuario.ejecutar(comando)
+        );
+
+        assertEquals("El nombre y apellido son requeridos", exception.getMessage());
+        verify(usuarioDao, never()).existePorEmail(any());
+        }
 
     // --- Tests: Flujo de Hashing ---
 

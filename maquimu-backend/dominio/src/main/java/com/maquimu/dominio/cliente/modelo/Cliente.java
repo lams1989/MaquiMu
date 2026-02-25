@@ -18,20 +18,30 @@ public class Cliente {
     private Long clienteId;
     private Long usuarioId;
     private String nombreCliente;
+    private String apellido;
     private String identificacion;
     private String telefono;
     private String email;
     private String direccion;
     private LocalDateTime fechaRegistro;
 
+    // Constructor completo (compatibilidad)
+    public Cliente(Long clienteId, Long usuarioId, String nombreCliente, String identificacion, String telefono, String email, String direccion, LocalDateTime fechaRegistro) {
+        this(clienteId, usuarioId, nombreCliente, null, identificacion, telefono, email, direccion, fechaRegistro);
+    }
+
     // Constructor completo
-        public Cliente(Long clienteId, Long usuarioId, String nombreCliente, String identificacion, String telefono, String email, String direccion, LocalDateTime fechaRegistro) {
+    public Cliente(Long clienteId, Long usuarioId, String nombreCliente, String apellido, String identificacion, String telefono, String email, String direccion, LocalDateTime fechaRegistro) {
         this.clienteId = clienteId;
         // usuarioId ahora puede ser nulo cuando se registra un cliente sin usuario asociado
         this.usuarioId = usuarioId;
         this.nombreCliente = Optional.ofNullable(nombreCliente)
             .filter(n -> !n.isBlank())
             .orElseThrow(() -> new IllegalArgumentException("El nombre del cliente no puede ser nulo o vacío."));
+        this.apellido = Optional.ofNullable(apellido)
+            .map(String::trim)
+            .filter(a -> !a.isBlank())
+            .orElse(null);
         this.identificacion = Optional.ofNullable(identificacion)
             .filter(i -> !i.isBlank())
             .orElseThrow(() -> new IllegalArgumentException("La identificación no puede ser nula o vacía."));
@@ -43,11 +53,16 @@ public class Cliente {
         this.fechaRegistro = Optional.ofNullable(fechaRegistro).orElse(LocalDateTime.now());
 
         validarEmail();
-        }
+    }
 
     // Constructor sin ID para creación
     public Cliente(Long usuarioId, String nombreCliente, String identificacion, String telefono, String email, String direccion) {
-        this(null, usuarioId, nombreCliente, identificacion, telefono, email, direccion, LocalDateTime.now());
+        this(null, usuarioId, nombreCliente, null, identificacion, telefono, email, direccion, LocalDateTime.now());
+    }
+
+    // Constructor sin ID para creación con apellido
+    public Cliente(Long usuarioId, String nombreCliente, String apellido, String identificacion, String telefono, String email, String direccion) {
+        this(null, usuarioId, nombreCliente, apellido, identificacion, telefono, email, direccion, LocalDateTime.now());
     }
 
     private void validarEmail() {
@@ -58,5 +73,12 @@ public class Cliente {
 
     public static boolean esEmailValido(String email) {
         return email != null && EMAIL_PATTERN.matcher(email).matches();
+    }
+
+    public String getNombreCompleto() {
+        if (this.apellido == null || this.apellido.isBlank()) {
+            return this.nombreCliente;
+        }
+        return this.nombreCliente + " " + this.apellido;
     }
 }

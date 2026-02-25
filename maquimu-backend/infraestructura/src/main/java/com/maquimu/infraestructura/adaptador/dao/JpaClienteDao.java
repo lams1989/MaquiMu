@@ -39,6 +39,12 @@ public class JpaClienteDao implements ClienteDao {
     }
 
     @Override
+    public Optional<Cliente> buscarPorEmail(String email) {
+        return jpaClienteRepository.findByEmail(email)
+                .map(ClienteEntity::toCliente);
+    }
+
+    @Override
     public Optional<Cliente> buscarPorUsuarioId(Long usuarioId) {
         return jpaClienteRepository.findByUsuarioId(usuarioId)
                 .map(ClienteEntity::toCliente);
@@ -47,5 +53,10 @@ public class JpaClienteDao implements ClienteDao {
     @Override
     public boolean existePorIdentificacion(String identificacion) {
         return jpaClienteRepository.existsByIdentificacion(identificacion);
+    }
+
+    @Override
+    public boolean existePorEmail(String email) {
+        return jpaClienteRepository.existsByEmail(email);
     }
 }

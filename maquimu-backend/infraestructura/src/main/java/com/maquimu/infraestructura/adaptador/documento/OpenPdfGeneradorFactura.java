@@ -135,7 +135,7 @@ public class OpenPdfGeneradorFactura implements GeneradorFacturaPort {
         table.setWidthPercentage(100);
         table.setWidths(new float[]{50, 50});
 
-        agregarCampo(table, "Nombre:", cliente.getNombreCliente());
+        agregarCampo(table, "Nombre:", cliente.getNombreCompleto());
         agregarCampo(table, "Identificación:", cliente.getIdentificacion());
         agregarCampo(table, "Teléfono:", cliente.getTelefono());
         agregarCampo(table, "Email:", cliente.getEmail());

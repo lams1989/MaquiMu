@@ -9,7 +9,7 @@ public class FabricaUsuario {
 
     public Usuario crear(ComandoRegistrarUsuario comando, String passwordHash) {
         return Usuario.builder()
-                .nombreCompleto(comando.getNombreCompleto())
+                .nombreCompleto(comando.getNombreCompletoNormalizado())
                 .email(comando.getEmail())
                 .passwordHash(passwordHash)
                 .rol(comando.getRol())

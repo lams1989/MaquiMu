@@ -85,6 +85,7 @@ class ManejadorActualizarClienteTest {
 
         when(clienteDao.buscarPorId(clienteId)).thenReturn(Optional.of(clienteExistente));
         when(clienteDao.buscarPorIdentificacion(identificacionExistente)).thenReturn(Optional.of(otroCliente));
+        when(clienteDao.buscarPorEmail("juan@example.com")).thenReturn(Optional.of(clienteExistente));
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             manejadorActualizarCliente.ejecutar(comando);
@@ -93,9 +94,54 @@ class ManejadorActualizarClienteTest {
         assertEquals("Ya existe otro cliente con la identificación: " + identificacionExistente, exception.getMessage());
         verify(clienteDao, times(1)).buscarPorId(clienteId);
         verify(clienteDao, times(1)).buscarPorIdentificacion(identificacionExistente);
+                verify(clienteDao, never()).buscarPorEmail(anyString());
         verify(fabricaCliente, never()).actualizar(any(Cliente.class), any(ComandoActualizarCliente.class));
         verify(clienteRepositorio, never()).guardar(any(Cliente.class));
     }
+
+        @Test
+        void ejecutar_emailCambiadoAExistenteDeOtroCliente_deberiaLanzarExcepcion() {
+                Long clienteId = 1L;
+                String emailExistente = "maria@example.com";
+
+                Cliente clienteExistente = Cliente.builder()
+                                .clienteId(clienteId)
+                                .nombreCliente("Juan Pérez")
+                                .identificacion("1234567890")
+                                .email("juan@example.com")
+                                .fechaRegistro(LocalDateTime.now())
+                                .build();
+
+                Cliente otroCliente = Cliente.builder()
+                                .clienteId(2L)
+                                .nombreCliente("María López")
+                                .identificacion("9876543210")
+                                .email(emailExistente)
+                                .fechaRegistro(LocalDateTime.now())
+                                .build();
+
+                ComandoActualizarCliente comando = ComandoActualizarCliente.builder()
+                                .clienteId(clienteId)
+                                .nombreCliente("Juan Pérez")
+                                .identificacion("1234567890")
+                                .email(emailExistente)
+                                .build();
+
+                when(clienteDao.buscarPorId(clienteId)).thenReturn(Optional.of(clienteExistente));
+                when(clienteDao.buscarPorIdentificacion("1234567890")).thenReturn(Optional.of(clienteExistente));
+                when(clienteDao.buscarPorEmail(emailExistente)).thenReturn(Optional.of(otroCliente));
+
+                Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+                        manejadorActualizarCliente.ejecutar(comando);
+                });
+
+                assertEquals("Ya existe otro cliente con el email: " + emailExistente, exception.getMessage());
+                verify(clienteDao, times(1)).buscarPorId(clienteId);
+                verify(clienteDao, times(1)).buscarPorIdentificacion("1234567890");
+                verify(clienteDao, times(1)).buscarPorEmail(emailExistente);
+                verify(fabricaCliente, never()).actualizar(any(Cliente.class), any(ComandoActualizarCliente.class));
+                verify(clienteRepositorio, never()).guardar(any(Cliente.class));
+        }
 
     @Test
     void ejecutar_mismIdentificacion_deberiaActualizarCorrectamente() {
@@ -132,12 +178,15 @@ class ManejadorActualizarClienteTest {
 
         when(clienteDao.buscarPorId(clienteId)).thenReturn(Optional.of(clienteExistente));
         when(clienteDao.buscarPorIdentificacion(mismaIdentificacion)).thenReturn(Optional.of(clienteExistente));
+        when(clienteDao.buscarPorEmail("juan.nuevo@example.com")).thenReturn(Optional.empty());
         when(fabricaCliente.actualizar(clienteExistente, comando)).thenReturn(clienteActualizado);
         when(clienteRepositorio.guardar(clienteActualizado)).thenReturn(clienteActualizado);
 
         manejadorActualizarCliente.ejecutar(comando);
 
         verify(clienteDao, times(1)).buscarPorId(clienteId);
+                verify(clienteDao, times(1)).buscarPorIdentificacion(mismaIdentificacion);
+                verify(clienteDao, times(1)).buscarPorEmail("juan.nuevo@example.com");
         verify(fabricaCliente, times(1)).actualizar(clienteExistente, comando);
         verify(clienteRepositorio, times(1)).guardar(clienteActualizado);
     }
@@ -173,6 +222,7 @@ class ManejadorActualizarClienteTest {
 
         when(clienteDao.buscarPorId(clienteId)).thenReturn(Optional.of(clienteExistente));
         when(clienteDao.buscarPorIdentificacion(nuevaIdentificacion)).thenReturn(Optional.empty());
+        when(clienteDao.buscarPorEmail("juan@example.com")).thenReturn(Optional.of(clienteExistente));
         when(fabricaCliente.actualizar(clienteExistente, comando)).thenReturn(clienteActualizado);
         when(clienteRepositorio.guardar(clienteActualizado)).thenReturn(clienteActualizado);
 
@@ -180,6 +230,7 @@ class ManejadorActualizarClienteTest {
 
         verify(clienteDao, times(1)).buscarPorId(clienteId);
         verify(clienteDao, times(1)).buscarPorIdentificacion(nuevaIdentificacion);
+                verify(clienteDao, times(1)).buscarPorEmail("juan@example.com");
         verify(fabricaCliente, times(1)).actualizar(clienteExistente, comando);
         verify(clienteRepositorio, times(1)).guardar(clienteActualizado);
     }
