@@ -18,6 +18,8 @@ public class Alquiler {
     private BigDecimal costoTotal;
     private EstadoAlquiler estado;
     private String motivoRechazo; // Nullable: solo cuando estado es RECHAZADO
+    private LocalDateTime fechaFinSolicitada; // Nullable: nueva fecha fin solicitada en extensión
+    private BigDecimal costoAdicional; // Nullable: costo adicional de la extensión
 
     // Constructor vacío
     public Alquiler() {
@@ -63,6 +65,24 @@ public class Alquiler {
         this.costoTotal = costoTotal;
         this.estado = estado;
         this.motivoRechazo = motivoRechazo;
+    }
+
+    // Constructor completo con campos de extensión
+    public Alquiler(Long alquilerId, Long clienteId, Long maquinariaId, Long usuarioId,
+                    LocalDateTime fechaInicio, LocalDateTime fechaFin, 
+                    BigDecimal costoTotal, EstadoAlquiler estado, String motivoRechazo,
+                    LocalDateTime fechaFinSolicitada, BigDecimal costoAdicional) {
+        this.alquilerId = alquilerId;
+        this.clienteId = clienteId;
+        this.maquinariaId = maquinariaId;
+        this.usuarioId = usuarioId;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+        this.costoTotal = costoTotal;
+        this.estado = estado;
+        this.motivoRechazo = motivoRechazo;
+        this.fechaFinSolicitada = fechaFinSolicitada;
+        this.costoAdicional = costoAdicional;
     }
 
     // Validaciones de negocio
@@ -111,6 +131,41 @@ public class Alquiler {
             throw new IllegalStateException("No se puede cancelar un alquiler ya finalizado o cancelado");
         }
         this.estado = EstadoAlquiler.CANCELADO;
+    }
+
+    // Métodos de transición para extensión de alquiler
+    public void solicitarExtension(LocalDateTime nuevaFechaFin, BigDecimal costoAdicional) {
+        if (this.estado != EstadoAlquiler.ACTIVO) {
+            throw new IllegalStateException("Solo se puede solicitar extensión de un alquiler en estado ACTIVO");
+        }
+        if (nuevaFechaFin == null || !nuevaFechaFin.isAfter(this.fechaFin)) {
+            throw new IllegalArgumentException("La nueva fecha de fin debe ser posterior a la fecha de fin actual");
+        }
+        this.fechaFinSolicitada = nuevaFechaFin;
+        this.costoAdicional = costoAdicional;
+        this.estado = EstadoAlquiler.PENDIENTE_EXTENSION;
+    }
+
+    public void aprobarExtension() {
+        if (this.estado != EstadoAlquiler.PENDIENTE_EXTENSION) {
+            throw new IllegalStateException("Solo se puede aprobar extensión de un alquiler en estado PENDIENTE_EXTENSION");
+        }
+        this.fechaFin = this.fechaFinSolicitada;
+        this.costoTotal = this.costoTotal.add(this.costoAdicional);
+        this.fechaFinSolicitada = null;
+        this.costoAdicional = null;
+        this.motivoRechazo = null;
+        this.estado = EstadoAlquiler.ACTIVO;
+    }
+
+    public void rechazarExtension(String motivo) {
+        if (this.estado != EstadoAlquiler.PENDIENTE_EXTENSION) {
+            throw new IllegalStateException("Solo se puede rechazar extensión de un alquiler en estado PENDIENTE_EXTENSION");
+        }
+        this.fechaFinSolicitada = null;
+        this.costoAdicional = null;
+        this.motivoRechazo = motivo;
+        this.estado = EstadoAlquiler.ACTIVO;
     }
 
     // Getters y Setters
@@ -188,5 +243,21 @@ public class Alquiler {
 
     public void setMotivoRechazo(String motivoRechazo) {
         this.motivoRechazo = motivoRechazo;
+    }
+
+    public LocalDateTime getFechaFinSolicitada() {
+        return fechaFinSolicitada;
+    }
+
+    public void setFechaFinSolicitada(LocalDateTime fechaFinSolicitada) {
+        this.fechaFinSolicitada = fechaFinSolicitada;
+    }
+
+    public BigDecimal getCostoAdicional() {
+        return costoAdicional;
+    }
+
+    public void setCostoAdicional(BigDecimal costoAdicional) {
+        this.costoAdicional = costoAdicional;
     }
 }

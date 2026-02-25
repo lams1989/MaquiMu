@@ -33,14 +33,20 @@ export class AdminRentalsComponent implements OnInit {
   // Modal de confirmación
   showConfirmModal = false;
   confirmMessage = '';
-  confirmAction: 'aprobar' | 'entregar' | 'finalizar' | 'facturar' | null = null;
+  confirmAction: 'aprobar' | 'entregar' | 'finalizar' | 'facturar' | 'aprobar-extension' | null = null;
   confirmAlquiler: Alquiler | null = null;
+
+  // Modal de rechazo de extensión
+  showRejectExtensionModal = false;
+  extensionAlquilerSeleccionado: Alquiler | null = null;
+  motivoRechazoExtension = '';
 
   estados: { value: EstadoAlquiler | ''; label: string }[] = [
     { value: '', label: 'Todos' },
     { value: 'PENDIENTE', label: 'Pendientes' },
     { value: 'APROBADO', label: 'Aprobados' },
     { value: 'ACTIVO', label: 'Activos' },
+    { value: 'PENDIENTE_EXTENSION', label: 'Extensión Pendiente' },
     { value: 'FINALIZADO', label: 'Finalizados' },
     { value: 'RECHAZADO', label: 'Rechazados' },
     { value: 'CANCELADO', label: 'Cancelados' }
@@ -198,6 +204,8 @@ export class AdminRentalsComponent implements OnInit {
       this.finalizar(alquiler);
     } else if (action === 'facturar') {
       this.generarFactura(alquiler);
+    } else if (action === 'aprobar-extension') {
+      this.aprobarExtensionConfirm(alquiler);
     }
   }
 
@@ -208,11 +216,63 @@ export class AdminRentalsComponent implements OnInit {
     this.confirmAlquiler = null;
   }
 
-  private abrirConfirmacion(action: 'aprobar' | 'entregar' | 'finalizar' | 'facturar', alquiler: Alquiler, message: string): void {
+  private abrirConfirmacion(action: 'aprobar' | 'entregar' | 'finalizar' | 'facturar' | 'aprobar-extension', alquiler: Alquiler, message: string): void {
     this.confirmAction = action;
     this.confirmAlquiler = alquiler;
     this.confirmMessage = message;
     this.showConfirmModal = true;
+  }
+
+  // ===== HU #17: Extensión de Alquiler =====
+
+  solicitarAprobarExtension(alquiler: Alquiler): void {
+    this.abrirConfirmacion('aprobar-extension', alquiler,
+      `¿Aprobar la extensión del alquiler #${alquiler.alquilerId}? La fecha fin se actualizará a ${new Date(alquiler.fechaFinSolicitada!).toLocaleDateString('es-CO')} y el costo se incrementará en $${alquiler.costoAdicional?.toLocaleString()}.`);
+  }
+
+  private aprobarExtensionConfirm(alquiler: Alquiler): void {
+    this.alquilerService.aprobarExtension(alquiler.alquilerId!).subscribe({
+      next: () => {
+        this.setFeedback('success', 'Extensión aprobada exitosamente. Fecha y costo actualizados.');
+        this.cargarAlquileres();
+      },
+      error: (error) => {
+        console.error('Error al aprobar extensión', error);
+        this.setFeedback('danger', 'Error al aprobar la extensión: ' + (error.error?.message || error.message));
+      }
+    });
+  }
+
+  abrirModalRechazoExtension(alquiler: Alquiler): void {
+    this.extensionAlquilerSeleccionado = alquiler;
+    this.motivoRechazoExtension = '';
+    this.showRejectExtensionModal = true;
+  }
+
+  confirmarRechazoExtension(): void {
+    if (!this.extensionAlquilerSeleccionado) return;
+    this.alquilerService.rechazarExtension(
+      this.extensionAlquilerSeleccionado.alquilerId!,
+      this.motivoRechazoExtension || undefined
+    ).subscribe({
+      next: () => {
+        this.showRejectExtensionModal = false;
+        this.extensionAlquilerSeleccionado = null;
+        this.motivoRechazoExtension = '';
+        this.setFeedback('success', 'Extensión rechazada. El alquiler continúa activo sin cambios.');
+        this.cargarAlquileres();
+      },
+      error: (error) => {
+        console.error('Error al rechazar extensión', error);
+        this.setFeedback('danger', 'Error al rechazar la extensión: ' + (error.error?.message || error.message));
+      }
+    });
+  }
+
+  cancelarRechazoExtension(): void {
+    this.showRejectExtensionModal = false;
+    this.extensionAlquilerSeleccionado = null;
+    this.motivoRechazoExtension = '';
   }
 
   private setFeedback(type: 'success' | 'danger', message: string): void {
@@ -238,6 +298,7 @@ export class AdminRentalsComponent implements OnInit {
       case 'APROBADO': return 'bg-info text-white';
       case 'RECHAZADO': return 'bg-danger text-white';
       case 'ACTIVO': return 'bg-success text-white';
+      case 'PENDIENTE_EXTENSION': return 'bg-primary text-white';
       case 'FINALIZADO': return 'bg-secondary text-white';
       case 'CANCELADO': return 'bg-dark text-white';
       default: return 'bg-light text-dark';
@@ -250,6 +311,7 @@ export class AdminRentalsComponent implements OnInit {
       case 'APROBADO': return 'Aprobado';
       case 'RECHAZADO': return 'Rechazado';
       case 'ACTIVO': return 'Activo';
+      case 'PENDIENTE_EXTENSION': return 'Extensión Pendiente';
       case 'FINALIZADO': return 'Finalizado';
       case 'CANCELADO': return 'Cancelado';
       default: return estado;

@@ -19,4 +19,7 @@ export type NotificationType =
   | 'invoice_generated'
   | 'invoice_paid'
   | 'registration_pending'
+  | 'extension_pending'
+  | 'extension_approved'
+  | 'extension_rejected'
   | 'system';

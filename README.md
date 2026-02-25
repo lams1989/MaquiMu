@@ -169,7 +169,8 @@ Ver más en [`.luis-metodo/`](./.luis-metodo/)
 ## 👥 Equipo
 
 [Información del equipo de desarrollo]
-
+Email: operario@maquimu.com
+Contraseña: Admin@2026
 ---
 
 **Última actualización:** 2025-01-05

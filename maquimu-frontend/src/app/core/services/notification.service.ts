@@ -149,6 +149,20 @@ export class NotificationService implements OnDestroy {
                 routerLink: '/admin/rentals'
               });
             }
+            // Detect new extension requests
+            if (prev && prev !== 'PENDIENTE_EXTENSION' && r.estado === 'PENDIENTE_EXTENSION') {
+              this.push({
+                id: `extension-new-${r.alquilerId}-${Date.now()}`,
+                type: 'extension_pending',
+                title: 'Solicitud de extensión',
+                message: `El cliente solicita extensión del alquiler #${r.alquilerId}.`,
+                icon: 'bi-calendar-plus',
+                iconColor: '#6366f1',
+                timestamp: new Date(),
+                read: false,
+                routerLink: '/admin/rentals'
+              });
+            }
           });
         }
         rentals.forEach(r => {
@@ -286,6 +300,22 @@ export class NotificationService implements OnDestroy {
   }
 
   private pushRentalChangeNotification(id: number, newState: string, oldState: string): void {
+    // Special case: extension approved (PENDIENTE_EXTENSION -> ACTIVO)
+    if (oldState === 'PENDIENTE_EXTENSION' && newState === 'ACTIVO') {
+      this.push({
+        id: `extension-result-${id}-${Date.now()}`,
+        type: 'extension_approved',
+        title: 'Extensión aprobada',
+        message: `Tu extensión para el alquiler #${id} fue aprobada. Fecha y costo actualizados.`,
+        icon: 'bi-calendar-check',
+        iconColor: '#22c55e',
+        timestamp: new Date(),
+        read: false,
+        routerLink: '/client/my-rentals'
+      });
+      return;
+    }
+
     const map: Record<string, { title: string; msg: string; icon: string; color: string }> = {
       'APROBADO': {
         title: 'Alquiler aprobado',
@@ -316,6 +346,12 @@ export class NotificationService implements OnDestroy {
         msg: `El alquiler #${id} fue cancelado.`,
         icon: 'bi-slash-circle-fill',
         color: '#64748b'
+      },
+      'PENDIENTE_EXTENSION': {
+        title: 'Extensión en revisión',
+        msg: `Tu solicitud de extensión para el alquiler #${id} está siendo revisada.`,
+        icon: 'bi-calendar-plus',
+        color: '#6366f1'
       }
     };
 
@@ -327,7 +363,8 @@ export class NotificationService implements OnDestroy {
       type: newState === 'APROBADO' ? 'rental_approved' :
             newState === 'RECHAZADO' ? 'rental_rejected' :
             newState === 'ACTIVO' ? 'rental_active' :
-            newState === 'FINALIZADO' ? 'rental_finalized' : 'system',
+            newState === 'FINALIZADO' ? 'rental_finalized' :
+            newState === 'PENDIENTE_EXTENSION' ? 'extension_pending' : 'system',
       title: info.title,
       message: info.msg,
       icon: info.icon,

@@ -1,4 +1,4 @@
-import { Alquiler, EstadoAlquiler, SolicitudAlquiler } from '@core/models/alquiler.model';
+import { Alquiler, EstadoAlquiler, RechazoExtension, SolicitudAlquiler, SolicitudExtension } from '@core/models/alquiler.model';
 import { environment } from '@environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -100,5 +100,29 @@ export class AlquilerService {
    */
   finalizarAlquiler(id: number): Observable<Alquiler> {
     return this.http.patch<Alquiler>(`${this.apiUrl}/alquileres/${id}/finalizar`, {});
+  }
+
+  // ===== HU 17: Extensión de Alquiler Activo =====
+
+  /**
+   * Solicita extensión de un alquiler activo
+   */
+  solicitarExtension(id: number, solicitud: SolicitudExtension): Observable<Alquiler> {
+    return this.http.post<Alquiler>(`${this.apiUrl}/alquileres/${id}/extension`, solicitud);
+  }
+
+  /**
+   * Aprueba la extensión de un alquiler (operario)
+   */
+  aprobarExtension(id: number): Observable<Alquiler> {
+    return this.http.patch<Alquiler>(`${this.apiUrl}/alquileres/${id}/aprobar-extension`, {});
+  }
+
+  /**
+   * Rechaza la extensión de un alquiler (operario)
+   */
+  rechazarExtension(id: number, motivo?: string): Observable<Alquiler> {
+    const body: RechazoExtension = { motivo };
+    return this.http.patch<Alquiler>(`${this.apiUrl}/alquileres/${id}/rechazar-extension`, body);
   }
 }

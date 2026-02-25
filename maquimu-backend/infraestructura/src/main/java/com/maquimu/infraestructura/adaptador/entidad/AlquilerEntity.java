@@ -52,6 +52,12 @@ public class AlquilerEntity {
     @Column(name = "motivo_rechazo", length = 500)
     private String motivoRechazo;
 
+    @Column(name = "fecha_fin_solicitada")
+    private LocalDateTime fechaFinSolicitada;
+
+    @Column(name = "costo_adicional")
+    private BigDecimal costoAdicional;
+
     public static AlquilerEntity fromAlquiler(Alquiler alquiler, ClienteEntity clienteEntity, 
                                                MaquinariaEntity maquinariaEntity,
                                                com.maquimu.infraestructura.autenticacion.adaptador.entidad.UsuarioEntity usuarioEntity) {
@@ -65,6 +71,8 @@ public class AlquilerEntity {
         entity.setCostoTotal(alquiler.getCostoTotal());
         entity.setEstado(alquiler.getEstado());
         entity.setMotivoRechazo(alquiler.getMotivoRechazo());
+        entity.setFechaFinSolicitada(alquiler.getFechaFinSolicitada());
+        entity.setCostoAdicional(alquiler.getCostoAdicional());
         return entity;
     }
 
@@ -78,7 +86,9 @@ public class AlquilerEntity {
                 fechaFin,
                 costoTotal,
                 estado,
-                motivoRechazo
+                motivoRechazo,
+                fechaFinSolicitada,
+                costoAdicional
         );
     }
 }
