@@ -29,7 +29,7 @@ public class ManejadorActualizarMaquinaria {
         // Validar unicidad del serial si ha cambiado y no pertenece a la misma maquinaria
         if (comando.getSerial() != null && !comando.getSerial().equals(maquinariaExistente.getSerial())) {
             if (maquinariaDao.existePorSerial(comando.getSerial())) {
-                throw new IllegalArgumentException(String.format("La maquinaria con serial %s ya existe para otra máquina.", comando.getSerial()));
+                throw new IllegalArgumentException(String.format("La maquinaria con serial %s ya existe para otra m\u00e1quina.", comando.getSerial()));
             }
         }
 

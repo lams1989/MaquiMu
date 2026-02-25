@@ -26,7 +26,7 @@ public class ManejadorGlobalExcepciones {
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<Map<String, Object>> manejarBadCredentials(BadCredentialsException ex) {
-        return construirRespuesta(HttpStatus.UNAUTHORIZED, "Credenciales inválidas");
+        return construirRespuesta(HttpStatus.UNAUTHORIZED, "Credenciales inv\u00e1lidas");
     }
 
     @ExceptionHandler(SecurityException.class)
@@ -37,7 +37,7 @@ public class ManejadorGlobalExcepciones {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Map<String, Object>> manejarDataIntegrityViolation(DataIntegrityViolationException ex) {
         String mensaje = esViolacionUnicidad(ex)
-                ? "Ya existe un registro con la información proporcionada"
+            ? "Ya existe un registro con la informaci\u00f3n proporcionada"
                 : "No se pudo procesar la solicitud por restricciones de integridad de datos";
         return construirRespuesta(HttpStatus.BAD_REQUEST, mensaje);
     }

@@ -17,6 +17,9 @@ export class ClientsComponent implements OnInit {
   clientes: Cliente[] = [];
   selectedCliente: Cliente | null = null;
   showModal: boolean = false;
+  showDeleteConfirmModal = false;
+  clienteAEliminarId: number | null = null;
+  errorMessage = '';
 
   constructor(private clienteService: ClienteService) { }
 
@@ -51,17 +54,32 @@ export class ClientsComponent implements OnInit {
   }
 
   deleteCliente(id: number): void {
-    if (confirm('¿Está seguro de que desea eliminar este cliente?')) {
-      this.clienteService.deleteCliente(id).subscribe({
-        next: () => {
-          console.log('Cliente eliminado exitosamente');
-          this.loadClientes();
-        },
-        error: (error: any) => {
-          console.error('Error al eliminar cliente', error);
-        }
-      });
+    this.clienteAEliminarId = id;
+    this.showDeleteConfirmModal = true;
+  }
+
+  confirmarEliminacion(): void {
+    if (this.clienteAEliminarId == null) {
+      return;
     }
+
+    this.clienteService.deleteCliente(this.clienteAEliminarId).subscribe({
+      next: () => {
+        this.errorMessage = '';
+        this.cerrarConfirmacion();
+        this.loadClientes();
+      },
+      error: (error: any) => {
+        console.error('Error al eliminar cliente', error);
+        this.errorMessage = error.error?.message || 'No se pudo eliminar el cliente.';
+        this.cerrarConfirmacion();
+      }
+    });
+  }
+
+  cerrarConfirmacion(): void {
+    this.showDeleteConfirmModal = false;
+    this.clienteAEliminarId = null;
   }
 
   formatDate(dateString: string): string {

@@ -17,6 +17,9 @@ export class InventoryComponent implements OnInit {
   maquinarias: Maquinaria[] = [];
   selectedMaquinaria: Maquinaria | null = null;
   showModal: boolean = false;
+  showDeleteConfirmModal = false;
+  maquinariaAEliminarId: number | null = null;
+  errorMessage = '';
 
   constructor(private maquinariaService: MaquinariaService) { }
 
@@ -51,16 +54,31 @@ export class InventoryComponent implements OnInit {
   }
 
   deleteMaquinaria(id: number): void {
-    if (confirm('¿Está seguro de que desea eliminar esta maquinaria?')) {
-      this.maquinariaService.deleteMaquinaria(id).subscribe({
-        next: () => {
-          console.log('Maquinaria eliminada exitosamente');
-          this.loadMaquinarias();
-        },
-        error: (error: any) => {
-          console.error('Error al eliminar maquinaria', error);
-        }
-      });
+    this.maquinariaAEliminarId = id;
+    this.showDeleteConfirmModal = true;
+  }
+
+  confirmarEliminacion(): void {
+    if (this.maquinariaAEliminarId == null) {
+      return;
     }
+
+    this.maquinariaService.deleteMaquinaria(this.maquinariaAEliminarId).subscribe({
+      next: () => {
+        this.errorMessage = '';
+        this.cerrarConfirmacion();
+        this.loadMaquinarias();
+      },
+      error: (error: any) => {
+        console.error('Error al eliminar maquinaria', error);
+        this.errorMessage = error.error?.message || 'No se pudo eliminar la maquinaria.';
+        this.cerrarConfirmacion();
+      }
+    });
+  }
+
+  cerrarConfirmacion(): void {
+    this.showDeleteConfirmModal = false;
+    this.maquinariaAEliminarId = null;
   }
 }

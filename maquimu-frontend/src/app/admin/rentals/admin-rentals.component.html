@@ -19,6 +19,12 @@
                 </select>
             </div>
 
+            <div *ngIf="feedbackMessage" class="alert alert-dismissible fade show" [ngClass]="feedbackType === 'success' ? 'alert-success' : 'alert-danger'" role="alert">
+                <i class="bi" [ngClass]="feedbackType === 'success' ? 'bi-check-circle me-2' : 'bi-exclamation-triangle me-2'"></i>
+                {{ feedbackMessage }}
+                <button type="button" class="btn-close" (click)="feedbackMessage = ''" aria-label="Close"></button>
+            </div>
+
             <!-- Loading spinner -->
             <div *ngIf="loading" class="text-center py-5">
                 <div class="spinner-border text-primary" role="status">
@@ -68,19 +74,19 @@
                                             <button class="btn btn-outline-info" title="Ver detalle" (click)="verDetalle(alquiler)">
                                                 <i class="bi bi-eye"></i>
                                             </button>
-                                            <button *ngIf="alquiler.estado === 'PENDIENTE'" class="btn btn-outline-success" title="Aprobar" (click)="aprobar(alquiler)">
+                                            <button *ngIf="alquiler.estado === 'PENDIENTE'" class="btn btn-outline-success" title="Aprobar" (click)="solicitarAprobar(alquiler)">
                                                 <i class="bi bi-check-lg"></i>
                                             </button>
                                             <button *ngIf="alquiler.estado === 'PENDIENTE'" class="btn btn-outline-danger" title="Rechazar" (click)="abrirModalRechazo(alquiler)">
                                                 <i class="bi bi-x-lg"></i>
                                             </button>
-                                            <button *ngIf="alquiler.estado === 'APROBADO'" class="btn btn-outline-primary" title="Entregar" (click)="entregar(alquiler)">
+                                            <button *ngIf="alquiler.estado === 'APROBADO'" class="btn btn-outline-primary" title="Entregar" (click)="solicitarEntregar(alquiler)">
                                                 <i class="bi bi-truck"></i>
                                             </button>
-                                            <button *ngIf="alquiler.estado === 'ACTIVO'" class="btn btn-outline-secondary" title="Finalizar" (click)="finalizar(alquiler)">
+                                            <button *ngIf="alquiler.estado === 'ACTIVO'" class="btn btn-outline-secondary" title="Finalizar" (click)="solicitarFinalizar(alquiler)">
                                                 <i class="bi bi-flag"></i>
                                             </button>
-                                            <button *ngIf="alquiler.estado === 'FINALIZADO'" class="btn btn-outline-warning" title="Facturar" (click)="generarFactura(alquiler)">
+                                            <button *ngIf="alquiler.estado === 'FINALIZADO'" class="btn btn-outline-warning" title="Facturar" (click)="solicitarGenerarFactura(alquiler)">
                                                 <i class="bi bi-receipt"></i>
                                             </button>
                                         </div>
@@ -90,6 +96,26 @@
                         </table>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Confirmación -->
+<div *ngIf="showConfirmModal" class="modal-backdrop fade show"></div>
+<div *ngIf="showConfirmModal" class="modal fade show d-block" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar acción</h5>
+                <button type="button" class="btn-close" (click)="cerrarConfirmacion()"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">{{ confirmMessage }}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" (click)="cerrarConfirmacion()">Cancelar</button>
+                <button type="button" class="btn btn-primary" (click)="confirmarAccion()">Confirmar</button>
             </div>
         </div>
     </div>

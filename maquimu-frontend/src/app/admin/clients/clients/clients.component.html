@@ -19,6 +19,11 @@
                 </button>
             </div>
 
+            <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle me-2"></i>{{ errorMessage }}
+                <button type="button" class="btn-close" (click)="errorMessage = ''" aria-label="Close"></button>
+            </div>
+
             <!-- Table Card -->
             <div class="card border-0">
                 <div class="card-body p-0">
@@ -80,3 +85,23 @@
 
 <!-- Modal para Crear/Editar Cliente -->
 <app-client-modal *ngIf="showModal" [cliente]="selectedCliente" (close)="closeModal()"></app-client-modal>
+
+<!-- Modal de confirmación eliminar -->
+<div *ngIf="showDeleteConfirmModal" class="modal-backdrop fade show"></div>
+<div *ngIf="showDeleteConfirmModal" class="modal fade show d-block" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar eliminación</h5>
+                <button type="button" class="btn-close" (click)="cerrarConfirmacion()"></button>
+            </div>
+            <div class="modal-body">
+                ¿Está seguro de que desea eliminar este cliente?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" (click)="cerrarConfirmacion()">Cancelar</button>
+                <button type="button" class="btn btn-danger" (click)="confirmarEliminacion()">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>

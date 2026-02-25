@@ -82,7 +82,7 @@ export class MyInvoicesComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al descargar PDF', err);
-        alert('No se pudo descargar el PDF. Intenta nuevamente.');
+        this.errorMessage = 'No se pudo descargar el PDF. Intenta nuevamente.';
       }
     });
   }

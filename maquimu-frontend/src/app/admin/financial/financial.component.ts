@@ -94,7 +94,7 @@ export class FinancialComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al descargar PDF', err);
-        alert('Error al descargar el PDF de la factura.');
+        this.errorMessage = 'Error al descargar el PDF de la factura.';
       }
     });
   }
@@ -129,8 +129,7 @@ export class FinancialComponent implements OnInit {
       error: (err) => {
         console.error('Error al actualizar estado', err);
         this.procesandoEstado = false;
-        const msg = err.error?.message || 'Error al actualizar el estado de pago.';
-        alert(msg);
+        this.errorMessage = err.error?.message || 'Error al actualizar el estado de pago.';
       }
     });
   }

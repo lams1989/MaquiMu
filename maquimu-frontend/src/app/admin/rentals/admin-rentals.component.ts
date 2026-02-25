@@ -18,6 +18,8 @@ export class AdminRentalsComponent implements OnInit {
   alquileres: Alquiler[] = [];
   filtroEstado: EstadoAlquiler | '' = '';
   loading = false;
+  feedbackMessage = '';
+  feedbackType: 'success' | 'danger' = 'danger';
 
   // Modal de rechazo
   showRejectModal = false;
@@ -27,6 +29,12 @@ export class AdminRentalsComponent implements OnInit {
   // Detalle
   showDetail = false;
   alquilerDetalle: Alquiler | null = null;
+
+  // Modal de confirmación
+  showConfirmModal = false;
+  confirmMessage = '';
+  confirmAction: 'aprobar' | 'entregar' | 'finalizar' | 'facturar' | null = null;
+  confirmAlquiler: Alquiler | null = null;
 
   estados: { value: EstadoAlquiler | ''; label: string }[] = [
     { value: '', label: 'Todos' },
@@ -68,17 +76,21 @@ export class AdminRentalsComponent implements OnInit {
 
   // ===== Acciones =====
 
-  aprobar(alquiler: Alquiler): void {
-    if (!confirm('¿Está seguro de aprobar este alquiler?')) return;
+  solicitarAprobar(alquiler: Alquiler): void {
+    this.abrirConfirmacion('aprobar', alquiler, '¿Está seguro de aprobar este alquiler?');
+  }
+
+  private aprobar(alquiler: Alquiler): void {
     // TODO: Obtener usuarioId del contexto de autenticación
     const usuarioId = 1; // Placeholder - se reemplazará con el usuario autenticado
     this.alquilerService.aprobarAlquiler(alquiler.alquilerId!, usuarioId).subscribe({
       next: () => {
+        this.setFeedback('success', 'Alquiler aprobado exitosamente.');
         this.cargarAlquileres();
       },
       error: (error) => {
         console.error('Error al aprobar alquiler', error);
-        alert('Error al aprobar el alquiler: ' + (error.error?.message || error.message));
+        this.setFeedback('danger', 'Error al aprobar el alquiler: ' + (error.error?.message || error.message));
       }
     });
   }
@@ -99,11 +111,12 @@ export class AdminRentalsComponent implements OnInit {
         this.showRejectModal = false;
         this.alquilerSeleccionado = null;
         this.motivoRechazo = '';
+        this.setFeedback('success', 'Alquiler rechazado correctamente.');
         this.cargarAlquileres();
       },
       error: (error) => {
         console.error('Error al rechazar alquiler', error);
-        alert('Error al rechazar el alquiler: ' + (error.error?.message || error.message));
+        this.setFeedback('danger', 'Error al rechazar el alquiler: ' + (error.error?.message || error.message));
       }
     });
   }
@@ -114,46 +127,97 @@ export class AdminRentalsComponent implements OnInit {
     this.motivoRechazo = '';
   }
 
-  entregar(alquiler: Alquiler): void {
-    if (!confirm('¿Confirma la entrega de la maquinaria al cliente? El estado cambiará a ACTIVO.')) return;
+  solicitarEntregar(alquiler: Alquiler): void {
+    this.abrirConfirmacion('entregar', alquiler, '¿Confirma la entrega de la maquinaria al cliente? El estado cambiará a ACTIVO.');
+  }
+
+  private entregar(alquiler: Alquiler): void {
     this.alquilerService.entregarAlquiler(alquiler.alquilerId!).subscribe({
       next: () => {
+        this.setFeedback('success', 'Entrega registrada correctamente.');
         this.cargarAlquileres();
       },
       error: (error) => {
         console.error('Error al entregar alquiler', error);
-        alert('Error al registrar la entrega: ' + (error.error?.message || error.message));
+        this.setFeedback('danger', 'Error al registrar la entrega: ' + (error.error?.message || error.message));
       }
     });
   }
 
-  finalizar(alquiler: Alquiler): void {
-    if (!confirm('¿Confirma la devolución de la maquinaria? El alquiler se finalizará.')) return;
+  solicitarFinalizar(alquiler: Alquiler): void {
+    this.abrirConfirmacion('finalizar', alquiler, '¿Confirma la devolución de la maquinaria? El alquiler se finalizará.');
+  }
+
+  private finalizar(alquiler: Alquiler): void {
     this.alquilerService.finalizarAlquiler(alquiler.alquilerId!).subscribe({
       next: () => {
+        this.setFeedback('success', 'Alquiler finalizado correctamente.');
         this.cargarAlquileres();
       },
       error: (error) => {
         console.error('Error al finalizar alquiler', error);
-        alert('Error al finalizar el alquiler: ' + (error.error?.message || error.message));
+        this.setFeedback('danger', 'Error al finalizar el alquiler: ' + (error.error?.message || error.message));
       }
     });
   }
 
-  generarFactura(alquiler: Alquiler): void {
-    if (!confirm('¿Desea generar la factura para este alquiler?')) return;
+  solicitarGenerarFactura(alquiler: Alquiler): void {
+    this.abrirConfirmacion('facturar', alquiler, '¿Desea generar la factura para este alquiler?');
+  }
+
+  private generarFactura(alquiler: Alquiler): void {
     this.facturaService.generarFactura(alquiler.alquilerId!).subscribe({
       next: () => {
-        alert('Factura generada exitosamente.');
+        this.setFeedback('success', 'Factura generada exitosamente.');
       },
       error: (error) => {
         console.error('Error al generar factura', error);
-        const msg = error.status === 409
-          ? 'Ya existe una factura para este alquiler.'
-          : 'Error al generar la factura: ' + (error.error?.message || error.message);
-        alert(msg);
+        const backendMessage = error?.error?.message || error?.error?.error;
+        const msg = backendMessage
+          ? backendMessage
+          : 'Error al generar la factura: ' + (error.message || 'Intenta nuevamente.');
+        this.setFeedback('danger', msg);
       }
     });
+  }
+
+  confirmarAccion(): void {
+    if (!this.confirmAction || !this.confirmAlquiler) {
+      return;
+    }
+
+    const alquiler = this.confirmAlquiler;
+    const action = this.confirmAction;
+    this.cerrarConfirmacion();
+
+    if (action === 'aprobar') {
+      this.aprobar(alquiler);
+    } else if (action === 'entregar') {
+      this.entregar(alquiler);
+    } else if (action === 'finalizar') {
+      this.finalizar(alquiler);
+    } else if (action === 'facturar') {
+      this.generarFactura(alquiler);
+    }
+  }
+
+  cerrarConfirmacion(): void {
+    this.showConfirmModal = false;
+    this.confirmMessage = '';
+    this.confirmAction = null;
+    this.confirmAlquiler = null;
+  }
+
+  private abrirConfirmacion(action: 'aprobar' | 'entregar' | 'finalizar' | 'facturar', alquiler: Alquiler, message: string): void {
+    this.confirmAction = action;
+    this.confirmAlquiler = alquiler;
+    this.confirmMessage = message;
+    this.showConfirmModal = true;
+  }
+
+  private setFeedback(type: 'success' | 'danger', message: string): void {
+    this.feedbackType = type;
+    this.feedbackMessage = message;
   }
 
   verDetalle(alquiler: Alquiler): void {

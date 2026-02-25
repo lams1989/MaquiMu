@@ -67,7 +67,7 @@ public class Cliente {
 
     private void validarEmail() {
         if (!EMAIL_PATTERN.matcher(this.email).matches()) {
-            throw new IllegalArgumentException("El formato del email no es válido.");
+            throw new IllegalArgumentException("El formato del email no es v\u00e1lido.");
         }
     }
 

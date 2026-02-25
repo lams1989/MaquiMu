@@ -4,6 +4,8 @@ import com.maquimu.aplicacion.factura.comando.ComandoGenerarFactura;
 import com.maquimu.dominio.alquiler.modelo.Alquiler;
 import com.maquimu.dominio.alquiler.modelo.EstadoAlquiler;
 import com.maquimu.dominio.alquiler.puerto.dao.AlquilerDao;
+import com.maquimu.dominio.cliente.modelo.Cliente;
+import com.maquimu.dominio.cliente.puerto.dao.ClienteDao;
 import com.maquimu.dominio.factura.modelo.Factura;
 import com.maquimu.dominio.factura.puerto.dao.FacturaDao;
 import com.maquimu.dominio.factura.puerto.repositorio.FacturaRepositorio;
@@ -20,13 +22,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class ManejadorGenerarFactura {
 
     private final AlquilerDao alquilerDao;
+    private final ClienteDao clienteDao;
     private final FacturaDao facturaDao;
     private final FacturaRepositorio facturaRepositorio;
 
     public ManejadorGenerarFactura(AlquilerDao alquilerDao,
+                                    ClienteDao clienteDao,
                                     FacturaDao facturaDao,
                                     FacturaRepositorio facturaRepositorio) {
         this.alquilerDao = alquilerDao;
+        this.clienteDao = clienteDao;
         this.facturaDao = facturaDao;
         this.facturaRepositorio = facturaRepositorio;
     }
@@ -49,6 +54,16 @@ public class ManejadorGenerarFactura {
         if (facturaDao.buscarPorAlquilerId(alquiler.getId()).isPresent()) {
             throw new IllegalStateException(
                     "Ya existe una factura para el alquiler ID: " + alquiler.getId());
+        }
+
+        Cliente cliente = clienteDao.buscarPorId(alquiler.getClienteId())
+            .orElseThrow(() -> new IllegalArgumentException(
+                "Cliente no encontrado con ID: " + alquiler.getClienteId()));
+
+        if (cliente.getTelefono() == null || cliente.getTelefono().isBlank()
+            || cliente.getDireccion() == null || cliente.getDireccion().isBlank()) {
+            throw new IllegalStateException(
+                "Para generar factura el cliente debe tener tel\u00e9fono y direcci\u00f3n registrados");
         }
 
         // 4. Crear la factura
