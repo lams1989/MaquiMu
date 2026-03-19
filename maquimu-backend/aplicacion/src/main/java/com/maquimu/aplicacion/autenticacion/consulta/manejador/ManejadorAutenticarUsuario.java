@@ -33,10 +33,10 @@ public class ManejadorAutenticarUsuario {
                 new UsernamePasswordAuthenticationToken(consulta.getEmail(), consulta.getPassword())
         );
 
-        // If authentication is successful, retrieve UserDetails and generate token
+        // Si la autenticación es exitosa, recupera UserDetails y genera un token.
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         
-        // Retrieve the full Usuario object from the database using email from UserDetails
+        // Recuperar el objeto Usuario completo de la base de datos usando el correo electrónico de UserDetails
         Usuario usuario = usuarioDao.buscarPorEmail(userDetails.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado despues de autenticacion"));
 

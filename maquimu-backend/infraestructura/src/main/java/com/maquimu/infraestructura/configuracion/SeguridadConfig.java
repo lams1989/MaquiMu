@@ -29,7 +29,7 @@ public class SeguridadConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthEntryPoint unauthorizedHandler;
-    private final UserDetailsServiceImpl userDetailsService; // Use the specific implementation
+    private final UserDetailsServiceImpl userDetailsService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
