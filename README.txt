@@ -12,16 +12,9 @@ El proyecto utiliza **Arquitectura Hexagonal (Puertos y Adaptadores)** para gara
 
 ```
 MaquiMu/
-├── .luis-metodo/          # Metodología de desarrollo
-├── docs/                  # Documentación del proyecto
-│   ├── architecture/      # Documentación arquitectónica
-│   ├── stories/           # Historias de usuario
-│   ├── diseños/           # Diseños y maquetaciones
-│   └── qa/                # Quality Assurance
 ├── maquimu-backend/       # API REST (Spring Boot + Java 17)
 ├── maquimu-frontend/      # Aplicación Web (Angular 17)
 ├── maquimu-mobile/        # Aplicación Móvil (Android Kotlin)
-└── database/              # Scripts de base de datos
 ```
 
 ## 🚀 Módulos del Sistema
@@ -66,21 +59,6 @@ MaquiMu/
 | **Migraciones** | Flyway |
 | **Documentación API** | Swagger/OpenAPI |
 | **Testing** | JUnit 5, Mockito, Jasmine/Karma |
-
-## 📚 Documentación
-
-La documentación completa del proyecto se encuentra en la carpeta [`docs/`](./docs/):
-
-- **[Arquitectura](./docs/architecture/)** - Documentación técnica y arquitectónica
-  - [README.md](./docs/architecture/README.md) - Visión general
-  - [ARQUITECTURA.md](./docs/architecture/ARQUITECTURA.md) - Detalles arquitectónicos
-  - [tech-stack.md](./docs/architecture/tech-stack.md) - Stack tecnológico
-  - [source-tree.md](./docs/architecture/source-tree.md) - Estructura del código
-  - [coding-standards.md](./docs/architecture/coding-standards.md) - Estándares de código
-
-- **[Historias de Usuario](./docs/stories/)** - Requisitos funcionales
-- **[Diseños](./docs/diseños/)** - Mockups y prototipos
-- **[QA](./docs/qa/)** - Quality Assurance y gates de calidad
 
 ## 🚦 Inicio Rápido
 
@@ -131,7 +109,7 @@ La documentación completa del proyecto se encuentra en la carpeta [`docs/`](./d
 ## 🔐 Seguridad
 
 - Autenticación mediante **JWT (JSON Web Tokens)**
-- Autorización basada en **roles** (ADMIN, OPERARIO, CLIENTE)
+- Autorización basada en **roles** (OPERARIO, CLIENTE)
 - Comunicación segura mediante **HTTPS**
 - Configuración de **CORS** para frontend
 
@@ -143,24 +121,6 @@ Cada módulo incluye su propia suite de tests:
 - **Frontend:** Jasmine + Karma
 - **Mobile:** JUnit + Espresso
 
-## 📝 Metodología de Desarrollo
-
-Este proyecto utiliza el **Método Luis**, una metodología estructurada de desarrollo que incluye:
-
-- Gestión de historias de usuario
-- Estándares de código
-- Gates de calidad (QA)
-- Documentación arquitectónica
-
-Ver más en [`.luis-metodo/`](./.luis-metodo/)
-
-## 🤝 Contribución
-
-1. Revisar [coding-standards.md](./docs/architecture/coding-standards.md)
-2. Crear una rama desde `develop`
-3. Implementar cambios siguiendo los estándares
-4. Ejecutar tests
-5. Crear Pull Request
 
 ## 📄 Licencia
 
@@ -168,7 +128,7 @@ Ver más en [`.luis-metodo/`](./.luis-metodo/)
 
 ## 👥 Equipo
 
-[Información del equipo de desarrollo]
+[Luis Alejandro Muñoz Sierra - Arquitecto Desarrollador full stack IA]
 Email: operario@maquimu.com
 Contraseña: Admin@2026
 ---
