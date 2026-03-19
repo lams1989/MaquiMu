@@ -1,0 +1,123 @@
+<!-- Navbar -->
+<app-navbar></app-navbar>
+
+<!-- Dashboard Content -->
+<div class="container-fluid p-4 dashboard-content">
+
+    <!-- Welcome -->
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="fw-bold mb-1"><i class="bi bi-grid-1x2 me-2"></i>Dashboard</h2>
+            <p class="text-muted mb-0">Resumen general del sistema MaquiMu</p>
+        </div>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p class="mt-2 text-muted">Cargando estadísticas...</p>
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="errorMessage && !loading" class="alert alert-danger d-flex align-items-center" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <div>{{ errorMessage }}</div>
+        <button class="btn btn-sm btn-outline-danger ms-auto" (click)="cargarStats()">Reintentar</button>
+    </div>
+
+    <!-- KPI Cards -->
+    <div *ngIf="!loading && stats" class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card kpi-modern border-0 h-100">
+                <div class="card-body d-flex align-items-center p-4">
+                    <div class="kpi-icon kpi-icon-success me-3">
+                        <i class="bi bi-truck-front"></i>
+                    </div>
+                    <div>
+                        <p class="text-muted small mb-1 fw-medium">Maquinaria Disponible</p>
+                        <h2 class="mb-0 fw-bold">{{ stats.maquinariaDisponible }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card kpi-modern border-0 h-100">
+                <div class="card-body d-flex align-items-center p-4">
+                    <div class="kpi-icon kpi-icon-primary me-3">
+                        <i class="bi bi-journal-check"></i>
+                    </div>
+                    <div>
+                        <p class="text-muted small mb-1 fw-medium">Alquileres Activos</p>
+                        <h2 class="mb-0 fw-bold">{{ stats.alquileresActivos }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card kpi-modern border-0 h-100">
+                <div class="card-body d-flex align-items-center p-4">
+                    <div class="kpi-icon kpi-icon-warning me-3">
+                        <i class="bi bi-receipt"></i>
+                    </div>
+                    <div>
+                        <p class="text-muted small mb-1 fw-medium">Facturas Pendientes</p>
+                        <h2 class="mb-0 fw-bold">{{ stats.facturasPendientes }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Accesos rápidos -->
+    <div *ngIf="!loading && stats">
+        <h5 class="fw-bold mb-3"><i class="bi bi-lightning-charge me-2 text-warning"></i>Accesos Rápidos</h5>
+        <div class="row g-4 mb-4">
+            <div class="col-md-6 col-lg-3">
+                <a routerLink="/admin/inventory" class="card quick-access-card h-100 text-decoration-none border-0">
+                    <div class="card-body text-center py-4">
+                        <div class="quick-icon quick-icon-success mx-auto mb-3">
+                            <i class="bi bi-truck-front"></i>
+                        </div>
+                        <h6 class="fw-bold mb-1" style="color: var(--text-dark);">Inventario</h6>
+                        <p class="text-muted small mb-0">Gestionar maquinaria</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <a routerLink="/admin/rentals" class="card quick-access-card h-100 text-decoration-none border-0">
+                    <div class="card-body text-center py-4">
+                        <div class="quick-icon quick-icon-primary mx-auto mb-3">
+                            <i class="bi bi-journal-check"></i>
+                        </div>
+                        <h6 class="fw-bold mb-1" style="color: var(--text-dark);">Alquileres</h6>
+                        <p class="text-muted small mb-0">Administrar contratos</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <a routerLink="/admin/financial" class="card quick-access-card h-100 text-decoration-none border-0">
+                    <div class="card-body text-center py-4">
+                        <div class="quick-icon quick-icon-warning mx-auto mb-3">
+                            <i class="bi bi-wallet2"></i>
+                        </div>
+                        <h6 class="fw-bold mb-1" style="color: var(--text-dark);">Finanzas</h6>
+                        <p class="text-muted small mb-0">Revisar facturación</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <a routerLink="/admin/clients" class="card quick-access-card h-100 text-decoration-none border-0">
+                    <div class="card-body text-center py-4">
+                        <div class="quick-icon quick-icon-info mx-auto mb-3">
+                            <i class="bi bi-people"></i>
+                        </div>
+                        <h6 class="fw-bold mb-1" style="color: var(--text-dark);">Clientes</h6>
+                        <p class="text-muted small mb-0">Gestionar clientes</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

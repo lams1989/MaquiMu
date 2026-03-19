@@ -1,0 +1,657 @@
+/* You can add global styles to this file, and also import other style files */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+/* ============================================
+   MaquiMu - Modern Design System
+   ============================================ */
+
+:root {
+    /* Brand Colors */
+    --primary-color: #0D47A1;
+    --primary-light: #1565C0;
+    --primary-dark: #0A3A8A;
+    --primary-gradient: linear-gradient(135deg, #0D47A1 0%, #1976D2 100%);
+    --accent-color: #FF6F00;
+    --accent-light: #FF8F00;
+    --accent-gradient: linear-gradient(135deg, #FF6F00 0%, #FF8F00 100%);
+
+    /* Neutrals */
+    --text-dark: #1e293b;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+    --bg-light: #f1f5f9;
+    --bg-white: #ffffff;
+    --border-color: #e2e8f0;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03);
+    --shadow-lg: 0 10px 25px rgba(0,0,0,0.06), 0 4px 10px rgba(0,0,0,0.04);
+    --shadow-xl: 0 20px 40px rgba(0,0,0,0.08);
+
+    /* Radius */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --radius-full: 50%;
+
+    /* Transitions */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Sidebar */
+    --sidebar-width: 210px;
+    --sidebar-bg: #1e293b;
+    --navbar-bg: #0f172a;
+}
+
+/* ============================================
+   Global Reset & Base
+   ============================================ */
+
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    background-color: var(--bg-light);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    color: var(--text-dark);
+    letter-spacing: -0.02em;
+}
+
+p {
+    color: var(--text-muted);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* ============================================
+   Modern Cards
+   ============================================ */
+
+.card {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition-normal), transform var(--transition-normal);
+    background: var(--bg-white);
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.card-header {
+    border-bottom: 1px solid var(--border-color);
+    background: transparent;
+    padding: 1rem 1.25rem;
+    font-weight: 600;
+}
+
+/* ============================================
+   Modern Forms
+   ============================================ */
+
+.form-control, .form-select {
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--border-color);
+    padding: 0.65rem 1rem;
+    font-size: 0.9rem;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    color: var(--text-dark);
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 3px rgba(13, 71, 161, 0.12);
+}
+
+.form-label {
+    font-weight: 500;
+    font-size: 0.875rem;
+    color: var(--text-dark);
+    margin-bottom: 0.35rem;
+}
+
+.input-group-text {
+    border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+    border: 1.5px solid var(--border-color);
+    background-color: var(--bg-light);
+    color: var(--text-muted);
+    border-right: none;
+}
+
+.input-group .form-control {
+    border-left: none;
+}
+
+.input-group .form-control:focus {
+    box-shadow: none;
+    border-color: var(--primary-light);
+}
+
+.input-group .form-control:focus + .input-group-text,
+.input-group:focus-within .input-group-text {
+    border-color: var(--primary-light);
+}
+
+/* ============================================
+   Modern Buttons
+   ============================================ */
+
+.btn {
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 0.875rem;
+    padding: 0.55rem 1.25rem;
+    transition: all var(--transition-fast);
+    letter-spacing: 0.01em;
+}
+
+.btn-primary {
+    background: var(--primary-gradient);
+    border: none;
+    box-shadow: 0 2px 8px rgba(13, 71, 161, 0.25);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #1565C0 0%, #1E88E5 100%);
+    box-shadow: 0 4px 12px rgba(13, 71, 161, 0.35);
+    transform: translateY(-1px);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+    border: none;
+    box-shadow: 0 2px 8px rgba(22, 163, 74, 0.25);
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #15803d 0%, #16a34a 100%);
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.35);
+    transform: translateY(-1px);
+}
+
+.btn-warning {
+    background: var(--accent-gradient);
+    border: none;
+    color: white;
+    box-shadow: 0 2px 8px rgba(255, 111, 0, 0.25);
+}
+
+.btn-warning:hover {
+    background: linear-gradient(135deg, #e65100 0%, #FF6F00 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(255, 111, 0, 0.35);
+    transform: translateY(-1px);
+}
+
+.btn-outline-primary {
+    border: 1.5px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 12px rgba(13, 71, 161, 0.25);
+    transform: translateY(-1px);
+}
+
+/* ============================================
+   Modern Tables
+   ============================================ */
+
+.table {
+    font-size: 0.875rem;
+}
+
+.table thead th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    border-bottom: 2px solid var(--border-color);
+    padding: 0.85rem 1rem;
+    background: var(--bg-light);
+}
+
+.table tbody td {
+    padding: 0.85rem 1rem;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-dark);
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(13, 71, 161, 0.03);
+}
+
+/* ============================================
+   Modern Badges
+   ============================================ */
+
+.badge {
+    font-weight: 600;
+    font-size: 0.75rem;
+    padding: 0.4em 0.85em;
+    border-radius: 50px;
+    letter-spacing: 0.02em;
+}
+
+.badge.bg-success {
+    background: linear-gradient(135deg, #16a34a, #22c55e) !important;
+}
+
+.badge.bg-warning {
+    background: linear-gradient(135deg, #f59e0b, #fbbf24) !important;
+    color: #1e293b !important;
+}
+
+.badge.bg-danger {
+    background: linear-gradient(135deg, #dc2626, #ef4444) !important;
+}
+
+.badge.bg-primary {
+    background: var(--primary-gradient) !important;
+}
+
+.badge.bg-info {
+    background: linear-gradient(135deg, #0891b2, #06b6d4) !important;
+}
+
+.badge.bg-secondary {
+    background: linear-gradient(135deg, #475569, #64748b) !important;
+}
+
+/* ============================================
+   Modern Modals
+   ============================================ */
+
+.modal-content {
+    border: none;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    overflow: hidden;
+}
+
+.modal-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-header.bg-primary {
+    background: var(--primary-gradient) !important;
+    border-bottom: none;
+}
+
+.modal-header.bg-warning {
+    background: var(--accent-gradient) !important;
+    border-bottom: none;
+    color: white;
+}
+
+.modal-header.bg-info {
+    background: linear-gradient(135deg, #0891b2, #06b6d4) !important;
+    border-bottom: none;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+/* ============================================
+   Modern Alerts
+   ============================================ */
+
+.alert {
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    padding: 1rem 1.25rem;
+}
+
+.alert-danger {
+    background: #fef2f2;
+    color: #991b1b;
+}
+
+.alert-success {
+    background: #f0fdf4;
+    color: #166534;
+}
+
+.alert-warning {
+    background: #fffbeb;
+    color: #92400e;
+}
+
+/* ============================================
+   Sidebar Styles (Global)
+   ============================================ */
+
+.sidebar {
+    background: var(--sidebar-bg);
+    min-height: calc(100vh - 60px);
+    color: white;
+    width: var(--sidebar-width);
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.sidebar nav,
+.sidebar-menu {
+    padding: 0.5rem 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.sidebar a {
+    color: rgba(255, 255, 255, 0.55);
+    text-decoration: none;
+    padding: 0.55rem 0.75rem;
+    display: flex;
+    align-items: center;
+    transition: all 180ms cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 8px;
+    gap: 0.75rem;
+    position: relative;
+}
+
+.sidebar a i {
+    font-size: 0.95rem;
+    width: 1.25rem;
+    text-align: center;
+}
+
+.sidebar a:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.sidebar a.active {
+    background: rgba(59, 130, 246, 0.1);
+    color: #f8fafc;
+}
+
+.sidebar a.active::before {
+    content: '';
+    position: absolute;
+    left: -0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 22px;
+    background: linear-gradient(180deg, #3b82f6, #60a5fa);
+    border-radius: 0 4px 4px 0;
+}
+
+/* ============================================
+   Spinner Override
+   ============================================ */
+
+.spinner-border.text-primary {
+    color: var(--primary-color) !important;
+}
+
+/* ============================================
+   KPI Card Styles
+   ============================================ */
+
+.kpi-card {
+    border: none;
+    border-radius: var(--radius-md);
+}
+
+.kpi-card .card-icon {
+    font-size: 2.5em;
+    color: rgba(0, 0, 0, 0.2);
+}
+
+/* ============================================
+   Utility Classes
+   ============================================ */
+
+.text-gradient-primary {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.bg-gradient-primary {
+    background: var(--primary-gradient) !important;
+}
+
+.shadow-primary {
+    box-shadow: 0 4px 20px rgba(13, 71, 161, 0.3) !important;
+}
+
+.border-radius-lg {
+    border-radius: var(--radius-md) !important;
+}
+
+/* ============================================
+   Page Animations
+   ============================================ */
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.container-fluid {
+    animation: fadeInUp 0.4s ease-out;
+}
+
+/* ============================================
+   Watermark Overlay — Pro
+   ============================================ */
+.watermark-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 9999;
+    overflow: hidden;
+    user-select: none;
+}
+
+.watermark-grid {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    gap: 60px 80px;
+    transform: rotate(-25deg);
+}
+
+.watermark-grid span {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-size: 1.3rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(13, 71, 161, 0.04);
+    white-space: nowrap;
+}
+
+/* ============================================
+   Responsive — Main Content Constraint
+   ============================================ */
+
+/* Prevent flex-grow-1 content from overflowing */
+.d-flex > .flex-grow-1 {
+    min-width: 0;
+    overflow-x: auto;
+}
+
+/* Ensure all tables scroll horizontally on small viewports */
+.table-responsive,
+.card-body > .table,
+.flex-grow-1 .table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* ============================================
+   Responsive — Breakpoints
+   ============================================ */
+
+/* Tablets / small laptops / dev-tools open */
+@media (max-width: 1200px) {
+    .container-fluid {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+}
+
+@media (max-width: 992px) {
+    /* Hide sidebar on tablets and below (already handled with d-none d-md-flex) */
+
+    /* Stack page headers vertically */
+    .d-flex.justify-content-between.align-items-center.mb-4 {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 0.75rem;
+    }
+
+    /* Full-width buttons on small screens */
+    .d-flex.justify-content-between.align-items-center.mb-4 .btn {
+        width: 100%;
+    }
+
+    /* Reduce padding */
+    .container-fluid {
+        padding: 1rem !important;
+    }
+
+    h2.fw-bold {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Navbar compact */
+    .navbar-pro {
+        padding: 0 0.75rem;
+    }
+
+    .brand-name {
+        display: none;
+    }
+
+    .role-chip,
+    .role-chip-client {
+        display: none;
+    }
+
+    /* Tables: smaller text, tighter padding */
+    .table thead th,
+    .table tbody td {
+        padding: 0.6rem 0.5rem;
+        font-size: 0.8rem;
+    }
+
+    /* Cards stack nicely */
+    .card-body {
+        padding: 0.85rem;
+    }
+
+    /* Modals go wider */
+    .modal-dialog {
+        margin: 0.5rem;
+        max-width: calc(100vw - 1rem);
+    }
+
+    /* Forms tighter */
+    .form-control, .form-select {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.85rem;
+    }
+
+    /* Tabs wrap */
+    .nav-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .nav-tabs .nav-link {
+        white-space: nowrap;
+        font-size: 0.8rem;
+        padding: 0.5rem 0.75rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .container-fluid {
+        padding: 0.75rem !important;
+    }
+
+    h2.fw-bold {
+        font-size: 1.15rem;
+    }
+
+    .btn {
+        font-size: 0.8rem;
+        padding: 0.45rem 0.85rem;
+    }
+
+    .badge {
+        font-size: 0.65rem;
+    }
+
+    /* User pill compact */
+    .user-name {
+        max-width: 80px;
+    }
+}

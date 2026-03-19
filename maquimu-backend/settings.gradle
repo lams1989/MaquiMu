@@ -1,0 +1,5 @@
+rootProject.name = 'maquimu-backend'
+
+include 'dominio'
+include 'aplicacion'
+include 'infraestructura'

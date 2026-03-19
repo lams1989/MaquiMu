@@ -1,0 +1,32 @@
+<aside class="sidebar-pro d-none d-md-flex">
+    <div class="sidebar-menu">
+        <div class="sidebar-section-label">Principal</div>
+        <a routerLink="/admin/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+            <div class="sidebar-icon si-blue"><i class="bi bi-grid-1x2-fill"></i></div>
+            <span>Dashboard</span>
+        </a>
+
+        <div class="sidebar-section-label">Gestión</div>
+        <a routerLink="/admin/inventory" routerLinkActive="active">
+            <div class="sidebar-icon si-emerald"><i class="bi bi-truck-front-fill"></i></div>
+            <span>Maquinaria</span>
+        </a>
+        <a routerLink="/admin/clients" routerLinkActive="active">
+            <div class="sidebar-icon si-violet"><i class="bi bi-people-fill"></i></div>
+            <span>Clientes</span>
+        </a>
+        <a routerLink="/admin/rentals" routerLinkActive="active">
+            <div class="sidebar-icon si-amber"><i class="bi bi-journal-check"></i></div>
+            <span>Alquileres</span>
+        </a>
+
+        <div class="sidebar-section-label">Finanzas</div>
+        <a routerLink="/admin/financial" routerLinkActive="active">
+            <div class="sidebar-icon si-rose"><i class="bi bi-wallet2"></i></div>
+            <span>Finanzas</span>
+        </a>
+    </div>
+    <div class="sidebar-footer">
+        <span>© 2025 MaquiMu v1.0</span>
+    </div>
+</aside>

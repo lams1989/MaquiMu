@@ -1,0 +1,280 @@
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-1"><i class="bi bi-clock-history me-2"></i>Mis Alquileres</h2>
+      <p class="text-muted mb-0">Consulta el historial y estado de tus alquileres</p>
+    </div>
+    <button class="btn btn-outline-primary btn-sm" (click)="cargarAlquileres()" [disabled]="loading">
+      <i class="bi bi-arrow-clockwise me-1"></i>Actualizar
+    </button>
+  </div>
+
+  <!-- Filtro por estado -->
+  <div class="card border-0 mb-4">
+    <div class="card-body py-3">
+      <div class="row align-items-center">
+        <div class="col-md-4">
+          <label for="filtroEstado" class="form-label fw-semibold mb-1">Filtrar por estado</label>
+          <select id="filtroEstado" class="form-select" [(ngModel)]="filtroEstado" (ngModelChange)="aplicarFiltro()">
+            <option *ngFor="let e of estados" [ngValue]="e.value">{{ e.label }}</option>
+          </select>
+        </div>
+        <div class="col-md-8 text-end mt-3 mt-md-0">
+          <span class="text-muted small">
+            Mostrando <strong>{{ alquileresFiltrados.length }}</strong> de <strong>{{ alquileres.length }}</strong> alquileres
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success message -->
+  <div *ngIf="extensionSuccess" class="alert alert-success alert-dismissible fade show" role="alert">
+    <i class="bi bi-check-circle me-2"></i>{{ extensionSuccess }}
+    <button type="button" class="btn-close" (click)="extensionSuccess = ''" aria-label="Close"></button>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="mt-2 text-muted">Cargando tus alquileres...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="errorMessage && !loading" class="alert alert-danger d-flex align-items-center" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    <div>{{ errorMessage }}</div>
+  </div>
+
+  <!-- Sin alquileres -->
+  <div *ngIf="!loading && !errorMessage && alquileres.length === 0" class="text-center py-5">
+    <i class="bi bi-inbox display-1 text-muted"></i>
+    <h5 class="mt-3 text-muted">No tienes alquileres registrados</h5>
+    <p class="text-muted">Cuando solicites un alquiler, aparecerá aquí.</p>
+    <a routerLink="/client/request-rental" class="btn btn-primary">
+      <i class="bi bi-plus-circle me-1"></i>Solicitar Alquiler
+    </a>
+  </div>
+
+  <!-- Sin resultados con filtro -->
+  <div *ngIf="!loading && !errorMessage && alquileres.length > 0 && alquileresFiltrados.length === 0" class="text-center py-5">
+    <i class="bi bi-funnel display-4 text-muted"></i>
+    <h5 class="mt-3 text-muted">No hay alquileres con este estado</h5>
+    <button class="btn btn-outline-secondary btn-sm mt-2" (click)="filtroEstado = ''; aplicarFiltro()">
+      Limpiar filtro
+    </button>
+  </div>
+
+  <!-- Tabla de alquileres -->
+  <div *ngIf="!loading && !errorMessage && alquileresFiltrados.length > 0" class="card shadow-sm border-0">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0 align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>#</th>
+            <th>Maquinaria ID</th>
+            <th>Fecha Inicio</th>
+            <th>Fecha Fin</th>
+            <th>Costo Total</th>
+            <th>Estado</th>
+            <th class="text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let alquiler of alquileresFiltrados">
+            <td><strong>{{ alquiler.alquilerId }}</strong></td>
+            <td>
+              <i class="bi bi-truck me-1 text-muted"></i>{{ alquiler.maquinariaId }}
+            </td>
+            <td>{{ alquiler.fechaInicio | date:'dd/MM/yyyy' }}</td>
+            <td>{{ alquiler.fechaFin | date:'dd/MM/yyyy' }}</td>
+            <td class="fw-semibold">{{ formatCurrency(alquiler.costoTotal) }}</td>
+            <td>
+              <span class="badge rounded-pill" [ngClass]="getBadgeClass(alquiler.estado)">
+                {{ getEstadoLabel(alquiler.estado) }}
+              </span>
+            </td>
+            <td class="text-center">
+              <button class="btn btn-sm btn-outline-primary me-1"
+                      (click)="verDetalle(alquiler.alquilerId!)">
+                <i class="bi bi-eye me-1"></i>Detalle
+              </button>
+              <button *ngIf="alquiler.estado === 'ACTIVO'" class="btn btn-sm btn-outline-success"
+                      (click)="abrirExtensionModal(alquiler)">
+                <i class="bi bi-calendar-plus me-1"></i>Solicitar Extensión
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Detalle -->
+<div *ngIf="showDetalle" class="modal-backdrop fade show"></div>
+<div *ngIf="showDetalle" class="modal fade show d-block" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">
+          <i class="bi bi-file-earmark-text me-2"></i>
+          Detalle del Alquiler
+        </h5>
+        <button type="button" class="btn-close btn-close-white" aria-label="Cerrar" (click)="cerrarDetalle()"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Loading -->
+        <div *ngIf="loadingDetalle" class="text-center py-4">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+          </div>
+        </div>
+
+        <div *ngIf="!loadingDetalle && alquilerDetalle">
+          <div class="row g-3">
+            <div class="col-6">
+              <label class="form-label text-muted small mb-0">ID Alquiler</label>
+              <p class="fw-bold mb-0">{{ alquilerDetalle.alquilerId }}</p>
+            </div>
+            <div class="col-6">
+              <label class="form-label text-muted small mb-0">Estado</label>
+              <p class="mb-0">
+                <span class="badge rounded-pill" [ngClass]="getBadgeClass(alquilerDetalle.estado)">
+                  {{ getEstadoLabel(alquilerDetalle.estado) }}
+                </span>
+              </p>
+            </div>
+            <div class="col-6">
+              <label class="form-label text-muted small mb-0">Maquinaria ID</label>
+              <p class="fw-bold mb-0">{{ alquilerDetalle.maquinariaId }}</p>
+            </div>
+            <div class="col-6">
+              <label class="form-label text-muted small mb-0">Costo Total</label>
+              <p class="fw-bold text-success mb-0">{{ formatCurrency(alquilerDetalle.costoTotal) }}</p>
+            </div>
+            <div class="col-6">
+              <label class="form-label text-muted small mb-0">Fecha Inicio</label>
+              <p class="fw-bold mb-0">{{ alquilerDetalle.fechaInicio | date:'dd/MM/yyyy' }}</p>
+            </div>
+            <div class="col-6">
+              <label class="form-label text-muted small mb-0">Fecha Fin</label>
+              <p class="fw-bold mb-0">{{ alquilerDetalle.fechaFin | date:'dd/MM/yyyy' }}</p>
+            </div>
+            <div class="col-12" *ngIf="alquilerDetalle.motivoRechazo">
+              <label class="form-label text-muted small mb-0">Motivo de Rechazo</label>
+              <div class="alert alert-danger py-2 mb-0">
+                <i class="bi bi-exclamation-circle me-1"></i>{{ alquilerDetalle.motivoRechazo }}
+              </div>
+            </div>
+            <div class="col-6" *ngIf="alquilerDetalle.fechaFinSolicitada">
+              <label class="form-label text-muted small mb-0">Fecha Fin Solicitada</label>
+              <p class="fw-bold text-primary mb-0">{{ alquilerDetalle.fechaFinSolicitada | date:'dd/MM/yyyy' }}</p>
+            </div>
+            <div class="col-6" *ngIf="alquilerDetalle.costoAdicional">
+              <label class="form-label text-muted small mb-0">Costo Adicional</label>
+              <p class="fw-bold text-primary mb-0">{{ formatCurrency(alquilerDetalle.costoAdicional) }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="cerrarDetalle()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Solicitar Extensión -->
+<div *ngIf="showExtensionModal" class="modal-backdrop fade show"></div>
+<div *ngIf="showExtensionModal" class="modal fade show d-block" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title">
+          <i class="bi bi-calendar-plus me-2"></i>
+          Solicitar Extensión - Alquiler #{{ extensionAlquiler?.alquilerId }}
+        </h5>
+        <button type="button" class="btn-close btn-close-white" aria-label="Cerrar" (click)="cerrarExtensionModal()"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Error -->
+        <div *ngIf="extensionError" class="alert alert-danger py-2">
+          <i class="bi bi-exclamation-circle me-1"></i>{{ extensionError }}
+        </div>
+
+        <!-- Info del alquiler actual -->
+        <div *ngIf="extensionAlquiler" class="card bg-light border-0 mb-3">
+          <div class="card-body py-3">
+            <h6 class="card-title fw-bold mb-2"><i class="bi bi-info-circle me-1"></i>Información Actual</h6>
+            <div class="row g-2">
+              <div class="col-md-6">
+                <small class="text-muted d-block">Maquinaria</small>
+                <span class="fw-semibold">{{ extensionMaquinaria ? extensionMaquinaria.nombreEquipo + ' - ' + extensionMaquinaria.marca : 'ID: ' + extensionAlquiler.maquinariaId }}</span>
+              </div>
+              <div class="col-md-3">
+                <small class="text-muted d-block">Fecha Inicio</small>
+                <span class="fw-semibold">{{ extensionAlquiler.fechaInicio | date:'dd/MM/yyyy' }}</span>
+              </div>
+              <div class="col-md-3">
+                <small class="text-muted d-block">Fecha Fin Actual</small>
+                <span class="fw-semibold">{{ extensionAlquiler.fechaFin | date:'dd/MM/yyyy' }}</span>
+              </div>
+              <div class="col-md-6">
+                <small class="text-muted d-block">Tarifa por Día</small>
+                <span class="fw-semibold">{{ extensionMaquinaria ? formatCurrency(extensionMaquinaria.tarifaPorDia) : 'Cargando...' }}</span>
+              </div>
+              <div class="col-md-6">
+                <small class="text-muted d-block">Costo Actual</small>
+                <span class="fw-semibold text-success">{{ formatCurrency(extensionAlquiler.costoTotal) }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Selector de nueva fecha -->
+        <div class="mb-3">
+          <label for="nuevaFechaFin" class="form-label fw-semibold">
+            <i class="bi bi-calendar-date me-1"></i>Nueva Fecha de Fin
+          </label>
+          <input type="date" id="nuevaFechaFin" class="form-control"
+                 [(ngModel)]="nuevaFechaFin"
+                 [min]="getMinFechaExtension()"
+                 (ngModelChange)="calcularCostoAdicional()">
+        </div>
+
+        <!-- Resumen de costos -->
+        <div *ngIf="nuevaFechaFin && costoAdicionalEstimado > 0" class="card border-primary">
+          <div class="card-body py-3">
+            <h6 class="card-title fw-bold text-primary mb-2"><i class="bi bi-calculator me-1"></i>Resumen de Costos</h6>
+            <div class="d-flex justify-content-between mb-1">
+              <span>Costo actual:</span>
+              <span class="fw-semibold">{{ formatCurrency(extensionAlquiler!.costoTotal) }}</span>
+            </div>
+            <div class="d-flex justify-content-between mb-1">
+              <span>Costo adicional (extensión):</span>
+              <span class="fw-semibold text-primary">+ {{ formatCurrency(costoAdicionalEstimado) }}</span>
+            </div>
+            <hr class="my-2">
+            <div class="d-flex justify-content-between">
+              <span class="fw-bold">Costo total estimado:</span>
+              <span class="fw-bold text-success fs-5">{{ formatCurrency(extensionAlquiler!.costoTotal + costoAdicionalEstimado) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="cerrarExtensionModal()">Cancelar</button>
+        <button type="button" class="btn btn-success"
+                (click)="confirmarExtension()"
+                [disabled]="!nuevaFechaFin || costoAdicionalEstimado <= 0 || loadingExtension">
+          <span *ngIf="loadingExtension" class="spinner-border spinner-border-sm me-1" role="status"></span>
+          <i *ngIf="!loadingExtension" class="bi bi-send me-1"></i>
+          {{ loadingExtension ? 'Enviando...' : 'Solicitar Extensión' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

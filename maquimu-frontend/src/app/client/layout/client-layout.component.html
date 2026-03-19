@@ -1,0 +1,164 @@
+<!-- Watermark -->
+<div class="watermark-overlay" aria-hidden="true">
+    <div class="watermark-grid">
+        <span *ngFor="let i of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35]">MaquiMu</span>
+    </div>
+</div>
+
+<!-- Header -->
+<nav class="navbar-pro">
+    <div class="navbar-brand-section">
+        <a routerLink="/client/portal" class="brand-link">
+            <div class="brand-logo">
+                <img src="assets/images/mu.png" alt="MaquiMu" height="22">
+            </div>
+            <span class="brand-name">MaquiMu</span>
+        </a>
+        <span class="role-chip role-chip-client">Cliente</span>
+    </div>
+    <div class="navbar-actions">
+        <app-notification-dropdown></app-notification-dropdown>
+        <div class="nav-divider d-none d-sm-block"></div>
+        <div class="user-pill d-none d-sm-flex" style="cursor: pointer; position: relative;" (click)="toggleUserMenu()">
+            <div class="user-avatar-pro">
+                <span>{{ (currentUser?.nombreCompleto || 'U').charAt(0) }}</span>
+            </div>
+            <span class="user-name">{{ currentUser?.nombreCompleto || 'Usuario' }}</span>
+            <i class="bi bi-chevron-down ms-1" style="font-size: 0.7rem;"></i>
+            <!-- User dropdown -->
+            <div *ngIf="showUserMenu" class="user-dropdown-menu">
+                <a class="user-dropdown-item" (click)="openChangePasswordModal($event)">
+                    <i class="bi bi-key me-2"></i>Cambiar Contraseña
+                </a>
+                <div class="user-dropdown-divider"></div>
+                <a class="user-dropdown-item text-danger" (click)="logout()">
+                    <i class="bi bi-power me-2"></i>Cerrar Sesión
+                </a>
+            </div>
+        </div>
+        <!-- Mobile menu button -->
+        <button *ngIf="showSidebar" class="nav-action-btn d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#clientSidebarMobile">
+            <i class="bi bi-list"></i>
+        </button>
+    </div>
+</nav>
+
+<div class="d-flex">
+    <!-- Sidebar Cliente -->
+    <aside *ngIf="showSidebar" class="sidebar-pro d-none d-md-flex">
+        <div class="sidebar-menu">
+            <div class="sidebar-section-label">Navegación</div>
+            <a routerLink="/client/portal" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                <div class="sidebar-icon si-blue"><i class="bi bi-grid-1x2-fill"></i></div>
+                <span>Inicio</span>
+            </a>
+            <a routerLink="/client/request-rental" routerLinkActive="active">
+                <div class="sidebar-icon si-emerald"><i class="bi bi-calendar-plus-fill"></i></div>
+                <span>Solicitar Alquiler</span>
+            </a>
+
+            <div class="sidebar-section-label">Mis Registros</div>
+            <a routerLink="/client/my-rentals" routerLinkActive="active">
+                <div class="sidebar-icon si-amber"><i class="bi bi-journal-text"></i></div>
+                <span>Mis Alquileres</span>
+            </a>
+            <a routerLink="/client/my-invoices" routerLinkActive="active">
+                <div class="sidebar-icon si-rose"><i class="bi bi-receipt"></i></div>
+                <span>Mis Facturas</span>
+            </a>
+        </div>
+        <div class="sidebar-footer">
+            <span>© 2025 MaquiMu v1.0</span>
+        </div>
+    </aside>
+
+    <!-- Contenido dinámico -->
+    <main class="flex-grow-1 p-4">
+        <router-outlet></router-outlet>
+    </main>
+</div>
+
+<!-- Offcanvas sidebar para móvil -->
+<div class="offcanvas offcanvas-start" tabindex="-1" id="clientSidebarMobile">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title d-flex align-items-center gap-2">
+            <div class="brand-logo brand-logo-sm">
+                <img src="assets/images/mu.png" alt="MaquiMu" height="18">
+            </div>
+            Portal Cliente
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body p-0">
+        <div class="sidebar-menu">
+            <div class="sidebar-section-label">Navegación</div>
+            <a routerLink="/client/portal" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" data-bs-dismiss="offcanvas">
+                <div class="sidebar-icon si-blue"><i class="bi bi-grid-1x2-fill"></i></div>
+                <span>Inicio</span>
+            </a>
+            <a routerLink="/client/request-rental" routerLinkActive="active" data-bs-dismiss="offcanvas">
+                <div class="sidebar-icon si-emerald"><i class="bi bi-calendar-plus-fill"></i></div>
+                <span>Solicitar Alquiler</span>
+            </a>
+            <div class="sidebar-section-label">Mis Registros</div>
+            <a routerLink="/client/my-rentals" routerLinkActive="active" data-bs-dismiss="offcanvas">
+                <div class="sidebar-icon si-amber"><i class="bi bi-journal-text"></i></div>
+                <span>Mis Alquileres</span>
+            </a>
+            <a routerLink="/client/my-invoices" routerLinkActive="active" data-bs-dismiss="offcanvas">
+                <div class="sidebar-icon si-rose"><i class="bi bi-receipt"></i></div>
+                <span>Mis Facturas</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Cambiar Contraseña -->
+<div *ngIf="showChangePasswordModal" class="modal-backdrop fade show"></div>
+<div *ngIf="showChangePasswordModal" class="modal fade show d-block" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-key text-primary me-2"></i>Cambiar Contraseña</h5>
+        <button type="button" class="btn-close" (click)="closeChangePasswordModal()"></button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="!changePasswordSuccess">
+          <div class="mb-3">
+            <label for="currentPasswordC" class="form-label">Contraseña Actual</label>
+            <input type="password" class="form-control" id="currentPasswordC" [(ngModel)]="currentPassword"
+                   placeholder="Ingresa tu contraseña actual">
+          </div>
+          <div class="mb-3">
+            <label for="newPasswordC" class="form-label">Nueva Contraseña</label>
+            <input type="password" class="form-control" id="newPasswordC" [(ngModel)]="newPassword"
+                   placeholder="Mínimo 6 caracteres"
+                   [ngClass]="{'is-invalid': newPassword && newPassword.length < 6}">
+            <div *ngIf="newPassword && newPassword.length < 6" class="text-danger small mt-1">Mínimo 6 caracteres</div>
+          </div>
+          <div class="mb-3">
+            <label for="confirmPasswordC" class="form-label">Confirmar Nueva Contraseña</label>
+            <input type="password" class="form-control" id="confirmPasswordC" [(ngModel)]="confirmPassword"
+                   placeholder="Repite la nueva contraseña"
+                   [ngClass]="{'is-invalid': confirmPassword && confirmPassword !== newPassword}">
+            <div *ngIf="confirmPassword && confirmPassword !== newPassword" class="text-danger small mt-1">Las contraseñas no coinciden</div>
+          </div>
+          <div *ngIf="changePasswordError" class="alert alert-danger py-2">{{ changePasswordError }}</div>
+        </div>
+        <div *ngIf="changePasswordSuccess" class="text-center py-3">
+          <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+          <p class="mt-3 fw-semibold">Contraseña actualizada correctamente.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button *ngIf="!changePasswordSuccess" type="button" class="btn btn-outline-secondary" (click)="closeChangePasswordModal()">Cancelar</button>
+        <button *ngIf="!changePasswordSuccess" type="button" class="btn btn-primary" (click)="submitChangePassword()"
+                [disabled]="changePasswordLoading || !currentPassword || !newPassword || newPassword.length < 6 || newPassword !== confirmPassword">
+          <span *ngIf="changePasswordLoading" class="spinner-border spinner-border-sm me-2" role="status"></span>
+          {{ changePasswordLoading ? 'Guardando...' : 'Cambiar Contraseña' }}
+        </button>
+        <button *ngIf="changePasswordSuccess" type="button" class="btn btn-primary" (click)="closeChangePasswordModal()">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>

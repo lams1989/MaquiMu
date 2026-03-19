@@ -1,0 +1,50 @@
+<div class="notif-wrapper">
+    <!-- Bell Button -->
+    <button class="nav-action-btn notif-bell" (click)="toggle()" title="Notificaciones">
+        <i class="bi bi-bell"></i>
+        <span class="notif-badge" *ngIf="unreadCount > 0">{{ unreadCount > 9 ? '9+' : unreadCount }}</span>
+    </button>
+
+    <!-- Dropdown Panel -->
+    <div class="notif-panel" *ngIf="isOpen" (click)="$event.stopPropagation()">
+        <!-- Header -->
+        <div class="notif-panel-header">
+            <span class="notif-panel-title">Notificaciones</span>
+            <div class="notif-header-actions">
+                <button class="notif-header-btn" *ngIf="unreadCount > 0" (click)="markAllRead()" title="Marcar todo como leído">
+                    <i class="bi bi-check-all"></i>
+                </button>
+                <button class="notif-header-btn" *ngIf="notifications.length > 0" (click)="clearAll()" title="Limpiar todo">
+                    <i class="bi bi-trash3"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- List -->
+        <div class="notif-panel-body">
+            <div *ngIf="notifications.length === 0" class="notif-empty">
+                <i class="bi bi-bell-slash"></i>
+                <p>Sin notificaciones</p>
+            </div>
+
+            <div
+                *ngFor="let n of notifications"
+                class="notif-item"
+                [class.notif-unread]="!n.read"
+                (click)="onNotificationClick(n)"
+            >
+                <div class="notif-icon" [style.background]="n.iconColor + '18'" [style.color]="n.iconColor">
+                    <i class="bi" [ngClass]="n.icon"></i>
+                </div>
+                <div class="notif-content">
+                    <span class="notif-title">{{ n.title }}</span>
+                    <span class="notif-message">{{ n.message }}</span>
+                    <span class="notif-time">{{ timeAgo(n.timestamp) }}</span>
+                </div>
+                <button class="notif-dismiss" (click)="dismiss($event, n.id)" title="Descartar">
+                    <i class="bi bi-x"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

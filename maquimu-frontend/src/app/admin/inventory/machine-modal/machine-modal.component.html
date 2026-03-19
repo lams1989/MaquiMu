@@ -1,0 +1,152 @@
+<div class="modal-backdrop fade show"></div>
+<div class="modal fade show d-block" tabindex="-1" role="dialog" aria-labelledby="machineModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content machine-modal-card">
+            <!-- Header con gradiente -->
+            <div class="machine-modal-header">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="header-icon">
+                        <i class="bi" [ngClass]="isEditMode ? 'bi-pencil-square' : 'bi-gear-fill'"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title mb-0" id="machineModalLabel">
+                            {{ isEditMode ? 'Editar Maquinaria' : 'Registrar Nueva Maquinaria' }}
+                        </h5>
+                        <p class="modal-subtitle mb-0">{{ isEditMode ? 'Modifique los datos del equipo.' : 'Ingrese la información técnica y tarifas.' }}</p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close-modal" aria-label="Close" (click)="cancel()">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <!-- Body -->
+            <div class="machine-modal-body">
+                <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ errorMessage }}
+                </div>
+
+                <form [formGroup]="machineForm">
+                    <div class="row">
+                        <!-- Nombre del Equipo -->
+                        <div class="col-md-6 mb-3">
+                            <label for="nombreEquipo" class="form-label">Nombre del Equipo <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-truck"></i></span>
+                                <input type="text" id="nombreEquipo" formControlName="nombreEquipo" class="form-control"
+                                       placeholder="Ej: Excavadora CAT 320"
+                                       [class.is-invalid]="machineForm.get('nombreEquipo')?.invalid && machineForm.get('nombreEquipo')?.touched">
+                                <div *ngIf="machineForm.get('nombreEquipo')?.invalid && machineForm.get('nombreEquipo')?.touched" class="invalid-feedback">
+                                    El nombre del equipo es requerido.
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Marca -->
+                        <div class="col-md-6 mb-3">
+                            <label for="marca" class="form-label">Marca <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-tag"></i></span>
+                                <input type="text" id="marca" formControlName="marca" class="form-control"
+                                       placeholder="Ej: Caterpillar, Komatsu"
+                                       [class.is-invalid]="machineForm.get('marca')?.invalid && machineForm.get('marca')?.touched">
+                                <div *ngIf="machineForm.get('marca')?.invalid && machineForm.get('marca')?.touched" class="invalid-feedback">
+                                    La marca es requerida.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Modelo -->
+                        <div class="col-md-6 mb-3">
+                            <label for="modelo" class="form-label">Modelo <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-box"></i></span>
+                                <input type="text" id="modelo" formControlName="modelo" class="form-control"
+                                       placeholder="Ej: 320F, PC200"
+                                       [class.is-invalid]="machineForm.get('modelo')?.invalid && machineForm.get('modelo')?.touched">
+                                <div *ngIf="machineForm.get('modelo')?.invalid && machineForm.get('modelo')?.touched" class="invalid-feedback">
+                                    El modelo es requerido.
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Serial -->
+                        <div class="col-md-6 mb-3">
+                            <label for="serial" class="form-label">Serial <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-upc-scan"></i></span>
+                                <input type="text" id="serial" formControlName="serial" class="form-control"
+                                       placeholder="Número de serie único"
+                                       [class.is-invalid]="machineForm.get('serial')?.invalid && machineForm.get('serial')?.touched">
+                                <div *ngIf="machineForm.get('serial')?.invalid && machineForm.get('serial')?.touched" class="invalid-feedback">
+                                    El serial es requerido.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Tarifa por Día -->
+                        <div class="col-md-6 mb-3">
+                            <label for="tarifaPorDia" class="form-label">Tarifa por Día <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-cash-coin"></i></span>
+                                <input type="number" id="tarifaPorDia" formControlName="tarifaPorDia" class="form-control"
+                                       placeholder="0.00"
+                                       [class.is-invalid]="machineForm.get('tarifaPorDia')?.invalid && machineForm.get('tarifaPorDia')?.touched">
+                                <div *ngIf="machineForm.get('tarifaPorDia')?.invalid && machineForm.get('tarifaPorDia')?.touched" class="invalid-feedback">
+                                    La tarifa por día es requerida y debe ser mayor que cero.
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Tarifa por Hora -->
+                        <div class="col-md-6 mb-3">
+                            <label for="tarifaPorHora" class="form-label">Tarifa por Hora <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-clock"></i></span>
+                                <input type="number" id="tarifaPorHora" formControlName="tarifaPorHora" class="form-control"
+                                       placeholder="0.00"
+                                       [class.is-invalid]="machineForm.get('tarifaPorHora')?.invalid && machineForm.get('tarifaPorHora')?.touched">
+                                <div *ngIf="machineForm.get('tarifaPorHora')?.invalid && machineForm.get('tarifaPorHora')?.touched" class="invalid-feedback">
+                                    La tarifa por hora es requerida y debe ser mayor que cero.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Descripción -->
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción</label>
+                        <div class="input-group">
+                            <span class="input-group-text align-self-start pt-2"><i class="bi bi-card-text"></i></span>
+                            <textarea id="descripcion" formControlName="descripcion" class="form-control" rows="3"
+                                      placeholder="Características adicionales del equipo..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Estado (solo edición) -->
+                    <div class="mb-3" *ngIf="isEditMode">
+                        <label for="estado" class="form-label">Estado</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-toggles"></i></span>
+                            <select id="estado" formControlName="estado" class="form-select">
+                                <option *ngFor="let estado of estadosMaquinaria" [value]="estado">{{ estado }}</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Footer -->
+            <div class="machine-modal-footer">
+                <button type="button" class="btn btn-cancel" (click)="cancel()">
+                    <i class="bi bi-x-circle me-1"></i>Cancelar
+                </button>
+                <button type="button" class="btn btn-save-machine" (click)="saveMachine()" [disabled]="machineForm.invalid || isSubmitting">
+                    <i class="bi me-1" [ngClass]="isEditMode ? 'bi-check-circle' : 'bi-floppy'"></i>
+                    {{ isEditMode ? 'Actualizar Maquinaria' : 'Guardar Maquinaria' }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

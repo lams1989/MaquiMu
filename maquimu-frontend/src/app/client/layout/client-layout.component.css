@@ -1,0 +1,350 @@
+/* ============================================
+   Client Layout — Pro Dark Theme
+   ============================================ */
+
+/* — Navbar — */
+.navbar-pro {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    height: 60px;
+    background: #0f172a;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    position: sticky;
+    top: 0;
+    z-index: 1030;
+}
+
+.navbar-brand-section {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.brand-link {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    text-decoration: none;
+}
+
+.brand-logo {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    transition: transform 250ms ease;
+}
+
+.brand-logo-sm {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+}
+
+.brand-link:hover .brand-logo {
+    transform: scale(1.08);
+    box-shadow: none;
+}
+
+.brand-logo img {
+    height: 34px;
+    width: auto;
+    filter: drop-shadow(0 1px 4px rgba(96, 165, 250, 0.35));
+}
+
+.brand-name {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #f8fafc;
+    letter-spacing: -0.02em;
+}
+
+.role-chip-client {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #34d399;
+    background: rgba(16, 185, 129, 0.12);
+    padding: 0.25em 0.7em;
+    border-radius: 6px;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.nav-action-btn {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 1.05rem;
+    cursor: pointer;
+    transition: all 200ms ease;
+}
+
+.nav-action-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #f8fafc;
+}
+
+.nav-logout {
+    color: rgba(255, 255, 255, 0.35) !important;
+}
+
+.nav-logout:hover {
+    background: rgba(239, 68, 68, 0.12) !important;
+    color: #f87171 !important;
+}
+
+.nav-divider {
+    width: 1px;
+    height: 26px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 0 0.35rem;
+}
+
+/* — User Pill — */
+.user-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.3rem 0.85rem 0.3rem 0.3rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    transition: background 200ms ease;
+}
+
+.user-pill:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.user-avatar-pro {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #10b981, #059669);
+    border-radius: 50%;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+}
+
+.user-name {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 0.8rem;
+    font-weight: 500;
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* — Sidebar — */
+.sidebar-pro {
+    display: flex;
+    flex-direction: column;
+    width: 210px;
+    min-height: calc(100vh - 60px);
+    background: #1e293b;
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    position: sticky;
+    top: 60px;
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+
+.sidebar-menu {
+    flex: 1;
+    padding: 0.5rem 0.75rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.sidebar-section-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.25);
+    padding: 1.25rem 0.75rem 0.5rem;
+}
+
+.sidebar-section-label:first-child {
+    padding-top: 0.75rem;
+}
+
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.55rem 0.75rem;
+    color: rgba(255, 255, 255, 0.55);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: all 180ms cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.sidebar-menu a:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.sidebar-menu a.active {
+    background: rgba(59, 130, 246, 0.1);
+    color: #f8fafc;
+}
+
+.sidebar-menu a.active::before {
+    content: '';
+    position: absolute;
+    left: -0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 22px;
+    background: linear-gradient(180deg, #3b82f6, #60a5fa);
+    border-radius: 0 4px 4px 0;
+}
+
+/* — Icon Wrappers — */
+.sidebar-icon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    transition: transform 200ms ease;
+}
+
+.sidebar-menu a:hover .sidebar-icon {
+    transform: scale(1.08);
+}
+
+.si-blue {
+    background: rgba(59, 130, 246, 0.15);
+    color: #60a5fa;
+}
+
+.si-emerald {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+}
+
+.si-amber {
+    background: rgba(245, 158, 11, 0.15);
+    color: #fbbf24;
+}
+
+.si-rose {
+    background: rgba(244, 63, 94, 0.15);
+    color: #fb7185;
+}
+
+/* — Footer — */
+.sidebar-footer {
+    padding: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    text-align: center;
+}
+
+.sidebar-footer span {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.2);
+    letter-spacing: 0.04em;
+}
+
+/* — Offcanvas — */
+.offcanvas {
+    background: #1e293b !important;
+    width: 280px !important;
+    color: #f8fafc;
+}
+
+.offcanvas-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 1rem 1.25rem;
+    color: #f8fafc;
+    font-weight: 600;
+}
+
+/* — User Dropdown — */
+.user-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: #1e293b;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    min-width: 200px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    z-index: 1050;
+    overflow: hidden;
+}
+
+.user-dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.875rem;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 150ms ease;
+}
+
+.user-dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+}
+
+.user-dropdown-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 0;
+}
+
+/* — Responsive — */
+@media (max-width: 768px) {
+    .navbar-pro {
+        padding: 0 0.75rem;
+    }
+
+    .brand-name {
+        display: none;
+    }
+
+    .role-chip-client {
+        display: none;
+    }
+
+    main.flex-grow-1 {
+        padding: 1rem !important;
+    }
+}

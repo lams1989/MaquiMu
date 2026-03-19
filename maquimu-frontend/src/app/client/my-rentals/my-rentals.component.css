@@ -1,0 +1,19 @@
+/* Mis Alquileres - Modern Styles */
+
+.table th {
+  font-size: 0.8rem;
+}
+
+.badge.rounded-pill {
+  font-size: 0.75rem;
+  padding: 0.35em 0.75em;
+}
+
+.modal-header.bg-primary {
+  background: var(--primary-gradient, linear-gradient(135deg, #0D47A1, #1976D2)) !important;
+  border-bottom: none;
+}
+
+.btn-close-white {
+  filter: brightness(0) invert(1);
+}

@@ -1,0 +1,14 @@
+/* Estilos específicos para el componente de clientes */
+
+.client-avatar {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, rgba(13, 71, 161, 0.1), rgba(25, 118, 210, 0.06));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color, #0D47A1);
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
