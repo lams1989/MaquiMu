@@ -1,6 +1,6 @@
 package com.maquimu.infraestructura.autenticacion.adaptador.servicio;
 
-import com.maquimu.dominio.autenticacion.puerto.servicio.ServicioHashing;
+import com.maquimu.dominio.autenticacion.servicio.ServicioHashing;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

@@ -10,6 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ComandoCambiarPassword {
-    private String passwordActual;
-    private String passwordNueva;
+	private String passwordActual;
+	private String passwordNueva;
 }

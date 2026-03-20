@@ -13,5 +13,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ComandoGenerarFactura {
-    private Long alquilerId;
+	private Long alquilerId;
 }

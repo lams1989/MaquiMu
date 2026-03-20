@@ -1,6 +1,6 @@
 package com.maquimu.infraestructura.autenticacion.adaptador.correo;
 
-import com.maquimu.dominio.autenticacion.puerto.servicio.ServicioCorreo;
+import com.maquimu.dominio.autenticacion.servicio.ServicioCorreo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;

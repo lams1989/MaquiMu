@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ComandoEliminarCliente {
-    private Long clienteId;
+	private Long clienteId;
 }

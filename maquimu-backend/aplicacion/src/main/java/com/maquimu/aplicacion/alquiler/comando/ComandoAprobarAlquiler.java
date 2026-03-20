@@ -6,8 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * Comando para aprobar un alquiler pendiente.
- * DTO usado en el patrón CQRS.
+ * Comando para aprobar un alquiler pendiente. DTO usado en el patrón CQRS.
  */
 @Getter
 @Builder
@@ -15,6 +14,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ComandoAprobarAlquiler {
 
-    private Long alquilerId;
-    private Long usuarioId; // ID del operario que aprueba
+	private Long alquilerId;
+	private Long usuarioId; // ID del operario que aprueba
 }

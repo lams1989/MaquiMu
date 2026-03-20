@@ -6,9 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * Comando para finalizar un alquiler activo.
- * Finaliza el alquiler y devuelve la maquinaria a DISPONIBLE.
- * DTO usado en el patrón CQRS.
+ * Comando para finalizar un alquiler activo. Finaliza el alquiler y devuelve la
+ * maquinaria a DISPONIBLE. DTO usado en el patrón CQRS.
  */
 @Getter
 @Builder
@@ -16,5 +15,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ComandoFinalizarAlquiler {
 
-    private Long alquilerId;
+	private Long alquilerId;
 }

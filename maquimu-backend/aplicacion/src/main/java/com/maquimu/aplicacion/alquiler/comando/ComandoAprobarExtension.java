@@ -6,8 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * Comando para aprobar la extensión de un alquiler.
- * DTO usado en el patrón CQRS.
+ * Comando para aprobar la extensión de un alquiler. DTO usado en el patrón
+ * CQRS.
  */
 @Getter
 @Builder
@@ -15,5 +15,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ComandoAprobarExtension {
 
-    private Long alquilerId;
+	private Long alquilerId;
 }

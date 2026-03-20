@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ConsultaListarClientes {
-    private String filtro;
+	private String filtro;
 }

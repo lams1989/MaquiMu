@@ -10,5 +10,5 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ComandoAprobarUsuario {
-    private Long usuarioId;
+	private Long usuarioId;
 }

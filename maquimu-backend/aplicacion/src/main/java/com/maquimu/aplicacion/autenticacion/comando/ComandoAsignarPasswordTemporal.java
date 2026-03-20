@@ -10,5 +10,5 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ComandoAsignarPasswordTemporal {
-    private String passwordTemporal;
+	private String passwordTemporal;
 }
