@@ -10,7 +10,7 @@ import com.maquimu.dominio.maquinaria.modelo.Maquinaria;
  * Servicio de dominio para calcular el costo de alquileres. Reutilizable en
  * múltiples casos de uso (HU 06, 07, 08, 09).
  */
-public class CalculadorCostoAlquiler {
+public class ServicioCalculadorCostoAlquiler {
 
 	/**
 	 * Calcula el costo estimado basado en días completos. Fase 1: Cálculo simple

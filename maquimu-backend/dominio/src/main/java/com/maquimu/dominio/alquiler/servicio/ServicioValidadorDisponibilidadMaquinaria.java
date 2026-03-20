@@ -11,11 +11,11 @@ import com.maquimu.dominio.alquiler.puerto.dao.AlquilerDao;
  * Servicio de dominio para validar disponibilidad de maquinaria. Reutilizable
  * en múltiples casos de uso (HU 06, 07, 08, 09).
  */
-public class ValidadorDisponibilidadMaquinaria {
+public class ServicioValidadorDisponibilidadMaquinaria {
 
 	private final AlquilerDao alquilerDao;
 
-	public ValidadorDisponibilidadMaquinaria(AlquilerDao alquilerDao) {
+	public ServicioValidadorDisponibilidadMaquinaria(AlquilerDao alquilerDao) {
 		this.alquilerDao = alquilerDao;
 	}
 

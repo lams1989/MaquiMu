@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.maquimu.aplicacion.alquiler.consulta.ConsultaMaquinariasDisponibles;
-import com.maquimu.dominio.alquiler.servicio.ValidadorDisponibilidadMaquinaria;
+import com.maquimu.dominio.alquiler.servicio.ServicioValidadorDisponibilidadMaquinaria;
 import com.maquimu.dominio.maquinaria.modelo.Maquinaria;
 import com.maquimu.dominio.maquinaria.puerto.dao.MaquinariaDao;
 
@@ -17,10 +17,10 @@ import com.maquimu.dominio.maquinaria.puerto.dao.MaquinariaDao;
 public class ManejadorMaquinariasDisponibles {
 
 	private final MaquinariaDao maquinariaDao;
-	private final ValidadorDisponibilidadMaquinaria validadorDisponibilidad;
+	private final ServicioValidadorDisponibilidadMaquinaria validadorDisponibilidad;
 
 	public ManejadorMaquinariasDisponibles(MaquinariaDao maquinariaDao,
-			ValidadorDisponibilidadMaquinaria validadorDisponibilidad) {
+			ServicioValidadorDisponibilidadMaquinaria validadorDisponibilidad) {
 		this.maquinariaDao = maquinariaDao;
 		this.validadorDisponibilidad = validadorDisponibilidad;
 	}

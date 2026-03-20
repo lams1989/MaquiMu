@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 import com.maquimu.aplicacion.alquiler.comando.ComandoSolicitarAlquiler;
 import com.maquimu.dominio.alquiler.modelo.Alquiler;
 import com.maquimu.dominio.alquiler.puerto.repositorio.AlquilerRepositorio;
-import com.maquimu.dominio.alquiler.servicio.CalculadorCostoAlquiler;
-import com.maquimu.dominio.alquiler.servicio.ValidadorDisponibilidadMaquinaria;
+import com.maquimu.dominio.alquiler.servicio.ServicioCalculadorCostoAlquiler;
+import com.maquimu.dominio.alquiler.servicio.ServicioValidadorDisponibilidadMaquinaria;
 import com.maquimu.dominio.cliente.puerto.dao.ClienteDao;
 import com.maquimu.dominio.maquinaria.modelo.Maquinaria;
 import com.maquimu.dominio.maquinaria.puerto.dao.MaquinariaDao;
@@ -23,12 +23,12 @@ public class ManejadorGestionAlquiler {
 	private final AlquilerRepositorio alquilerRepositorio;
 	private final ClienteDao clienteDao;
 	private final MaquinariaDao maquinariaDao;
-	private final CalculadorCostoAlquiler calculadorCosto;
-	private final ValidadorDisponibilidadMaquinaria validadorDisponibilidad;
+	private final ServicioCalculadorCostoAlquiler calculadorCosto;
+	private final ServicioValidadorDisponibilidadMaquinaria validadorDisponibilidad;
 
 	public ManejadorGestionAlquiler(AlquilerRepositorio alquilerRepositorio, ClienteDao clienteDao,
-			MaquinariaDao maquinariaDao, CalculadorCostoAlquiler calculadorCosto,
-			ValidadorDisponibilidadMaquinaria validadorDisponibilidad) {
+			MaquinariaDao maquinariaDao, ServicioCalculadorCostoAlquiler calculadorCosto,
+			ServicioValidadorDisponibilidadMaquinaria validadorDisponibilidad) {
 		this.alquilerRepositorio = alquilerRepositorio;
 		this.clienteDao = clienteDao;
 		this.maquinariaDao = maquinariaDao;

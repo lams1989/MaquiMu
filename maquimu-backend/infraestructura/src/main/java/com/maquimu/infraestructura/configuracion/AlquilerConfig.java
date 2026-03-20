@@ -4,8 +4,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.maquimu.dominio.alquiler.puerto.dao.AlquilerDao;
-import com.maquimu.dominio.alquiler.servicio.CalculadorCostoAlquiler;
-import com.maquimu.dominio.alquiler.servicio.ValidadorDisponibilidadMaquinaria;
+import com.maquimu.dominio.alquiler.servicio.ServicioCalculadorCostoAlquiler;
+import com.maquimu.dominio.alquiler.servicio.ServicioValidadorDisponibilidadMaquinaria;
 
 /**
  * Configuración de beans para servicios de dominio de alquiler. Los servicios
@@ -16,12 +16,12 @@ import com.maquimu.dominio.alquiler.servicio.ValidadorDisponibilidadMaquinaria;
 public class AlquilerConfig {
 
 	@Bean
-	public CalculadorCostoAlquiler calculadorCostoAlquiler() {
-		return new CalculadorCostoAlquiler();
+	public ServicioCalculadorCostoAlquiler calculadorCostoAlquiler() {
+		return new ServicioCalculadorCostoAlquiler();
 	}
 
 	@Bean
-	public ValidadorDisponibilidadMaquinaria validadorDisponibilidadMaquinaria(AlquilerDao alquilerDao) {
-		return new ValidadorDisponibilidadMaquinaria(alquilerDao);
+	public ServicioValidadorDisponibilidadMaquinaria validadorDisponibilidadMaquinaria(AlquilerDao alquilerDao) {
+		return new ServicioValidadorDisponibilidadMaquinaria(alquilerDao);
 	}
 }
