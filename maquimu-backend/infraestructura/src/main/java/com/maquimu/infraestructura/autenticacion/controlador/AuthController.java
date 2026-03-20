@@ -5,7 +5,7 @@ import com.maquimu.aplicacion.autenticacion.comando.ComandoSolicitarRestablecimi
 import com.maquimu.aplicacion.autenticacion.comando.manejador.ManejadorRegistrarUsuario;
 import com.maquimu.aplicacion.autenticacion.comando.manejador.ManejadorSolicitarRestablecimiento;
 import com.maquimu.aplicacion.autenticacion.consulta.ConsultaAutenticarUsuario;
-import com.maquimu.aplicacion.autenticacion.consulta.RespuestaAutenticacion;
+import com.maquimu.aplicacion.autenticacion.consulta.ComandoAutenticacion;
 import com.maquimu.aplicacion.autenticacion.consulta.manejador.ManejadorAutenticarUsuario;
 import com.maquimu.dominio.autenticacion.excepcion.CuentaNoActivaException;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +39,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody ConsultaAutenticarUsuario consulta) {
         try {
-            RespuestaAutenticacion respuesta = manejadorAutenticarUsuario.ejecutar(consulta);
+            ComandoAutenticacion respuesta = manejadorAutenticarUsuario.ejecutar(consulta);
             return ResponseEntity.ok(respuesta);
         } catch (CuentaNoActivaException ex) {
             Map<String, Object> body = new HashMap<>();

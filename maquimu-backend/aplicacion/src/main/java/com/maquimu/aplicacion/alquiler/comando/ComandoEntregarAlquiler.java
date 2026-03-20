@@ -6,9 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * Comando para registrar la entrega de maquinaria.
- * Activa el alquiler y marca la maquinaria como ALQUILADO.
- * DTO usado en el patrón CQRS.
+ * Comando para registrar la entrega de maquinaria. Activa el alquiler y marca
+ * la maquinaria como ALQUILADO. DTO usado en el patrón CQRS.
  */
 @Getter
 @Builder
@@ -16,5 +15,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ComandoEntregarAlquiler {
 
-    private Long alquilerId;
+	private Long alquilerId;
 }

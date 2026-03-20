@@ -1,61 +1,71 @@
 package com.maquimu.aplicacion.comando.manejador;
 
-import com.maquimu.aplicacion.comando.ComandoEliminarMaquinaria;
-import com.maquimu.dominio.modelo.Maquinaria;
-import com.maquimu.dominio.puerto.dao.MaquinariaDao;
-import com.maquimu.dominio.puerto.repositorio.MaquinariaRepositorio;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import com.maquimu.aplicacion.maquinaria.comando.ComandoEliminarMaquinaria;
+import com.maquimu.aplicacion.maquinaria.comando.manejador.ManejadorEliminarMaquinaria;
+import com.maquimu.dominio.maquinaria.modelo.Maquinaria;
+import com.maquimu.dominio.maquinaria.puerto.dao.MaquinariaDao;
+import com.maquimu.dominio.maquinaria.puerto.repositorio.MaquinariaRepositorio;
 
 class ManejadorEliminarMaquinariaTest {
 
-    @Mock
-    private MaquinariaRepositorio maquinariaRepositorio;
-    @Mock
-    private MaquinariaDao maquinariaDao;
+	@Mock
+	private MaquinariaRepositorio maquinariaRepositorio;
+	@Mock
+	private MaquinariaDao maquinariaDao;
 
-    @InjectMocks
-    private ManejadorEliminarMaquinaria manejadorEliminarMaquinaria;
+	@InjectMocks
+	private ManejadorEliminarMaquinaria manejadorEliminarMaquinaria;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
+	@BeforeEach
+	void setUp() {
+		MockitoAnnotations.openMocks(this);
+	}
 
-    @Test
-    void ejecutar_maquinariaNoExistente_deberiaLanzarExcepcion() {
-        ComandoEliminarMaquinaria comando = new ComandoEliminarMaquinaria(1L);
+	@Test
+	void ejecutar_maquinariaNoExistente_deberiaLanzarExcepcion() {
+		ComandoEliminarMaquinaria comando = new ComandoEliminarMaquinaria(1L);
 
-        when(maquinariaDao.buscarPorId(comando.getMaquinariaId())).thenReturn(Optional.empty());
+		when(maquinariaDao.buscarPorId(comando.getMaquinariaId())).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            manejadorEliminarMaquinaria.ejecutar(comando);
-        });
+		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+			manejadorEliminarMaquinaria.ejecutar(comando);
+		});
 
-        assertEquals(String.format("La maquinaria con ID %d no existe.", comando.getMaquinariaId()), exception.getMessage());
-        verify(maquinariaDao, times(1)).buscarPorId(comando.getMaquinariaId());
-        verify(maquinariaRepositorio, never()).eliminar(anyLong());
-    }
+		assertEquals(String.format("La maquinaria con ID %d no existe.", comando.getMaquinariaId()),
+				exception.getMessage());
+		verify(maquinariaDao, times(1)).buscarPorId(comando.getMaquinariaId());
+		verify(maquinariaRepositorio, never()).eliminar(anyLong());
+	}
 
-    @Test
-    void ejecutar_maquinariaExistente_deberiaEliminarCorrectamente() {
-        ComandoEliminarMaquinaria comando = new ComandoEliminarMaquinaria(1L);
-        Maquinaria maquinariaExistente = mock(Maquinaria.class); // Mock de Maquinaria
+	@Test
+	void ejecutar_maquinariaExistente_deberiaEliminarCorrectamente() {
+		ComandoEliminarMaquinaria comando = new ComandoEliminarMaquinaria(1L);
+		Maquinaria maquinariaExistente = mock(Maquinaria.class); // Mock de Maquinaria
 
-        when(maquinariaDao.buscarPorId(comando.getMaquinariaId())).thenReturn(Optional.of(maquinariaExistente));
-        doNothing().when(maquinariaRepositorio).eliminar(comando.getMaquinariaId());
+		when(maquinariaDao.buscarPorId(comando.getMaquinariaId())).thenReturn(Optional.of(maquinariaExistente));
+		doNothing().when(maquinariaRepositorio).eliminar(comando.getMaquinariaId());
 
-        manejadorEliminarMaquinaria.ejecutar(comando);
+		manejadorEliminarMaquinaria.ejecutar(comando);
 
-        verify(maquinariaDao, times(1)).buscarPorId(comando.getMaquinariaId());
-        verify(maquinariaRepositorio, times(1)).eliminar(comando.getMaquinariaId());
-    }
+		verify(maquinariaDao, times(1)).buscarPorId(comando.getMaquinariaId());
+		verify(maquinariaRepositorio, times(1)).eliminar(comando.getMaquinariaId());
+	}
 }

@@ -10,6 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ComandoRechazarUsuario {
-    private Long usuarioId;
-    private String motivo;
+	private Long usuarioId;
+	private String motivo;
 }

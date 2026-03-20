@@ -1,64 +1,65 @@
 package com.maquimu.aplicacion.consulta.manejador;
 
-import com.maquimu.aplicacion.consulta.ConsultaListarMaquinaria;
-import com.maquimu.dominio.modelo.Maquinaria;
-import com.maquimu.dominio.puerto.dao.MaquinariaDao;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import com.maquimu.aplicacion.maquinaria.consulta.manejador.ManejadorListarMaquinaria;
+import com.maquimu.dominio.maquinaria.modelo.Maquinaria;
+import com.maquimu.dominio.maquinaria.puerto.dao.MaquinariaDao;
 
 class ManejadorListarMaquinariaTest {
 
-    @Mock
-    private MaquinariaDao maquinariaDao;
+	@Mock
+	private MaquinariaDao maquinariaDao;
 
-    @InjectMocks
-    private ManejadorListarMaquinaria manejadorListarMaquinaria;
+	@InjectMocks
+	private ManejadorListarMaquinaria manejadorListarMaquinaria;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
+	@BeforeEach
+	void setUp() {
+		MockitoAnnotations.openMocks(this);
+	}
 
-    @Test
-    void ejecutar_deberiaRetornarTodasLasMaquinarias() {
-        Maquinaria maquinaria1 = new Maquinaria(
-                1L, "Excavadora", "Caterpillar", "320D", "EXC-001",
-                BigDecimal.valueOf(1000), BigDecimal.valueOf(150), "Excavadora de orugas"
-        );
-        Maquinaria maquinaria2 = new Maquinaria(
-                2L, "Retroexcavadora", "JCB", "3CX", "RET-002",
-                BigDecimal.valueOf(800), BigDecimal.valueOf(120), "Retroexcavadora"
-        );
-        List<Maquinaria> listaEsperada = Arrays.asList(maquinaria1, maquinaria2);
+	@Test
+	void ejecutar_deberiaRetornarTodasLasMaquinarias() {
+		Maquinaria maquinaria1 = new Maquinaria(1L, "Excavadora", "Caterpillar", "320D", "EXC-001",
+				BigDecimal.valueOf(1000), BigDecimal.valueOf(150), "Excavadora de orugas");
+		Maquinaria maquinaria2 = new Maquinaria(2L, "Retroexcavadora", "JCB", "3CX", "RET-002", BigDecimal.valueOf(800),
+				BigDecimal.valueOf(120), "Retroexcavadora");
+		List<Maquinaria> listaEsperada = Arrays.asList(maquinaria1, maquinaria2);
 
-        when(maquinariaDao.listarTodas()).thenReturn(listaEsperada);
+		when(maquinariaDao.listarTodas()).thenReturn(listaEsperada);
 
-        List<Maquinaria> resultado = manejadorListarMaquinaria.ejecutar(new ConsultaListarMaquinaria());
+		List<Maquinaria> resultado = manejadorListarMaquinaria.ejecutar();
 
-        assertNotNull(resultado);
-        assertEquals(2, resultado.size());
-        assertEquals(listaEsperada, resultado);
-        verify(maquinariaDao, times(1)).listarTodas();
-    }
+		assertNotNull(resultado);
+		assertEquals(2, resultado.size());
+		assertEquals(listaEsperada, resultado);
+		verify(maquinariaDao, times(1)).listarTodas();
+	}
 
-    @Test
-    void ejecutar_sinMaquinarias_deberiaRetornarListaVacia() {
-        when(maquinariaDao.listarTodas()).thenReturn(Arrays.asList());
+	@Test
+	void ejecutar_sinMaquinarias_deberiaRetornarListaVacia() {
+		when(maquinariaDao.listarTodas()).thenReturn(Arrays.asList());
 
-        List<Maquinaria> resultado = manejadorListarMaquinaria.ejecutar(new ConsultaListarMaquinaria());
+		List<Maquinaria> resultado = manejadorListarMaquinaria.ejecutar();
 
-        assertNotNull(resultado);
-        assertTrue(resultado.isEmpty());
-        verify(maquinariaDao, times(1)).listarTodas();
-    }
+		assertNotNull(resultado);
+		assertTrue(resultado.isEmpty());
+		verify(maquinariaDao, times(1)).listarTodas();
+	}
 }

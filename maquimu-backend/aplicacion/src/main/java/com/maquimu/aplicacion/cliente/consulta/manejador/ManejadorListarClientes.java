@@ -1,19 +1,21 @@
 package com.maquimu.aplicacion.cliente.consulta.manejador;
 
-import com.maquimu.dominio.cliente.modelo.Cliente;
-import com.maquimu.dominio.cliente.puerto.dao.ClienteDao;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import com.maquimu.dominio.cliente.modelo.Cliente;
+import com.maquimu.dominio.cliente.puerto.dao.ClienteDao;
+
+import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
 public class ManejadorListarClientes {
 
-    private final ClienteDao clienteDao;
+	private final ClienteDao clienteDao;
 
-    public List<Cliente> ejecutar() {
-        return clienteDao.listarTodos();
-    }
+	public List<Cliente> ejecutar() {
+		return clienteDao.listarTodos();
+	}
 }

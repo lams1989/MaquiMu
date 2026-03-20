@@ -6,8 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * Comando para rechazar la extensión de un alquiler.
- * DTO usado en el patrón CQRS.
+ * Comando para rechazar la extensión de un alquiler. DTO usado en el patrón
+ * CQRS.
  */
 @Getter
 @Builder
@@ -15,6 +15,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ComandoRechazarExtension {
 
-    private Long alquilerId;
-    private String motivo; // Opcional: motivo del rechazo
+	private Long alquilerId;
+	private String motivo; // Opcional: motivo del rechazo
 }

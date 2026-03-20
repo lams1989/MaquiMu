@@ -1,12 +1,7 @@
 package com.maquimu.infraestructura.configuracion;
 
-import com.maquimu.aplicacion.autenticacion.servicio.GeneradorJwt;
-import com.maquimu.infraestructura.autenticacion.adaptador.repositorio.UserDetailsServiceImpl;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
+import java.io.IOException;
+
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,55 +12,57 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.io.IOException;
+import com.maquimu.aplicacion.autenticacion.servicio.GeneradorJwt;
+import com.maquimu.infraestructura.autenticacion.adaptador.repositorio.UserDetailsServiceImpl;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final GeneradorJwt generadorJwt;
-    private final UserDetailsServiceImpl userDetailsService; // Inject the specific implementation
+	private final GeneradorJwt generadorJwt;
+	private final UserDetailsServiceImpl userDetailsService;
 
-    @Override
-    protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
-        String requestUri = request.getRequestURI();
-        return requestUri != null && requestUri.startsWith("/api/maquimu/v1/auth/");
-    }
+	@Override
+	protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
+		String requestUri = request.getRequestURI();
+		return requestUri != null && requestUri.startsWith("/api/maquimu/v1/auth/");
+	}
 
-    @Override
-    protected void doFilterInternal(
-            @NonNull HttpServletRequest request,
-            @NonNull HttpServletResponse response,
-            @NonNull FilterChain filterChain) throws ServletException, IOException {
+	@Override
+	protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
+			@NonNull FilterChain filterChain) throws ServletException, IOException {
 
-        final String authHeader = request.getHeader("Authorization");
-        final String jwt;
-        final String userEmail;
+		final String authHeader = request.getHeader("Authorization");
+		final String jwt;
+		final String userEmail;
 
-        if (!StringUtils.hasText(authHeader) || !authHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+		if (!StringUtils.hasText(authHeader) || !authHeader.startsWith("Bearer ")) {
+			filterChain.doFilter(request, response);
+			return;
+		}
 
-        try {
-            jwt = authHeader.substring(7);
-            userEmail = generadorJwt.extraerEmail(jwt); // Assuming extraerEmail is accessible
+		try {
+			jwt = authHeader.substring(7);
+			userEmail = generadorJwt.extraerEmail(jwt);
 
-            if (StringUtils.hasText(userEmail) && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+			if (StringUtils.hasText(userEmail) && SecurityContextHolder.getContext().getAuthentication() == null) {
+				UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
 
-                if (generadorJwt.esTokenValido(jwt)) { // Changed to esTokenValido(String token)
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            userDetails,
-                            null,
-                            userDetails.getAuthorities()
-                    );
-                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
-                }
-            }
-        } catch (UsernameNotFoundException ignored) {
-        }
-        filterChain.doFilter(request, response);
-    }
+				if (generadorJwt.esTokenValido(jwt)) {
+					UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
+							null, userDetails.getAuthorities());
+					authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+					SecurityContextHolder.getContext().setAuthentication(authToken);
+				}
+			}
+		} catch (UsernameNotFoundException ignored) {
+		}
+		filterChain.doFilter(request, response);
+	}
 }

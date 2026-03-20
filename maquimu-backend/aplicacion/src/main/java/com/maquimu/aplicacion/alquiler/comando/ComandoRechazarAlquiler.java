@@ -6,8 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * Comando para rechazar un alquiler pendiente.
- * DTO usado en el patrón CQRS.
+ * Comando para rechazar un alquiler pendiente. DTO usado en el patrón CQRS.
  */
 @Getter
 @Builder
@@ -15,6 +14,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ComandoRechazarAlquiler {
 
-    private Long alquilerId;
-    private String motivoRechazo; // Opcional
+	private Long alquilerId;
+	private String motivoRechazo; // Opcional
 }
