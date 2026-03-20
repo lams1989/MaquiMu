@@ -1,4 +1,4 @@
-package com.maquimu.aplicacion.alquiler.servicio;
+package com.maquimu.aplicacion.alquiler.comando.manejador;
 
 import java.math.BigDecimal;
 
@@ -14,11 +14,11 @@ import com.maquimu.dominio.maquinaria.modelo.Maquinaria;
 import com.maquimu.dominio.maquinaria.puerto.dao.MaquinariaDao;
 
 /**
- * Servicio de aplicación que orquesta la lógica de gestión de alquileres.
+ * Manejador de aplicación que orquesta la lógica de gestión de alquileres.
  * Coordina servicios de dominio, DAOs y repositorios.
  */
 @Service
-public class ServicioGestionAlquiler {
+public class ManejadorGestionAlquiler {
 
 	private final AlquilerRepositorio alquilerRepositorio;
 	private final ClienteDao clienteDao;
@@ -26,7 +26,7 @@ public class ServicioGestionAlquiler {
 	private final CalculadorCostoAlquiler calculadorCosto;
 	private final ValidadorDisponibilidadMaquinaria validadorDisponibilidad;
 
-	public ServicioGestionAlquiler(AlquilerRepositorio alquilerRepositorio, ClienteDao clienteDao,
+	public ManejadorGestionAlquiler(AlquilerRepositorio alquilerRepositorio, ClienteDao clienteDao,
 			MaquinariaDao maquinariaDao, CalculadorCostoAlquiler calculadorCosto,
 			ValidadorDisponibilidadMaquinaria validadorDisponibilidad) {
 		this.alquilerRepositorio = alquilerRepositorio;

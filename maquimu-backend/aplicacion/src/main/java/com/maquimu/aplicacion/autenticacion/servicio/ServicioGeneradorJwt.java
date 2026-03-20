@@ -19,7 +19,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
 @Service
-public class GeneradorJwt implements ServicioToken {
+public class ServicioGeneradorJwt implements ServicioToken {
 
 	@Value("${jwt.secret}")
 	private String jwtSecret;

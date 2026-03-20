@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.maquimu.aplicacion.autenticacion.servicio.GeneradorJwt;
+import com.maquimu.aplicacion.autenticacion.servicio.ServicioGeneradorJwt;
 import com.maquimu.infraestructura.autenticacion.adaptador.repositorio.UserDetailsServiceImpl;
 
 import jakarta.servlet.FilterChain;
@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-	private final GeneradorJwt generadorJwt;
+	private final ServicioGeneradorJwt servicioGeneradorJwt;
 	private final UserDetailsServiceImpl userDetailsService;
 
 	@Override
@@ -49,12 +49,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 		try {
 			jwt = authHeader.substring(7);
-			userEmail = generadorJwt.extraerEmail(jwt);
+			userEmail = servicioGeneradorJwt.extraerEmail(jwt);
 
 			if (StringUtils.hasText(userEmail) && SecurityContextHolder.getContext().getAuthentication() == null) {
 				UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
 
-				if (generadorJwt.esTokenValido(jwt)) {
+				if (servicioGeneradorJwt.esTokenValido(jwt)) {
 					UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
 							null, userDetails.getAuthorities());
 					authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
