@@ -63,4 +63,18 @@ object FormatUtils {
             else -> "?"
         }
     }
+
+    fun getTimeAgo(timestamp: Long): String {
+        val diff = System.currentTimeMillis() - timestamp
+        val minutes = diff / 60_000
+        val hours = minutes / 60
+        val days = hours / 24
+        return when {
+            minutes < 1 -> "Ahora"
+            minutes < 60 -> "Hace $minutes min"
+            hours < 24 -> "Hace $hours h"
+            days < 7 -> "Hace $days d"
+            else -> "Hace más de una semana"
+        }
+    }
 }

@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -11,8 +13,12 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.card.MaterialCardView
 import com.sena.proyecto.R
+import com.sena.proyecto.data.repository.AlquilerRepository
 import com.sena.proyecto.data.repository.AuthRepository
 import com.sena.proyecto.data.repository.DashboardRepository
+import com.sena.proyecto.data.repository.FacturaRepository
+import com.sena.proyecto.data.repository.NotificationRepository
+import com.sena.proyecto.utils.FormatUtils
 
 class DashboardFragment : Fragment() {
 
@@ -26,6 +32,10 @@ class DashboardFragment : Fragment() {
     private lateinit var cardFacturas: MaterialCardView
     private lateinit var progressBar: ProgressBar
     private lateinit var tvError: TextView
+    private lateinit var cardNotifications: MaterialCardView
+    private lateinit var tvNotificationsTitle: TextView
+    private lateinit var tvClearNotifications: TextView
+    private lateinit var notificationsList: LinearLayout
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,7 +50,10 @@ class DashboardFragment : Fragment() {
 
         val authRepo = AuthRepository(requireContext())
         val dashRepo = DashboardRepository()
-        viewModel = ViewModelProvider(this, DashboardViewModel.Factory(authRepo, dashRepo))
+        val alquilerRepo = AlquilerRepository()
+        val facturaRepo = FacturaRepository()
+        val notifRepo = NotificationRepository(requireContext())
+        viewModel = ViewModelProvider(this, DashboardViewModel.Factory(authRepo, dashRepo, alquilerRepo, facturaRepo, notifRepo))
             .get(DashboardViewModel::class.java)
 
         initViews(view)
@@ -58,6 +71,10 @@ class DashboardFragment : Fragment() {
         cardFacturas = view.findViewById(R.id.cardFacturas)
         progressBar = view.findViewById(R.id.progressBar)
         tvError = view.findViewById(R.id.tvError)
+        cardNotifications = view.findViewById(R.id.cardNotifications)
+        tvNotificationsTitle = view.findViewById(R.id.tvNotificationsTitle)
+        tvClearNotifications = view.findViewById(R.id.tvClearNotifications)
+        notificationsList = view.findViewById(R.id.notificationsList)
 
         tvWelcome.text = "¡Hola, ${viewModel.userName}!"
     }
@@ -70,6 +87,9 @@ class DashboardFragment : Fragment() {
         cardFacturas.setOnClickListener {
             activity?.findViewById<BottomNavigationView>(R.id.bottomNavigation)
                 ?.selectedItemId = R.id.nav_invoices
+        }
+        tvClearNotifications.setOnClickListener {
+            viewModel.clearNotifications()
         }
     }
 
@@ -93,5 +113,38 @@ class DashboardFragment : Fragment() {
                 }
             }
         }
+
+        viewModel.notifications.observe(viewLifecycleOwner) { notifications ->
+            if (notifications.isNullOrEmpty()) {
+                cardNotifications.visibility = View.GONE
+            } else {
+                cardNotifications.visibility = View.VISIBLE
+                tvNotificationsTitle.text = "Notificaciones (${notifications.size})"
+                notificationsList.removeAllViews()
+                notifications.take(5).forEach { notif ->
+                    val itemView = layoutInflater.inflate(R.layout.item_notification, notificationsList, false)
+                    itemView.findViewById<TextView>(R.id.tvNotifTitle).text = notif.title
+                    itemView.findViewById<TextView>(R.id.tvNotifMessage).text = notif.message
+                    itemView.findViewById<TextView>(R.id.tvNotifTime).text = FormatUtils.getTimeAgo(notif.timestamp)
+                    val icon = itemView.findViewById<ImageView>(R.id.ivNotifIcon)
+                    when (notif.type) {
+                        NotificationRepository.TYPE_ALQUILER_ESTADO -> icon.setImageResource(R.drawable.ic_construction)
+                        NotificationRepository.TYPE_FACTURA_NUEVA -> icon.setImageResource(R.drawable.ic_receipt)
+                    }
+                    notificationsList.addView(itemView)
+                }
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.refreshNotifications()
+        viewModel.startPolling()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.stopPolling()
     }
 }

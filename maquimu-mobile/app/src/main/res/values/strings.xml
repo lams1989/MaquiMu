@@ -31,6 +31,10 @@
     <string name="nav_invoices">Facturas</string>
     <string name="nav_profile">Perfil</string>
 
+    <!-- Notifications -->
+    <string name="notifications_title">Notificaciones</string>
+    <string name="clear_notifications">Limpiar</string>
+
     <!-- Status -->
     <string name="status_active">Activo</string>
     <string name="status_pending">Pendiente</string>
