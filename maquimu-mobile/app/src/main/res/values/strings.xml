@@ -5,20 +5,36 @@
     <string name="password_hint">Contraseña</string>
     <string name="login_button">Iniciar Sesión</string>
     <string name="forgot_password">¿Olvidaste tu contraseña?</string>
-    
+    <string name="register_link">¿No tienes cuenta? Regístrate</string>
+    <string name="login_link">¿Ya tienes cuenta? Inicia Sesión</string>
+
+    <!-- Register -->
+    <string name="register_title">Crear Cuenta</string>
+    <string name="register_subtitle">Regístrate como cliente para solicitar alquileres</string>
+    <string name="register_button">Registrarse</string>
+    <string name="nombre_hint">Nombre / Razón Social</string>
+    <string name="apellido_hint">Apellido (opcional para empresas)</string>
+    <string name="identificacion_hint">Identificación (NIT / Cédula)</string>
+    <string name="confirm_password_hint">Confirmar Contraseña</string>
+    <string name="forgot_password_message">Ingresa tu correo electrónico. Un operario te asignará una contraseña temporal en un plazo de 1 a 3 días hábiles.</string>
+
     <!-- Dashboard -->
     <string name="welcome_user">¡Hola, Usuario!</string>
     <string name="welcome_subtitle">Gestiona tu maquinaria de manera eficiente</string>
     <string name="active_rentals">Alquileres Activos</string>
     <string name="pending_invoices">Facturas Pendientes</string>
     <string name="new_request">Nueva Solicitud</string>
-    
+
     <!-- Navigation -->
     <string name="nav_dashboard">Inicio</string>
     <string name="nav_rentals">Alquileres</string>
     <string name="nav_invoices">Facturas</string>
     <string name="nav_profile">Perfil</string>
-    
+
+    <!-- Notifications -->
+    <string name="notifications_title">Notificaciones</string>
+    <string name="clear_notifications">Limpiar</string>
+
     <!-- Status -->
     <string name="status_active">Activo</string>
     <string name="status_pending">Pendiente</string>

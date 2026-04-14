@@ -2,7 +2,9 @@ import { ActualizarClienteRequest, Cliente, CrearClienteRequest } from '@core/mo
 import { ClienteService } from '@core/services/cliente.service';
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { forkJoin } from 'rxjs';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { UsuarioService } from '@core/services/usuario.service';
 
 @Component({
   selector: 'app-client-modal',
@@ -18,15 +20,21 @@ export class ClientModalComponent implements OnInit {
   clientForm!: FormGroup;
   isEditMode: boolean = false;
   errorMessage: string = '';
+  rolActual: string = '';
+  roles: string[] = ['CLIENTE', 'OPERARIO'];
 
   constructor(
     private fb: FormBuilder,
-    private clienteService: ClienteService
+    private clienteService: ClienteService,
+    private usuarioService: UsuarioService
   ) { }
 
   ngOnInit(): void {
     this.isEditMode = !!this.cliente;
     this.initializeForm();
+    if (this.isEditMode && this.cliente?.usuarioId) {
+      this.cargarRolUsuario(this.cliente.usuarioId);
+    }
   }
 
   initializeForm(): void {
@@ -40,11 +48,25 @@ export class ClientModalComponent implements OnInit {
       telefono: [this.cliente?.telefono || '', Validators.required],
       email: [this.cliente?.email || '', [Validators.required, Validators.email]],
       direccion: [this.cliente?.direccion || '', Validators.required],
-      autorizaDatos: [this.isEditMode ? true : false, Validators.requiredTrue]
+      autorizaDatos: [this.isEditMode ? true : false, Validators.requiredTrue],
+      rol: [{ value: '', disabled: !this.isEditMode }]
     });
 
     this.actualizarValidacionApellido();
     this.clientForm.get('tipoCliente')?.valueChanges.subscribe(() => this.actualizarValidacionApellido());
+  }
+
+  cargarRolUsuario(usuarioId: number): void {
+    this.usuarioService.getUsuarioPorId(usuarioId).subscribe({
+      next: (usuario) => {
+        this.rolActual = usuario.rol;
+        this.clientForm.get('rol')?.setValue(usuario.rol);
+        this.clientForm.get('rol')?.enable();
+      },
+      error: (error: any) => {
+        console.error('Error al cargar rol del usuario', error);
+      }
+    });
   }
 
   saveClient(): void {
@@ -66,16 +88,38 @@ export class ClientModalComponent implements OnInit {
         email: formValue.email,
         direccion: formValue.direccion
       };
-      this.clienteService.updateCliente(this.cliente.clienteId, updateRequest).subscribe({
-        next: () => {
-          console.log('Cliente actualizado exitosamente');
-          this.close.emit();
-        },
-        error: (error: any) => {
-          console.error('Error al actualizar cliente', error);
-          this.errorMessage = error.error?.message || 'No se pudo actualizar el cliente. Intente nuevamente.';
-        }
-      });
+
+      const nuevoRol = this.clientForm.get('rol')?.value;
+      const cambioRol = this.cliente.usuarioId && nuevoRol && nuevoRol !== this.rolActual;
+
+      const updateCliente$ = this.clienteService.updateCliente(this.cliente.clienteId, updateRequest);
+
+      if (cambioRol) {
+        forkJoin([
+          updateCliente$,
+          this.usuarioService.cambiarRol(this.cliente!.usuarioId!, nuevoRol)
+        ]).subscribe({
+          next: () => {
+            console.log('Cliente y rol actualizados exitosamente');
+            this.close.emit();
+          },
+          error: (error: any) => {
+            console.error('Error al actualizar cliente o rol', error);
+            this.errorMessage = error.error?.message || 'No se pudo actualizar el cliente. Intente nuevamente.';
+          }
+        });
+      } else {
+        updateCliente$.subscribe({
+          next: () => {
+            console.log('Cliente actualizado exitosamente');
+            this.close.emit();
+          },
+          error: (error: any) => {
+            console.error('Error al actualizar cliente', error);
+            this.errorMessage = error.error?.message || 'No se pudo actualizar el cliente. Intente nuevamente.';
+          }
+        });
+      }
     } else {
       const createRequest: CrearClienteRequest = {
         nombreCliente: formValue.nombreCliente,

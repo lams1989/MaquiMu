@@ -23,7 +23,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.maquimu.aplicacion.autenticacion.servicio.GeneradorJwt;
+import com.maquimu.aplicacion.autenticacion.servicio.ServicioGeneradorJwt;
 import com.maquimu.infraestructura.autenticacion.adaptador.repositorio.UserDetailsServiceImpl;
 
 import jakarta.servlet.FilterChain;
@@ -34,7 +34,7 @@ import jakarta.servlet.http.HttpServletResponse;
 class JwtAuthenticationFilterTest {
 
 	@Mock
-	private GeneradorJwt generadorJwt;
+	private ServicioGeneradorJwt servicioGeneradorJwt;
 
 	@Mock
 	private UserDetailsServiceImpl userDetailsService;
@@ -67,9 +67,9 @@ class JwtAuthenticationFilterTest {
 				Collections.singletonList(new SimpleGrantedAuthority("ROLE_OPERARIO")));
 
 		when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
-		when(generadorJwt.extraerEmail(token)).thenReturn(email);
+		when(servicioGeneradorJwt.extraerEmail(token)).thenReturn(email);
 		when(userDetailsService.loadUserByUsername(email)).thenReturn(userDetails);
-		when(generadorJwt.esTokenValido(token)).thenReturn(true);
+		when(servicioGeneradorJwt.esTokenValido(token)).thenReturn(true);
 
 		// Act
 		jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
@@ -78,9 +78,9 @@ class JwtAuthenticationFilterTest {
 		assertNotNull(SecurityContextHolder.getContext().getAuthentication());
 		assertEquals(email, SecurityContextHolder.getContext().getAuthentication().getName());
 
-		verify(generadorJwt).extraerEmail(token);
+		verify(servicioGeneradorJwt).extraerEmail(token);
 		verify(userDetailsService).loadUserByUsername(email);
-		verify(generadorJwt).esTokenValido(token);
+		verify(servicioGeneradorJwt).esTokenValido(token);
 		verify(filterChain).doFilter(request, response);
 	}
 
@@ -95,7 +95,7 @@ class JwtAuthenticationFilterTest {
 		// Assert
 		assertNull(SecurityContextHolder.getContext().getAuthentication());
 
-		verify(generadorJwt, never()).extraerEmail(anyString());
+		verify(servicioGeneradorJwt, never()).extraerEmail(anyString());
 		verify(userDetailsService, never()).loadUserByUsername(anyString());
 		verify(filterChain).doFilter(request, response);
 	}
@@ -110,9 +110,9 @@ class JwtAuthenticationFilterTest {
 				Collections.singletonList(new SimpleGrantedAuthority("ROLE_OPERARIO")));
 
 		when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
-		when(generadorJwt.extraerEmail(token)).thenReturn(email);
+		when(servicioGeneradorJwt.extraerEmail(token)).thenReturn(email);
 		when(userDetailsService.loadUserByUsername(email)).thenReturn(userDetails);
-		when(generadorJwt.esTokenValido(token)).thenReturn(false);
+		when(servicioGeneradorJwt.esTokenValido(token)).thenReturn(false);
 
 		// Act
 		jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
@@ -120,9 +120,9 @@ class JwtAuthenticationFilterTest {
 		// Assert
 		assertNull(SecurityContextHolder.getContext().getAuthentication());
 
-		verify(generadorJwt).extraerEmail(token);
+		verify(servicioGeneradorJwt).extraerEmail(token);
 		verify(userDetailsService).loadUserByUsername(email);
-		verify(generadorJwt).esTokenValido(token);
+		verify(servicioGeneradorJwt).esTokenValido(token);
 		verify(filterChain).doFilter(request, response);
 	}
 
@@ -137,7 +137,7 @@ class JwtAuthenticationFilterTest {
 		// Assert
 		assertNull(SecurityContextHolder.getContext().getAuthentication());
 
-		verify(generadorJwt, never()).extraerEmail(anyString());
+		verify(servicioGeneradorJwt, never()).extraerEmail(anyString());
 		verify(userDetailsService, never()).loadUserByUsername(anyString());
 		verify(filterChain).doFilter(request, response);
 	}
@@ -152,7 +152,7 @@ class JwtAuthenticationFilterTest {
 		jwtAuthenticationFilter.doFilter(request, response, filterChain);
 
 		// Assert
-		verify(generadorJwt, never()).extraerEmail(anyString());
+		verify(servicioGeneradorJwt, never()).extraerEmail(anyString());
 		verify(userDetailsService, never()).loadUserByUsername(anyString());
 		verify(filterChain).doFilter(request, response);
 	}
@@ -164,7 +164,7 @@ class JwtAuthenticationFilterTest {
 		String email = "inexistente@maquimu.com";
 
 		when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
-		when(generadorJwt.extraerEmail(token)).thenReturn(email);
+		when(servicioGeneradorJwt.extraerEmail(token)).thenReturn(email);
 		when(userDetailsService.loadUserByUsername(email))
 				.thenThrow(new UsernameNotFoundException("Usuario no encontrado"));
 
@@ -173,7 +173,7 @@ class JwtAuthenticationFilterTest {
 
 		// Assert
 		assertNull(SecurityContextHolder.getContext().getAuthentication());
-		verify(generadorJwt).extraerEmail(token);
+		verify(servicioGeneradorJwt).extraerEmail(token);
 		verify(userDetailsService).loadUserByUsername(email);
 		verify(filterChain).doFilter(request, response);
 	}

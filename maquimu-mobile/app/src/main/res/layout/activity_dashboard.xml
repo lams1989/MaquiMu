@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context=".DashboardActivity">
+    tools:context=".ui.dashboard.DashboardActivity">
 
     <!-- Fragment Container -->
     <FrameLayout
@@ -26,19 +26,5 @@
         app:itemIconTint="@color/bottom_nav_color_selector"
         app:itemTextColor="@color/bottom_nav_color_selector"
         app:elevation="8dp" />
-
-    <!-- Floating Action Button -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:layout_marginBottom="72dp"
-        android:src="@drawable/ic_add"
-        android:contentDescription="@string/new_request"
-        app:backgroundTint="@color/colorAccent"
-        app:tint="@color/white"
-        app:elevation="6dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

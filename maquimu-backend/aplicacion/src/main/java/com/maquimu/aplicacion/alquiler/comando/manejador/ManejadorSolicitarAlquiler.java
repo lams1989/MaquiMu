@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.maquimu.aplicacion.alquiler.comando.ComandoSolicitarAlquiler;
-import com.maquimu.aplicacion.alquiler.servicio.ServicioGestionAlquiler;
 import com.maquimu.dominio.alquiler.modelo.Alquiler;
 
 /**
@@ -14,14 +13,14 @@ import com.maquimu.dominio.alquiler.modelo.Alquiler;
 @Service
 public class ManejadorSolicitarAlquiler {
 
-	private final ServicioGestionAlquiler servicioGestionAlquiler;
+	private final ManejadorGestionAlquiler manejadorGestionAlquiler;
 
-	public ManejadorSolicitarAlquiler(ServicioGestionAlquiler servicioGestionAlquiler) {
-		this.servicioGestionAlquiler = servicioGestionAlquiler;
+	public ManejadorSolicitarAlquiler(ManejadorGestionAlquiler manejadorGestionAlquiler) {
+		this.manejadorGestionAlquiler = manejadorGestionAlquiler;
 	}
 
 	@Transactional
 	public Alquiler ejecutar(ComandoSolicitarAlquiler comando) {
-		return servicioGestionAlquiler.solicitarAlquiler(comando);
+		return manejadorGestionAlquiler.solicitarAlquiler(comando);
 	}
 }

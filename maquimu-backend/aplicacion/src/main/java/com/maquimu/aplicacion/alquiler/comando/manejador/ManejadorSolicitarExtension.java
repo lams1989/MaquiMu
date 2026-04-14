@@ -9,8 +9,8 @@ import com.maquimu.aplicacion.alquiler.comando.ComandoSolicitarExtension;
 import com.maquimu.dominio.alquiler.modelo.Alquiler;
 import com.maquimu.dominio.alquiler.puerto.dao.AlquilerDao;
 import com.maquimu.dominio.alquiler.puerto.repositorio.AlquilerRepositorio;
-import com.maquimu.dominio.alquiler.servicio.CalculadorCostoAlquiler;
-import com.maquimu.dominio.alquiler.servicio.ValidadorDisponibilidadMaquinaria;
+import com.maquimu.dominio.alquiler.servicio.ServicioCalculadorCostoAlquiler;
+import com.maquimu.dominio.alquiler.servicio.ServicioValidadorDisponibilidadMaquinaria;
 import com.maquimu.dominio.maquinaria.modelo.Maquinaria;
 import com.maquimu.dominio.maquinaria.puerto.dao.MaquinariaDao;
 
@@ -25,12 +25,12 @@ public class ManejadorSolicitarExtension {
 	private final AlquilerDao alquilerDao;
 	private final AlquilerRepositorio alquilerRepositorio;
 	private final MaquinariaDao maquinariaDao;
-	private final ValidadorDisponibilidadMaquinaria validadorDisponibilidad;
-	private final CalculadorCostoAlquiler calculadorCosto;
+	private final ServicioValidadorDisponibilidadMaquinaria validadorDisponibilidad;
+	private final ServicioCalculadorCostoAlquiler calculadorCosto;
 
 	public ManejadorSolicitarExtension(AlquilerDao alquilerDao, AlquilerRepositorio alquilerRepositorio,
-			MaquinariaDao maquinariaDao, ValidadorDisponibilidadMaquinaria validadorDisponibilidad,
-			CalculadorCostoAlquiler calculadorCosto) {
+			MaquinariaDao maquinariaDao, ServicioValidadorDisponibilidadMaquinaria validadorDisponibilidad,
+			ServicioCalculadorCostoAlquiler calculadorCosto) {
 		this.alquilerDao = alquilerDao;
 		this.alquilerRepositorio = alquilerRepositorio;
 		this.maquinariaDao = maquinariaDao;

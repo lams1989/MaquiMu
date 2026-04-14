@@ -35,4 +35,12 @@ export class UsuarioService {
   asignarPasswordTemporal(usuarioId: number, passwordTemporal: string): Observable<any> {
     return this.http.patch(`${this.apiUrl}/${usuarioId}/asignar-password`, { passwordTemporal });
   }
+
+  getUsuarioPorId(usuarioId: number): Observable<UsuarioPendiente> {
+    return this.http.get<UsuarioPendiente>(`${this.apiUrl}/${usuarioId}`);
+  }
+
+  cambiarRol(usuarioId: number, nuevoRol: string): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/${usuarioId}/cambiar-rol`, { nuevoRol });
+  }
 }

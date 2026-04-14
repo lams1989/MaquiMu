@@ -19,6 +19,7 @@
             android:layout_marginBottom="24dp">
 
             <TextView
+                android:id="@+id/tvWelcome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/welcome_user"
@@ -27,6 +28,7 @@
                 android:textColor="@color/textColorPrimary" />
 
             <TextView
+                android:id="@+id/tvSubtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/welcome_subtitle"
@@ -36,8 +38,90 @@
 
         </LinearLayout>
 
+        <!-- Notifications Section -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardNotifications"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="8dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_notifications"
+                        app:tint="@color/colorPrimary"
+                        android:layout_marginEnd="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvNotificationsTitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/notifications_title"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/textColorPrimary" />
+
+                    <TextView
+                        android:id="@+id/tvClearNotifications"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/clear_notifications"
+                        android:textSize="14sp"
+                        android:textColor="@color/colorPrimary"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:padding="4dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/notificationsList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Loading -->
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <!-- Error -->
+        <TextView
+            android:id="@+id/tvError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/error"
+            android:textAlignment="center"
+            android:visibility="gone"
+            android:layout_marginBottom="16dp" />
+
         <!-- Active Rentals Card -->
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardAlquileres"
             android:layout_width="match_parent"
             android:layout_height="120dp"
             android:layout_marginBottom="16dp"
@@ -80,9 +164,10 @@
                     android:layout_marginStart="16dp">
 
                     <TextView
+                        android:id="@+id/tvAlquileresActivos"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="3"
+                        android:text="0"
                         android:textSize="28sp"
                         android:textStyle="bold"
                         android:textColor="@color/textColorPrimary" />
@@ -110,6 +195,7 @@
 
         <!-- Pending Invoices Card -->
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardFacturas"
             android:layout_width="match_parent"
             android:layout_height="120dp"
             android:layout_marginBottom="16dp"
@@ -152,9 +238,10 @@
                     android:layout_marginStart="16dp">
 
                     <TextView
+                        android:id="@+id/tvFacturasPendientes"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="2"
+                        android:text="0"
                         android:textSize="28sp"
                         android:textStyle="bold"
                         android:textColor="@color/textColorPrimary" />
@@ -175,94 +262,6 @@
                         android:textColor="@color/textColorSecondary" />
 
                 </LinearLayout>
-
-            </LinearLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Alert Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="16dp"
-            app:cardBackgroundColor="#1AF44336"
-            app:cardElevation="2dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:gravity="center_vertical">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_construction"
-                    app:tint="@color/error" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginStart="12dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Contrato próximo a vencer"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/error" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Excavadora CAT 320 - Vence en 3 días"
-                        android:textSize="12sp"
-                        android:textColor="@color/textColorSecondary" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Quick Actions Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="2dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Acciones Rápidas"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/textColorPrimary"
-                    android:layout_marginBottom="16dp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:text="Nueva Solicitud de Alquiler"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    app:cornerRadius="12dp"
-                    android:backgroundTint="@color/colorPrimary"
-                    android:textColor="@color/white"
-                    app:icon="@drawable/ic_add"
-                    app:iconTint="@color/white" />
 
             </LinearLayout>
 

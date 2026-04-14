@@ -10,13 +10,31 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!-- Loading -->
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <!-- Error -->
+        <TextView
+            android:id="@+id/tvError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/error"
+            android:textAlignment="center"
+            android:visibility="gone"
+            android:layout_marginBottom="16dp" />
+
         <!-- User Profile Header -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="20dp"
             app:cardElevation="4dp"
-            android:layout_marginBottom="32dp">
+            android:layout_marginBottom="24dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -25,7 +43,7 @@
                 android:padding="24dp"
                 android:gravity="center_horizontal">
 
-                <!-- Avatar -->
+                <!-- Avatar with initials -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="80dp"
                     android:layout_height="80dp"
@@ -34,57 +52,168 @@
                     app:cardElevation="0dp"
                     android:layout_marginBottom="16dp">
 
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_person"
-                        app:tint="@color/white" />
+                    <TextView
+                        android:id="@+id/tvInitials"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="?"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white" />
 
                 </com.google.android.material.card.MaterialCardView>
 
                 <!-- User Info -->
                 <TextView
+                    android:id="@+id/tvNombreCompleto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Juan Carlos Pérez"
+                    android:text="Cargando..."
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:textColor="@color/textColorPrimary" />
 
                 <TextView
+                    android:id="@+id/tvEmail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Constructora ABC S.A.S."
+                    android:text=""
                     android:textSize="16sp"
                     android:textColor="@color/textColorSecondary"
                     android:layout_marginTop="4dp" />
 
                 <TextView
+                    android:id="@+id/tvEstado"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Cliente Premium"
+                    android:text="Cliente activo"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/statusActive"
                     android:layout_marginTop="8dp" />
 
             </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Profile Options -->
+        <!-- Datos del cliente -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Configuración de la cuenta"
+            android:text="Información personal"
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@color/textColorPrimary"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="12dp" />
 
-        <!-- Profile Options Cards -->
         <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            android:layout_marginBottom="12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Identificación -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Identificación"
+                        android:textSize="14sp"
+                        android:textColor="@color/textColorSecondary" />
+
+                    <TextView
+                        android:id="@+id/tvIdentificacion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="-"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/textColorPrimary" />
+
+                </LinearLayout>
+
+                <!-- Teléfono -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Teléfono"
+                        android:textSize="14sp"
+                        android:textColor="@color/textColorSecondary" />
+
+                    <TextView
+                        android:id="@+id/tvTelefono"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="-"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/textColorPrimary" />
+
+                </LinearLayout>
+
+                <!-- Dirección -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Dirección"
+                        android:textSize="14sp"
+                        android:textColor="@color/textColorSecondary" />
+
+                    <TextView
+                        android:id="@+id/tvDireccion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="-"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/textColorPrimary" />
+
+                </LinearLayout>
+
+                <!-- Fecha registro -->
+                <TextView
+                    android:id="@+id/tvFechaRegistro"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Registrado: -"
+                    android:textSize="12sp"
+                    android:textColor="@color/textColorSecondary" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Editar perfil -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardEditProfile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="16dp"
@@ -117,7 +246,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Información personal"
+                        android:text="Editar información"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:textColor="@color/textColorPrimary" />
@@ -157,7 +286,7 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_construction"
+                    android:src="@drawable/ic_person"
                     app:tint="@color/error" />
 
                 <LinearLayout
