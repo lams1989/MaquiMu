@@ -25,27 +25,26 @@ MaquiMu/
 - **Base de Datos:** MySQL 8.0
 - **Seguridad:** JWT + Spring Security
 - **Documentación:** Swagger/OpenAPI
-- [Ver README del Backend](./maquimu-backend/README.md)
+- [Ver README del Backend](./maquimu-backend/README.txt)
 
 ### Frontend Web
 - **Tecnología:** Angular 17 + TypeScript
 - **UI Framework:** Bootstrap 5.3
 - **Características:** SPA con routing, guards, interceptors
 - **Módulos:** Gestión Interna + Portal de Clientes
-- [Ver README del Frontend](./maquimu-frontend/README.md)
+- [Ver README del Frontend](./maquimu-frontend/README.txt)
 
 ### Mobile - Android
 - **Tecnología:** Android + Kotlin
 - **Arquitectura:** MVVM
 - **Cliente HTTP:** Retrofit
 - **Enfoque:** Portal de autoservicio para clientes
-- [Ver README de Mobile](./maquimu-mobile/README.md)
+- [Ver README de Mobile](./maquimu-mobile/README.txt)
 
 ### Base de Datos
 - **Motor:** MySQL 8.0
 - **Migraciones:** Flyway
 - **Esquema:** Usuarios, Clientes, Maquinaria, Alquileres, Facturas
-- [Ver README de Database](./database/README.md)
 
 ## 🛠️ Stack Tecnológico
 
@@ -84,7 +83,6 @@ MaquiMu/
    mysql -u root -p
    CREATE DATABASE maquimu_db;
    ```
-   Ver más detalles en [database/README.md](./database/README.md)
 
 3. **Iniciar Backend**
    ```bash
