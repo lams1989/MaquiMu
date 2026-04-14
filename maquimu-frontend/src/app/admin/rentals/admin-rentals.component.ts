@@ -1,5 +1,7 @@
 import { Alquiler, EstadoAlquiler } from '@core/models/alquiler.model';
 import { AlquilerService } from '@core/services/alquiler.service';
+import { Cliente } from '@core/models/cliente.model';
+import { ClienteService } from '@core/services/cliente.service';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FacturaService } from '@core/services/factura.service';
@@ -41,6 +43,9 @@ export class AdminRentalsComponent implements OnInit {
   extensionAlquilerSeleccionado: Alquiler | null = null;
   motivoRechazoExtension = '';
 
+  // Mapa de clientes para mostrar nombres
+  clientesMap: Map<number, string> = new Map();
+
   estados: { value: EstadoAlquiler | ''; label: string }[] = [
     { value: '', label: 'Todos' },
     { value: 'PENDIENTE', label: 'Pendientes' },
@@ -54,11 +59,30 @@ export class AdminRentalsComponent implements OnInit {
 
   constructor(
     private alquilerService: AlquilerService,
-    private facturaService: FacturaService
+    private facturaService: FacturaService,
+    private clienteService: ClienteService
   ) {}
 
   ngOnInit(): void {
+    this.cargarClientes();
     this.cargarAlquileres();
+  }
+
+  cargarClientes(): void {
+    this.clienteService.getClientes().subscribe({
+      next: (clientes: Cliente[]) => {
+        this.clientesMap.clear();
+        clientes.forEach(c => {
+          const nombre = c.apellido ? `${c.nombreCliente} ${c.apellido}` : c.nombreCliente;
+          this.clientesMap.set(c.clienteId, nombre);
+        });
+      },
+      error: (error) => console.error('Error al cargar clientes', error)
+    });
+  }
+
+  getClienteNombre(clienteId: number): string {
+    return this.clientesMap.get(clienteId) || `Cliente #${clienteId}`;
   }
 
   cargarAlquileres(): void {

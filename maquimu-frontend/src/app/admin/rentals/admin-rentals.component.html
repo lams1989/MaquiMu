@@ -47,8 +47,7 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Cliente ID</th>
-                                    <th>Maquinaria ID</th>
+                                    <th>Cliente ID</th>                                    <th>Cliente</th>                                    <th>Maquinaria ID</th>
                                     <th>Fecha Inicio</th>
                                     <th>Fecha Fin</th>
                                     <th class="text-end">Costo Total</th>
@@ -60,6 +59,7 @@
                                 <tr *ngFor="let alquiler of alquileres">
                                     <td class="fw-semibold">{{ alquiler.alquilerId }}</td>
                                     <td>{{ alquiler.clienteId }}</td>
+                                    <td>{{ getClienteNombre(alquiler.clienteId) }}</td>
                                     <td>{{ alquiler.maquinariaId }}</td>
                                     <td>{{ alquiler.fechaInicio | date:'short' }}</td>
                                     <td>{{ alquiler.fechaFin | date:'short' }}</td>
@@ -166,6 +166,7 @@
                     <div class="col-md-6">
                         <p><strong>ID Alquiler:</strong> {{ alquilerDetalle.alquilerId }}</p>
                         <p><strong>ID Cliente:</strong> {{ alquilerDetalle.clienteId }}</p>
+                        <p><strong>Cliente:</strong> {{ getClienteNombre(alquilerDetalle.clienteId) }}</p>
                         <p><strong>ID Maquinaria:</strong> {{ alquilerDetalle.maquinariaId }}</p>
                         <p><strong>ID Operario:</strong> {{ alquilerDetalle.usuarioId || 'Sin asignar' }}</p>
                     </div>
