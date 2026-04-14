@@ -72,4 +72,11 @@ public class Usuario {
 		}
 		this.passwordHash = nuevoPasswordHash;
 	}
+
+	public void cambiarRol(RolUsuario nuevoRol) {
+		if (nuevoRol == null) {
+			throw new IllegalArgumentException("El nuevo rol es requerido");
+		}
+		this.rol = nuevoRol;
+	}
 }

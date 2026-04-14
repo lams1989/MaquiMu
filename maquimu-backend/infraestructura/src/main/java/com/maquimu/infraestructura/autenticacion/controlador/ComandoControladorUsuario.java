@@ -2,10 +2,12 @@ package com.maquimu.infraestructura.autenticacion.controlador;
 
 import com.maquimu.aplicacion.autenticacion.comando.ComandoAsignarPasswordTemporal;
 import com.maquimu.aplicacion.autenticacion.comando.ComandoCambiarPassword;
+import com.maquimu.aplicacion.autenticacion.comando.ComandoCambiarRol;
 import com.maquimu.aplicacion.autenticacion.comando.ComandoRechazarUsuario;
 import com.maquimu.aplicacion.autenticacion.comando.manejador.ManejadorAprobarUsuario;
 import com.maquimu.aplicacion.autenticacion.comando.manejador.ManejadorAsignarPasswordTemporal;
 import com.maquimu.aplicacion.autenticacion.comando.manejador.ManejadorCambiarPassword;
+import com.maquimu.aplicacion.autenticacion.comando.manejador.ManejadorCambiarRol;
 import com.maquimu.aplicacion.autenticacion.comando.manejador.ManejadorRechazarUsuario;
 import com.maquimu.aplicacion.autenticacion.consulta.manejador.ManejadorConsultarUsuariosPendientes;
 import com.maquimu.aplicacion.autenticacion.consulta.manejador.ManejadorConsultarUsuariosRestablecer;
@@ -30,6 +32,7 @@ public class ComandoControladorUsuario {
     private final ManejadorAprobarUsuario manejadorAprobarUsuario;
     private final ManejadorRechazarUsuario manejadorRechazarUsuario;
     private final ManejadorCambiarPassword manejadorCambiarPassword;
+    private final ManejadorCambiarRol manejadorCambiarRol;
     private final ManejadorAsignarPasswordTemporal manejadorAsignarPasswordTemporal;
     private final UsuarioDao usuarioDao;
 
@@ -96,6 +99,30 @@ public class ComandoControladorUsuario {
             manejadorAsignarPasswordTemporal.ejecutar(id, comando);
             return ResponseEntity.ok(Map.of("mensaje", "Contraseña temporal asignada y enviada por correo."));
         } catch (IllegalArgumentException | IllegalStateException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", ex.getMessage()));
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> obtenerUsuario(@PathVariable("id") Long id) {
+        return usuarioDao.buscarPorId(id)
+                .map(u -> ResponseEntity.ok(Map.<String, Object>of(
+                        "usuarioId", u.getId(),
+                        "nombreCompleto", u.getNombreCompleto(),
+                        "email", u.getEmail(),
+                        "rol", u.getRol().name(),
+                        "estado", u.getEstado().name(),
+                        "fechaCreacion", u.getFechaCreacion().toString()
+                )))
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Usuario no encontrado")));
+    }
+
+    @PatchMapping("/{id}/cambiar-rol")
+    public ResponseEntity<?> cambiarRol(@PathVariable("id") Long id, @RequestBody ComandoCambiarRol comando) {
+        try {
+            manejadorCambiarRol.ejecutar(id, comando.getNuevoRol());
+            return ResponseEntity.ok(Map.of("mensaje", "Rol actualizado exitosamente"));
+        } catch (IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", ex.getMessage()));
         }
     }

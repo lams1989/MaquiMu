@@ -129,6 +129,16 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- Rol (solo en edición y si tiene usuario asociado) -->
+                        <div class="col-md-6 mb-3" *ngIf="isEditMode && cliente?.usuarioId">
+                            <label for="rol" class="form-label">Rol de Usuario</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-shield-lock"></i></span>
+                                <select id="rol" formControlName="rol" class="form-select">
+                                    <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Dirección -->
