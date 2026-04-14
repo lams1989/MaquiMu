@@ -118,9 +118,6 @@ Componentes y utilidades compartidas:
 ### Bootstrap 5.3
 Framework CSS utilizado para componentes y layout responsivo.
 
-### Diseños de Referencia
-Los mockups HTML están disponibles en: `../docs/diseños/maquetacion/`
-
 ### Temas
 - Tema principal con colores corporativos
 - Modo responsive para móviles y tablets
@@ -182,7 +179,6 @@ Todos los servicios HTTP están en `src/app/core/services/`:
 - **Modelos:** kebab-case.model.ts (ej. `maquinaria.model.ts`)
 - **Interfaces:** PascalCase con prefijo `I` (ej. `IMaquinaria`)
 
-Ver [coding-standards.md](../docs/architecture/coding-standards.md) para más detalles.
 
 ## 📦 Scripts Disponibles
 
@@ -214,14 +210,5 @@ Luego instalar dependencias adicionales:
 npm install bootstrap bootstrap-icons
 npm install @types/bootstrap --save-dev
 ```
-
-## 📞 Soporte
-
-Para dudas o problemas, consultar:
-- [Documentación del proyecto](../docs/)
-- [Mockups de diseño](../docs/diseños/maquetacion/)
-- [Historias de usuario](../docs/stories/)
-
----
 
 **Última actualización:** 2025-11-22

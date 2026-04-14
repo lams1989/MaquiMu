@@ -1,0 +1,23 @@
+# Backend - Gradle/Spring Boot
+
+# Gradle build outputs
+.gradle/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# compiled classes
+*.class
+
+# Log file
+bootrun.log
+
+# Spring Boot
+application-local.properties
+
+# Package files
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+*.war
+
+# Lombok
+lombok.config
