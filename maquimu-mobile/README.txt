@@ -223,7 +223,6 @@ dependencies {
 - **Layouts:** `snake_case` con prefijo (ej. `activity_login.xml`)
 - **IDs:** `camelCase` (ej. `btnLogin`, `tvUsername`)
 
-Ver [coding-standards.md](../docs/architecture/coding-standards.md) para más detalles.
 
 ## 🚧 Estado Actual
 
@@ -272,7 +271,7 @@ Log.e("TAG", "Error message", exception)
 
 Para dudas o problemas, consultar:
 - [Documentación del proyecto](../docs/)
-- [API Backend](../maquimu-backend/README.md)
+- [API Backend](../maquimu-backend/README.txt)
 - [Historias de usuario](../docs/stories/)
 
 ---

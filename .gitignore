@@ -7,6 +7,21 @@
 .gradle/
 **/build/
 !gradle/wrapper/gradle-wrapper.jar
+!**/src/**/build/
+
+# Compiled class files
+*.class
+
+# Log files
+*.log
+bootrun.log
+
+# Package files
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+*.war
+*.nar
+*.ear
 
 # IntelliJ IDEA
 .idea/
@@ -44,8 +59,10 @@ node_modules/
 /coverage
 
 # Production builds
-/build
 /dist
+/tmp
+/out-tsc
+/bazel-out
 
 # Angular
 .angular/
@@ -55,22 +72,24 @@ node_modules/
 # Mobile (Android)
 # ===================================
 # Android Studio
-.gradle
 local.properties
-.idea/
-*.iml
 .externalNativeBuild
 .cxx
+captures/
 
 # Android build outputs
 *.apk
 *.ap_
 *.aab
+*.dex
+
+# Signing
+*.jks
+*.keystore
 
 # ===================================
 # Database
 # ===================================
-# Backups
 *.sql.backup
 *.sql.bak
 
@@ -92,6 +111,7 @@ local.properties
 .DS_Store
 .AppleDouble
 .LSOverride
+._*
 
 # Windows
 Thumbs.db
@@ -105,12 +125,13 @@ $RECYCLE.BIN/
 # ===================================
 # Logs and Temporary Files
 # ===================================
-*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 *.tmp
 *.temp
+*.swp
+*.swo
 
 # ===================================
 # Environment and Secrets
@@ -123,13 +144,8 @@ yarn-error.log*
 application-local.properties
 
 # ===================================
-# Other
+# Misc
 # ===================================
-# Package files
-*.jar
-*.war
-*.nar
-*.ear
 *.zip
 *.tar.gz
 *.rar
