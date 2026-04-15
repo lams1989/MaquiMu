@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiUrl: 'https://TU-BACKEND-URL.onrender.com/api/maquimu'
+    apiUrl: 'https://maquimu.onrender.com/api/maquimu'
 };
