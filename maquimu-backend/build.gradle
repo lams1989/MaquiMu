@@ -61,5 +61,5 @@ dependencies {
 }
 
 bootJar {
-    mainClass = 'com.maquimu.MaquimuBackendApplication'
+    mainClass = 'com.maquimu.infraestructura.MaquimuBackendApplication'
 }
