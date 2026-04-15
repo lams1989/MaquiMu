@@ -533,13 +533,16 @@ p {
 }
 
 /* Ensure all tables scroll horizontally on small viewports */
-.table-responsive,
-.card-body > .table,
-.flex-grow-1 .table {
+.table-responsive {
     display: block;
     width: 100%;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+}
+
+.table-responsive > .table {
+    width: 100%;
+    min-width: 700px;
 }
 
 /* ============================================

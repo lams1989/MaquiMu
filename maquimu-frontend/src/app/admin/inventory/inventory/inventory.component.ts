@@ -20,6 +20,7 @@ export class InventoryComponent implements OnInit {
   showDeleteConfirmModal = false;
   maquinariaAEliminarId: number | null = null;
   errorMessage = '';
+  isLoading = false;
 
   constructor(private maquinariaService: MaquinariaService) { }
 
@@ -28,12 +29,15 @@ export class InventoryComponent implements OnInit {
   }
 
   loadMaquinarias(): void {
+    this.isLoading = true;
     this.maquinariaService.getMaquinarias().subscribe({
       next: (data: Maquinaria[]) => {
         this.maquinarias = data;
+        this.isLoading = false;
       },
       error: (error: any) => {
         console.error('Error al cargar maquinarias', error);
+        this.isLoading = false;
       }
     });
   }

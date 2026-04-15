@@ -87,6 +87,7 @@
             <div class="input-group">
               <span class="input-group-text"><i class="bi bi-lock"></i></span>
               <input type="password" id="password" formControlName="password" class="form-control" placeholder="••••••"
+                     autocomplete="new-password"
                      [ngClass]="{ 'is-invalid': registerForm.get('password')?.touched && registerForm.get('password')?.invalid }">
             </div>
             <div *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid" class="text-danger small mt-1">
@@ -99,6 +100,7 @@
             <div class="input-group">
               <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
               <input type="password" id="confirmPassword" formControlName="confirmPassword" class="form-control" placeholder="••••••"
+                     autocomplete="new-password"
                      [ngClass]="{ 'is-invalid': registerForm.touched && registerForm.invalid && registerForm.errors?.['mismatch'] }">
             </div>
             <div *ngIf="registerForm.touched && registerForm.invalid && registerForm.errors?.['mismatch']" class="text-danger small mt-1">

@@ -47,7 +47,13 @@
 
             <!-- Tab: Clientes -->
             <div *ngIf="activeTab === 'clientes'">
-                <div class="card border-0">
+                <div *ngIf="clientesLoading" class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                    <p class="mt-2 text-muted">Cargando clientes...</p>
+                </div>
+                <div class="card border-0" *ngIf="!clientesLoading">
                     <div class="card-body p-0">
                         <div class="table-responsive">
                             <table class="table table-hover align-middle mb-0">
