@@ -2,6 +2,8 @@ package com.sena.proyecto.utils
 
 object Constants {
     // Emulador Android usa 10.0.2.2 para acceder a localhost del host
+    // Para producción, cambiar a la URL del backend desplegado:
+    // const val BASE_URL = "https://TU-BACKEND-URL.onrender.com/api/"
     const val BASE_URL = "http://10.0.2.2:8080/api/"
 
     // SharedPreferences

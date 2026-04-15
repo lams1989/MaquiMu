@@ -32,6 +32,9 @@ public class SeguridadConfig {
 	private final AuthEntryPoint unauthorizedHandler;
 	private final UserDetailsServiceImpl userDetailsService;
 
+	@org.springframework.beans.factory.annotation.Value("${app.cors.allowed-origins:http://localhost:4200}")
+	private String allowedOrigins;
+
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf(csrf -> csrf.disable()).cors(cors -> cors.configurationSource(corsConfigurationSource()))
@@ -50,7 +53,7 @@ public class SeguridadConfig {
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+		configuration.setAllowedOrigins(Arrays.asList(allowedOrigins.split(",")));
 		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
 		configuration.setAllowedHeaders(Arrays.asList("*"));
 		configuration.setAllowCredentials(true);
