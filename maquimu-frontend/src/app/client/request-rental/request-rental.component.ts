@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Maquinaria } from '@core/models/maquinaria.model';
 import { MaquinariaService } from '@core/services/maquinaria.service';
 import { Router } from '@angular/router';
+import { SensitiveDataService } from '@core/services/sensitive-data.service';
 import { SolicitudAlquiler } from '@core/models/alquiler.model';
 
 @Component({
@@ -32,6 +33,7 @@ export class RequestRentalComponent implements OnInit {
     private alquilerService: AlquilerService,
     private maquinariaService: MaquinariaService,
     private router: Router,
+    public sensitiveData: SensitiveDataService,
     @Inject(PLATFORM_ID) platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);

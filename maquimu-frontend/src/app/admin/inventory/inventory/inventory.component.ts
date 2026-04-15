@@ -4,6 +4,7 @@ import { MachineModalComponent } from '../machine-modal/machine-modal.component'
 import { Maquinaria } from '@core/models/maquinaria.model';
 import { MaquinariaService } from '@core/services/maquinaria.service';
 import { NavbarComponent } from '@shared/navbar/navbar.component';
+import { SensitiveDataService } from '@core/services/sensitive-data.service';
 import { SidebarComponent } from '@shared/sidebar/sidebar.component';
 
 @Component({
@@ -22,7 +23,10 @@ export class InventoryComponent implements OnInit {
   errorMessage = '';
   isLoading = false;
 
-  constructor(private maquinariaService: MaquinariaService) { }
+  constructor(
+    private maquinariaService: MaquinariaService,
+    public sensitiveData: SensitiveDataService
+  ) { }
 
   ngOnInit(): void {
     this.loadMaquinarias();

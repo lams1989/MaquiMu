@@ -17,6 +17,9 @@
                 <select class="form-select" style="width: auto;" [(ngModel)]="filtroEstado" (ngModelChange)="onFiltroChange()">
                     <option *ngFor="let estado of estados" [value]="estado.value">{{ estado.label }}</option>
                 </select>
+                <button class="btn btn-outline-secondary btn-sm ms-2" (click)="sensitiveData.toggle()" title="Mostrar/Ocultar valores">
+                    <i class="bi" [ngClass]="sensitiveData.visible ? 'bi-eye' : 'bi-eye-slash'"></i>
+                </button>
             </div>
 
             <div *ngIf="feedbackMessage" class="alert alert-dismissible fade show" [ngClass]="feedbackType === 'success' ? 'alert-success' : 'alert-danger'" role="alert">
@@ -63,7 +66,7 @@
                                     <td>{{ alquiler.maquinariaId }}</td>
                                     <td>{{ alquiler.fechaInicio | date:'short' }}</td>
                                     <td>{{ alquiler.fechaFin | date:'short' }}</td>
-                                    <td class="text-end fw-medium">{{ alquiler.costoTotal | currency:'COP':'symbol':'1.0-0' }}</td>
+                                    <td class="text-end fw-medium">{{ sensitiveData.visible ? (alquiler.costoTotal | currency:'COP':'symbol':'1.0-0') : '••••••' }}</td>
                                     <td>
                                         <span class="badge rounded-pill" [ngClass]="getBadgeClass(alquiler.estado)">
                                             {{ getEstadoLabel(alquiler.estado) }}
@@ -173,7 +176,7 @@
                     <div class="col-md-6">
                         <p><strong>Fecha Inicio:</strong> {{ alquilerDetalle.fechaInicio | date:'medium' }}</p>
                         <p><strong>Fecha Fin:</strong> {{ alquilerDetalle.fechaFin | date:'medium' }}</p>
-                        <p><strong>Costo Total:</strong> {{ alquilerDetalle.costoTotal | currency:'COP':'symbol':'1.0-0' }}</p>
+                        <p><strong>Costo Total:</strong> {{ sensitiveData.visible ? (alquilerDetalle.costoTotal | currency:'COP':'symbol':'1.0-0') : '••••••' }}</p>
                         <p><strong>Estado:</strong>
                             <span class="badge" [ngClass]="getBadgeClass(alquilerDetalle.estado)">
                                 {{ getEstadoLabel(alquilerDetalle.estado) }}
@@ -189,7 +192,7 @@
                     <div class="card-body py-2">
                         <h6 class="fw-bold text-primary mb-2"><i class="bi bi-calendar-plus me-1"></i>Solicitud de Extensión</h6>
                         <p class="mb-1"><strong>Fecha Fin Solicitada:</strong> {{ alquilerDetalle.fechaFinSolicitada | date:'medium' }}</p>
-                        <p class="mb-0"><strong>Costo Adicional:</strong> {{ alquilerDetalle.costoAdicional | currency:'COP':'symbol':'1.0-0' }}</p>
+                        <p class="mb-0"><strong>Costo Adicional:</strong> {{ sensitiveData.visible ? (alquilerDetalle.costoAdicional | currency:'COP':'symbol':'1.0-0') : '••••••' }}</p>
                     </div>
                 </div>
             </div>
@@ -212,7 +215,7 @@
             <div class="modal-body">
                 <div *ngIf="extensionAlquilerSeleccionado" class="mb-3">
                     <p class="text-muted mb-1"><strong>Fecha fin solicitada:</strong> {{ extensionAlquilerSeleccionado.fechaFinSolicitada | date:'dd/MM/yyyy' }}</p>
-                    <p class="text-muted mb-0"><strong>Costo adicional:</strong> {{ extensionAlquilerSeleccionado.costoAdicional | currency:'COP':'symbol':'1.0-0' }}</p>
+                    <p class="text-muted mb-0"><strong>Costo adicional:</strong> {{ sensitiveData.visible ? (extensionAlquilerSeleccionado.costoAdicional | currency:'COP':'symbol':'1.0-0') : '••••••' }}</p>
                 </div>
                 <div class="form-group">
                     <label for="motivoRechazoExtension" class="form-label">Motivo del rechazo (opcional)</label>

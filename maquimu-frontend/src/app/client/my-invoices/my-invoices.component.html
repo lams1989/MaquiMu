@@ -7,6 +7,9 @@
     <button class="btn btn-outline-primary btn-sm" (click)="cargarFacturas()" [disabled]="loading">
       <i class="bi bi-arrow-clockwise me-1"></i>Actualizar
     </button>
+    <button class="btn btn-outline-secondary btn-sm ms-2" (click)="sensitiveData.toggle()" title="Mostrar/Ocultar valores">
+      <i class="bi" [ngClass]="sensitiveData.visible ? 'bi-eye' : 'bi-eye-slash'"></i>
+    </button>
   </div>
 
   <!-- Filtro por estado -->
@@ -69,7 +72,7 @@
               <td class="ps-3 fw-semibold">#{{ factura.facturaId }}</td>
               <td>{{ factura.fechaEmision | date:'dd/MM/yyyy' }}</td>
               <td>{{ factura.alquilerId }}</td>
-              <td class="text-end fw-semibold">{{ formatCurrency(factura.monto) }}</td>
+              <td class="text-end fw-semibold">{{ sensitiveData.visible ? formatCurrency(factura.monto) : '••••••' }}</td>
               <td class="text-center">
                 <span class="badge rounded-pill" [ngClass]="getBadgeClass(factura.estadoPago)">
                   {{ factura.estadoPago }}
@@ -124,7 +127,7 @@
           </div>
           <div class="col-12">
             <small class="text-muted d-block">Monto Total</small>
-            <h4 class="text-primary mb-0">{{ formatCurrency(facturaDetalle.monto) }}</h4>
+            <h4 class="text-primary mb-0">{{ sensitiveData.visible ? formatCurrency(facturaDetalle.monto) : '••••••' }}</h4>
           </div>
         </div>
       </div>
