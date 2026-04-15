@@ -8,6 +8,7 @@ import { Maquinaria } from '@core/models/maquinaria.model';
 import { MaquinariaService } from '@core/services/maquinaria.service';
 import { of } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
+import { SensitiveDataService } from '@core/services/sensitive-data.service';
 
 describe('InventoryComponent', () => {
   let component: InventoryComponent;
@@ -27,7 +28,8 @@ describe('InventoryComponent', () => {
     await TestBed.configureTestingModule({
       imports: [InventoryComponent, MachineModalComponent, HttpClientTestingModule, RouterTestingModule],
       providers: [
-        { provide: MaquinariaService, useValue: maquinariaServiceSpy }
+        { provide: MaquinariaService, useValue: maquinariaServiceSpy },
+        SensitiveDataService
       ]
     }).compileComponents();
 
@@ -65,17 +67,26 @@ describe('InventoryComponent', () => {
     expect(maquinariaServiceSpy.getMaquinarias).toHaveBeenCalledTimes(2); // Initial load + reload after close
   });
 
-  it('should delete maquinaria after confirmation', () => {
-    spyOn(window, 'confirm').and.returnValue(true); // Mock user confirmation
+  it('should show confirmation modal when deleteMaquinaria is called', () => {
     component.deleteMaquinaria(1);
-    expect(maquinariaServiceSpy.deleteMaquinaria).toHaveBeenCalledWith(1);
-    expect(maquinariaServiceSpy.getMaquinarias).toHaveBeenCalledTimes(2); // Reload after delete
+    expect(component.showDeleteConfirmModal).toBeTrue();
+    expect(component.maquinariaAEliminarId).toBe(1);
+    expect(maquinariaServiceSpy.deleteMaquinaria).not.toHaveBeenCalled();
   });
 
-  it('should not delete maquinaria if not confirmed', () => {
-    spyOn(window, 'confirm').and.returnValue(false); // Mock user denial
+  it('should delete maquinaria when confirmarEliminacion is called', () => {
     component.deleteMaquinaria(1);
+    component.confirmarEliminacion();
+    expect(maquinariaServiceSpy.deleteMaquinaria).toHaveBeenCalledWith(1);
+    expect(maquinariaServiceSpy.getMaquinarias).toHaveBeenCalledTimes(2); // Initial load + reload after delete
+  });
+
+  it('should not delete maquinaria when cerrarConfirmacion is called', () => {
+    component.deleteMaquinaria(1);
+    component.cerrarConfirmacion();
     expect(maquinariaServiceSpy.deleteMaquinaria).not.toHaveBeenCalled();
+    expect(component.showDeleteConfirmModal).toBeFalse();
+    expect(component.maquinariaAEliminarId).toBeNull();
   });
 
   it('should render machinery in the table', () => {

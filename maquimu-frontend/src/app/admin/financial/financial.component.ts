@@ -4,6 +4,7 @@ import { EstadoPago, Factura } from '@core/models/factura.model';
 import { FacturaService } from '@core/services/factura.service';
 import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from '@shared/navbar/navbar.component';
+import { SensitiveDataService } from '@core/services/sensitive-data.service';
 import { SidebarComponent } from '@shared/sidebar/sidebar.component';
 
 @Component({
@@ -37,7 +38,10 @@ export class FinancialComponent implements OnInit {
     { value: 'ANULADO', label: 'Anuladas' }
   ];
 
-  constructor(private facturaService: FacturaService) {}
+  constructor(
+    private facturaService: FacturaService,
+    public sensitiveData: SensitiveDataService
+  ) {}
 
   ngOnInit(): void {
     this.cargarFacturas();

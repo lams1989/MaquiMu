@@ -66,6 +66,7 @@ public class ComandoControladorCliente {
 	public ResponseEntity<Void> actualizarCliente(@PathVariable("id") Long id,
 			@RequestBody ComandoActualizarCliente comandoActualizarCliente) {
 		ComandoActualizarCliente comando = ComandoActualizarCliente.builder().clienteId(id)
+				.usuarioId(comandoActualizarCliente.getUsuarioId())
 				.nombreCliente(comandoActualizarCliente.getNombreCliente())
 				.apellido(comandoActualizarCliente.getApellido())
 				.identificacion(comandoActualizarCliente.getIdentificacion())

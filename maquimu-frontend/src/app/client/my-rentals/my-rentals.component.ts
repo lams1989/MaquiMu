@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { Maquinaria } from '@core/models/maquinaria.model';
 import { MaquinariaService } from '@core/services/maquinaria.service';
 import { RouterModule } from '@angular/router';
+import { SensitiveDataService } from '@core/services/sensitive-data.service';
 
 @Component({
   selector: 'app-my-rentals',
@@ -48,7 +49,8 @@ export class MyRentalsComponent implements OnInit {
 
   constructor(
     private alquilerService: AlquilerService,
-    private maquinariaService: MaquinariaService
+    private maquinariaService: MaquinariaService,
+    public sensitiveData: SensitiveDataService
   ) {}
 
   ngOnInit(): void {

@@ -7,6 +7,9 @@
     <button class="btn btn-outline-primary btn-sm" (click)="cargarAlquileres()" [disabled]="loading">
       <i class="bi bi-arrow-clockwise me-1"></i>Actualizar
     </button>
+    <button class="btn btn-outline-secondary btn-sm ms-2" (click)="sensitiveData.toggle()" title="Mostrar/Ocultar valores">
+      <i class="bi" [ngClass]="sensitiveData.visible ? 'bi-eye' : 'bi-eye-slash'"></i>
+    </button>
   </div>
 
   <!-- Filtro por estado -->
@@ -90,16 +93,16 @@
             </td>
             <td>{{ alquiler.fechaInicio | date:'dd/MM/yyyy' }}</td>
             <td>{{ alquiler.fechaFin | date:'dd/MM/yyyy' }}</td>
-            <td class="fw-semibold">{{ formatCurrency(alquiler.costoTotal) }}</td>
+            <td class="fw-semibold">{{ sensitiveData.visible ? formatCurrency(alquiler.costoTotal) : '••••••' }}</td>
             <td>
               <span class="badge rounded-pill" [ngClass]="getBadgeClass(alquiler.estado)">
                 {{ getEstadoLabel(alquiler.estado) }}
               </span>
             </td>
             <td class="text-center">
-              <button class="btn btn-sm btn-outline-primary me-1"
+              <button class="btn btn-sm btn-outline-info me-1" title="Ver detalle"
                       (click)="verDetalle(alquiler.alquilerId!)">
-                <i class="bi bi-eye me-1"></i>Detalle
+                <i class="bi bi-info-circle"></i>
               </button>
               <button *ngIf="alquiler.estado === 'ACTIVO'" class="btn btn-sm btn-outline-success"
                       (click)="abrirExtensionModal(alquiler)">
@@ -118,12 +121,12 @@
 <div *ngIf="showDetalle" class="modal fade show d-block" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header bg-primary text-white">
+      <div class="modal-header modal-header-detail">
         <h5 class="modal-title">
-          <i class="bi bi-file-earmark-text me-2"></i>
+          <i class="bi bi-info-circle me-2"></i>
           Detalle del Alquiler
         </h5>
-        <button type="button" class="btn-close btn-close-white" aria-label="Cerrar" (click)="cerrarDetalle()"></button>
+        <button type="button" class="btn-close" aria-label="Cerrar" (click)="cerrarDetalle()"></button>
       </div>
       <div class="modal-body">
         <!-- Loading -->
@@ -153,7 +156,7 @@
             </div>
             <div class="col-6">
               <label class="form-label text-muted small mb-0">Costo Total</label>
-              <p class="fw-bold text-success mb-0">{{ formatCurrency(alquilerDetalle.costoTotal) }}</p>
+              <p class="fw-bold text-success mb-0">{{ sensitiveData.visible ? formatCurrency(alquilerDetalle.costoTotal) : '••••••' }}</p>
             </div>
             <div class="col-6">
               <label class="form-label text-muted small mb-0">Fecha Inicio</label>
@@ -175,7 +178,7 @@
             </div>
             <div class="col-6" *ngIf="alquilerDetalle.costoAdicional">
               <label class="form-label text-muted small mb-0">Costo Adicional</label>
-              <p class="fw-bold text-primary mb-0">{{ formatCurrency(alquilerDetalle.costoAdicional) }}</p>
+              <p class="fw-bold text-primary mb-0">{{ sensitiveData.visible ? formatCurrency(alquilerDetalle.costoAdicional) : '••••••' }}</p>
             </div>
           </div>
         </div>
@@ -224,11 +227,11 @@
               </div>
               <div class="col-md-6">
                 <small class="text-muted d-block">Tarifa por Día</small>
-                <span class="fw-semibold">{{ extensionMaquinaria ? formatCurrency(extensionMaquinaria.tarifaPorDia) : 'Cargando...' }}</span>
+                <span class="fw-semibold">{{ sensitiveData.visible ? (extensionMaquinaria ? formatCurrency(extensionMaquinaria.tarifaPorDia) : 'Cargando...') : '••••••' }}</span>
               </div>
               <div class="col-md-6">
                 <small class="text-muted d-block">Costo Actual</small>
-                <span class="fw-semibold text-success">{{ formatCurrency(extensionAlquiler.costoTotal) }}</span>
+                <span class="fw-semibold text-success">{{ sensitiveData.visible ? formatCurrency(extensionAlquiler.costoTotal) : '••••••' }}</span>
               </div>
             </div>
           </div>
@@ -251,16 +254,16 @@
             <h6 class="card-title fw-bold text-primary mb-2"><i class="bi bi-calculator me-1"></i>Resumen de Costos</h6>
             <div class="d-flex justify-content-between mb-1">
               <span>Costo actual:</span>
-              <span class="fw-semibold">{{ formatCurrency(extensionAlquiler!.costoTotal) }}</span>
+              <span class="fw-semibold">{{ sensitiveData.visible ? formatCurrency(extensionAlquiler!.costoTotal) : '••••••' }}</span>
             </div>
             <div class="d-flex justify-content-between mb-1">
               <span>Costo adicional (extensión):</span>
-              <span class="fw-semibold text-primary">+ {{ formatCurrency(costoAdicionalEstimado) }}</span>
+              <span class="fw-semibold text-primary">+ {{ sensitiveData.visible ? formatCurrency(costoAdicionalEstimado) : '••••••' }}</span>
             </div>
             <hr class="my-2">
             <div class="d-flex justify-content-between">
               <span class="fw-bold">Costo total estimado:</span>
-              <span class="fw-bold text-success fs-5">{{ formatCurrency(extensionAlquiler!.costoTotal + costoAdicionalEstimado) }}</span>
+              <span class="fw-bold text-success fs-5">{{ sensitiveData.visible ? formatCurrency(extensionAlquiler!.costoTotal + costoAdicionalEstimado) : '••••••' }}</span>
             </div>
           </div>
         </div>

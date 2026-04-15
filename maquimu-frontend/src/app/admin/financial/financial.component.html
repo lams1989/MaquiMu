@@ -18,6 +18,9 @@
     <button class="btn btn-outline-primary btn-sm" (click)="cargarFacturas()" [disabled]="loading">
       <i class="bi bi-arrow-clockwise me-1"></i>Actualizar
     </button>
+    <button class="btn btn-outline-secondary btn-sm ms-2" (click)="sensitiveData.toggle()" title="Mostrar/Ocultar valores">
+      <i class="bi" [ngClass]="sensitiveData.visible ? 'bi-eye' : 'bi-eye-slash'"></i>
+    </button>
   </div>
 
   <!-- Tarjetas resumen -->
@@ -30,7 +33,7 @@
           </div>
           <div>
             <p class="text-muted small mb-1 fw-medium">Pendiente de Cobro</p>
-            <h4 class="fw-bold mb-0" style="color: #f59e0b;">{{ formatCurrency(getTotalPendiente()) }}</h4>
+            <h4 class="fw-bold mb-0" style="color: #f59e0b;">{{ sensitiveData.visible ? formatCurrency(getTotalPendiente()) : '••••••' }}</h4>
           </div>
         </div>
       </div>
@@ -43,7 +46,7 @@
           </div>
           <div>
             <p class="text-muted small mb-1 fw-medium">Total Cobrado</p>
-            <h4 class="fw-bold mb-0" style="color: #16a34a;">{{ formatCurrency(getTotalPagado()) }}</h4>
+            <h4 class="fw-bold mb-0" style="color: #16a34a;">{{ sensitiveData.visible ? formatCurrency(getTotalPagado()) : '••••••' }}</h4>
           </div>
         </div>
       </div>
@@ -124,7 +127,7 @@
             <td>{{ factura.alquilerId }}</td>
             <td>{{ factura.clienteId }}</td>
             <td>{{ factura.fechaEmision | date:'dd/MM/yyyy' }}</td>
-            <td class="fw-semibold">{{ formatCurrency(factura.monto) }}</td>
+            <td class="fw-semibold">{{ sensitiveData.visible ? formatCurrency(factura.monto) : '••••••' }}</td>
             <td>
               <span class="badge rounded-pill" [ngClass]="getBadgeClass(factura.estadoPago)">
                 {{ factura.estadoPago }}
@@ -133,7 +136,7 @@
             <td class="text-center">
               <div class="btn-group btn-group-sm">
                 <button class="btn btn-outline-primary" title="Ver detalle" (click)="verDetalle(factura)">
-                  <i class="bi bi-eye"></i>
+                  <i class="bi bi-info-circle"></i>
                 </button>
                 <button class="btn btn-outline-success" title="Descargar PDF" (click)="descargarPdf(factura.facturaId!)">
                   <i class="bi bi-file-earmark-pdf"></i>
@@ -151,7 +154,7 @@
     </div>
     <!-- Total visible -->
     <div class="card-footer text-end bg-light">
-      <strong>Total mostrado: {{ formatCurrency(getTotalMonto()) }}</strong>
+      <strong>Total mostrado: {{ sensitiveData.visible ? formatCurrency(getTotalMonto()) : '••••••' }}</strong>
     </div>
   </div>
 </div>
@@ -161,11 +164,11 @@
 <div *ngIf="showDetalle" class="modal fade show d-block" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header bg-primary text-white">
+      <div class="modal-header modal-header-detail">
         <h5 class="modal-title">
-          <i class="bi bi-receipt me-2"></i>Detalle de Factura
+          <i class="bi bi-info-circle me-2"></i>Detalle de Factura
         </h5>
-        <button type="button" class="btn-close btn-close-white" (click)="cerrarDetalle()"></button>
+        <button type="button" class="btn-close" (click)="cerrarDetalle()"></button>
       </div>
       <div class="modal-body" *ngIf="facturaDetalle">
         <div class="row g-3">
@@ -195,7 +198,7 @@
           </div>
           <div class="col-6">
             <label class="form-label text-muted small mb-0">Monto</label>
-            <p class="fw-bold text-success mb-0">{{ formatCurrency(facturaDetalle.monto) }}</p>
+            <p class="fw-bold text-success mb-0">{{ sensitiveData.visible ? formatCurrency(facturaDetalle.monto) : '••••••' }}</p>
           </div>
         </div>
       </div>
@@ -221,7 +224,7 @@
         <button type="button" class="btn-close" (click)="cerrarCambiarEstado()"></button>
       </div>
       <div class="modal-body" *ngIf="facturaEstado">
-        <p>Factura <strong>#{{ facturaEstado.facturaId }}</strong> — Monto: <strong>{{ formatCurrency(facturaEstado.monto) }}</strong></p>
+        <p>Factura <strong>#{{ facturaEstado.facturaId }}</strong> — Monto: <strong>{{ sensitiveData.visible ? formatCurrency(facturaEstado.monto) : '••••••' }}</strong></p>
         <p>Estado actual:
           <span class="badge rounded-pill" [ngClass]="getBadgeClass(facturaEstado.estadoPago)">
             {{ facturaEstado.estadoPago }}

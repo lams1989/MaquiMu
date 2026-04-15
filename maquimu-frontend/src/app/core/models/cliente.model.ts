@@ -20,6 +20,7 @@ export interface CrearClienteRequest {
 }
 
 export interface ActualizarClienteRequest {
+  usuarioId?: number;
   nombreCliente?: string;
   apellido?: string;
   identificacion?: string;

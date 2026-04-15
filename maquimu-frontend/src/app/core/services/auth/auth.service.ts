@@ -32,6 +32,16 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
+  updateCurrentUser(partialData: Partial<Usuario>): void {
+    const current = this.currentUserValue;
+    if (!current) return;
+    const updated = { ...current, ...partialData };
+    this.currentUserSubject.next(updated);
+    if (this.isBrowser) {
+      localStorage.setItem('currentUser', JSON.stringify(updated));
+    }
+  }
+
   login(credentials: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
       tap(response => {

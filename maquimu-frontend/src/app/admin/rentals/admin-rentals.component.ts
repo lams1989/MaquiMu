@@ -7,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
 import { FacturaService } from '@core/services/factura.service';
 import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from '@shared/navbar/navbar.component';
+import { SensitiveDataService } from '@core/services/sensitive-data.service';
 import { SidebarComponent } from '@shared/sidebar/sidebar.component';
 
 @Component({
@@ -60,7 +61,8 @@ export class AdminRentalsComponent implements OnInit {
   constructor(
     private alquilerService: AlquilerService,
     private facturaService: FacturaService,
-    private clienteService: ClienteService
+    private clienteService: ClienteService,
+    public sensitiveData: SensitiveDataService
   ) {}
 
   ngOnInit(): void {

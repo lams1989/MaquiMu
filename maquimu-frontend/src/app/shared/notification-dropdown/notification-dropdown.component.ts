@@ -50,6 +50,10 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
   onNotificationClick(notif: AppNotification): void {
     this.notifService.markAsRead(notif.id);
     this.isOpen = false;
+    if (notif.type === 'profile_incomplete') {
+      this.notifService.profileEditRequested$.next();
+      return;
+    }
     if (notif.routerLink) {
       this.router.navigate([notif.routerLink]);
     }

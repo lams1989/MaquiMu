@@ -2,16 +2,19 @@ import { AlquilerService } from './alquiler.service';
 import { AppNotification } from '@core/models/notification.model';
 import { AuthService } from './auth/auth.service';
 import { BehaviorSubject, of } from 'rxjs';
+import { ClienteService } from './cliente.service';
 import { discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FacturaService } from './factura.service';
 import { NotificationService } from './notification.service';
 import { PLATFORM_ID } from '@angular/core';
 import { Usuario } from '@core/models/auth/login-register.models';
+import { UsuarioService } from './usuario.service';
 
 describe('NotificationService', () => {
   let service: NotificationService;
   let alquilerServiceSpy: jasmine.SpyObj<AlquilerService>;
   let facturaServiceSpy: jasmine.SpyObj<FacturaService>;
+  let clienteServiceSpy: jasmine.SpyObj<ClienteService>;
   let currentUserSubject: BehaviorSubject<Usuario | null>;
   let currentUserValueRef: { value: Usuario | null };
 
@@ -45,11 +48,13 @@ describe('NotificationService', () => {
 
     alquilerServiceSpy = jasmine.createSpyObj('AlquilerService', ['getAlquileres', 'getMisAlquileres']);
     facturaServiceSpy = jasmine.createSpyObj('FacturaService', ['getMisFacturas']);
+    clienteServiceSpy = jasmine.createSpyObj('ClienteService', ['getClienteById']);
 
     // Default: return empty arrays
     alquilerServiceSpy.getAlquileres.and.returnValue(of([]));
     alquilerServiceSpy.getMisAlquileres.and.returnValue(of([]));
     facturaServiceSpy.getMisFacturas.and.returnValue(of([]));
+    clienteServiceSpy.getClienteById.and.returnValue(of({ clienteId: 10, nombreCliente: 'Test', apellido: 'Apellido', identificacion: '123', email: 'test@test.com', telefono: '300', direccion: 'Dir', fechaRegistro: '2025-01-01' }));
 
     TestBed.configureTestingModule({
       providers: [
@@ -57,6 +62,8 @@ describe('NotificationService', () => {
         { provide: AuthService, useValue: authSpy },
         { provide: AlquilerService, useValue: alquilerServiceSpy },
         { provide: FacturaService, useValue: facturaServiceSpy },
+        { provide: ClienteService, useValue: clienteServiceSpy },
+        { provide: UsuarioService, useValue: (() => { const spy = jasmine.createSpyObj('UsuarioService', ['getUsuariosPendientes', 'getUsuariosRestablecer']); spy.getUsuariosPendientes.and.returnValue(of([])); spy.getUsuariosRestablecer.and.returnValue(of([])); return spy; })() },
         { provide: PLATFORM_ID, useValue: 'browser' }
       ]
     });
@@ -278,6 +285,54 @@ describe('NotificationService', () => {
       service.markAllAsRead();
 
       expect(service.unreadCount).toBe(0);
+
+      service.ngOnDestroy();
+      discardPeriodicTasks();
+    }));
+  });
+
+  // ===== Profile Incomplete Notification =====
+  describe('Profile incomplete notification', () => {
+    it('should generate profile_incomplete notification when client data is incomplete', fakeAsync(() => {
+      let notifications: AppNotification[] = [];
+      service.notifications$.subscribe(n => notifications = n);
+
+      currentUserValueRef.value = mockCliente;
+      alquilerServiceSpy.getMisAlquileres.and.returnValue(of([]));
+      facturaServiceSpy.getMisFacturas.and.returnValue(of([]));
+      clienteServiceSpy.getClienteById.and.returnValue(of({
+        clienteId: 10, nombreCliente: 'Test', identificacion: '123',
+        email: 'test@test.com', fechaRegistro: '2025-01-01',
+        telefono: '', direccion: '', apellido: ''
+      }));
+      currentUserSubject.next(mockCliente);
+      tick(0);
+
+      const profileNotif = notifications.find(n => n.type === 'profile_incomplete');
+      expect(profileNotif).toBeTruthy();
+      expect(profileNotif!.title).toBe('Perfil incompleto');
+      expect(profileNotif!.message).toContain('datos pendientes');
+
+      service.ngOnDestroy();
+      discardPeriodicTasks();
+    }));
+
+    it('should NOT generate profile_incomplete notification when client data is complete', fakeAsync(() => {
+      let notifications: AppNotification[] = [];
+      service.notifications$.subscribe(n => notifications = n);
+
+      currentUserValueRef.value = mockCliente;
+      alquilerServiceSpy.getMisAlquileres.and.returnValue(of([]));
+      facturaServiceSpy.getMisFacturas.and.returnValue(of([]));
+      clienteServiceSpy.getClienteById.and.returnValue(of({
+        clienteId: 10, nombreCliente: 'Test', apellido: 'Apellido', identificacion: '123',
+        email: 'test@test.com', telefono: '3001234567', direccion: 'Calle 1', fechaRegistro: '2025-01-01'
+      }));
+      currentUserSubject.next(mockCliente);
+      tick(0);
+
+      const profileNotif = notifications.find(n => n.type === 'profile_incomplete');
+      expect(profileNotif).toBeUndefined();
 
       service.ngOnDestroy();
       discardPeriodicTasks();

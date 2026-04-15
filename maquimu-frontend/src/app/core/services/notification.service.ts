@@ -1,7 +1,8 @@
 import { AlquilerService } from './alquiler.service';
 import { AppNotification } from '@core/models/notification.model';
 import { AuthService } from './auth/auth.service';
-import { BehaviorSubject, Observable, Subscription, timer } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription, timer } from 'rxjs';
+import { ClienteService } from './cliente.service';
 import { FacturaService } from './factura.service';
 import { Inject, Injectable, OnDestroy, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
@@ -13,6 +14,8 @@ import { UsuarioService } from './usuario.service';
 export class NotificationService implements OnDestroy {
   private notificationsSubject = new BehaviorSubject<AppNotification[]>([]);
   public notifications$: Observable<AppNotification[]> = this.notificationsSubject.asObservable();
+
+  public profileEditRequested$ = new Subject<void>();
 
   private pollSub?: Subscription;
   private authSub?: Subscription;
@@ -33,6 +36,7 @@ export class NotificationService implements OnDestroy {
     private alquilerService: AlquilerService,
     private facturaService: FacturaService,
     private usuarioService: UsuarioService,
+    private clienteService: ClienteService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
@@ -267,6 +271,28 @@ export class NotificationService implements OnDestroy {
 
   // ===== Client poll =====
   private pollClient(): void {
+    const user = this.authService.currentUserValue;
+
+    // Check profile completeness on first poll
+    if (this.firstPoll && user?.clienteId) {
+      this.clienteService.getClienteById(user.clienteId).subscribe({
+        next: (cliente) => {
+          if (!cliente.telefono || !cliente.direccion || !cliente.apellido) {
+            this.push({
+              id: `profile-incomplete-${Date.now()}`,
+              type: 'profile_incomplete',
+              title: 'Perfil incompleto',
+              message: 'Tienes datos pendientes por actualizar en tu perfil. Estos datos son necesarios para facturación.',
+              icon: 'bi-person-exclamation',
+              iconColor: '#f59e0b',
+              timestamp: new Date(),
+              read: false
+            });
+          }
+        }
+      });
+    }
+
     this.alquilerService.getMisAlquileres().subscribe({
       next: (rentals) => {
         if (this.firstPoll) {

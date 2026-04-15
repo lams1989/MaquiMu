@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ComandoActualizarCliente {
 	private Long clienteId;
+	private Long usuarioId;
 	private String nombreCliente;
 	private String apellido;
 	private String identificacion;

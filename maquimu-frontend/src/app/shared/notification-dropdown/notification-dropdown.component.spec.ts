@@ -1,5 +1,5 @@
 import { AppNotification } from '@core/models/notification.model';
-import { BehaviorSubject, of } from 'rxjs';
+import { BehaviorSubject, of, Subject } from 'rxjs';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NotificationDropdownComponent } from './notification-dropdown.component';
 import { NotificationService } from '@core/services/notification.service';
@@ -43,7 +43,8 @@ describe('NotificationDropdownComponent', () => {
     notifServiceSpy = jasmine.createSpyObj('NotificationService', [
       'markAsRead', 'markAllAsRead', 'dismissNotification', 'clearAll'
     ], {
-      notifications$: notificationsSubject.asObservable()
+      notifications$: notificationsSubject.asObservable(),
+      profileEditRequested$: new Subject<void>()
     });
 
     routerSpy = jasmine.createSpyObj('Router', ['navigate']);
@@ -257,6 +258,30 @@ describe('NotificationDropdownComponent', () => {
       const outsideEvent = new Event('click');
       Object.defineProperty(outsideEvent, 'target', { value: document.body });
       component.onDocumentClick(outsideEvent);
+      expect(component.isOpen).toBeFalse();
+    });
+  });
+
+  // ===== Profile Incomplete Click =====
+  describe('profile_incomplete notification click', () => {
+    it('should emit profileEditRequested$ instead of navigating', () => {
+      const profileNotif: AppNotification = {
+        id: 'profile-1',
+        type: 'profile_incomplete',
+        title: 'Perfil incompleto',
+        message: 'Datos pendientes.',
+        icon: 'bi-person-exclamation',
+        iconColor: '#f59e0b',
+        timestamp: new Date(),
+        read: false
+      };
+
+      spyOn(notifServiceSpy.profileEditRequested$, 'next');
+      component.onNotificationClick(profileNotif);
+
+      expect(notifServiceSpy.markAsRead).toHaveBeenCalledWith('profile-1');
+      expect(notifServiceSpy.profileEditRequested$.next).toHaveBeenCalled();
+      expect(routerSpy.navigate).not.toHaveBeenCalled();
       expect(component.isOpen).toBeFalse();
     });
   });

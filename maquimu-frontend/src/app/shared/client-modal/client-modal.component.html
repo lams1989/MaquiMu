@@ -10,9 +10,9 @@
                     </div>
                     <div>
                         <h5 class="modal-title mb-0" id="clientModalLabel">
-                            {{ isEditMode ? 'Editar Cliente' : 'Registrar Nuevo Cliente' }}
+                            {{ modoAutoservicio ? 'Editar Perfil' : (isEditMode ? 'Editar Cliente' : 'Registrar Nuevo Cliente') }}
                         </h5>
-                        <p class="modal-subtitle mb-0">{{ isEditMode ? 'Modifique los datos del cliente.' : 'Ingrese los datos legales y de contacto.' }}</p>
+                        <p class="modal-subtitle mb-0">{{ modoAutoservicio ? 'Actualice sus datos personales.' : (isEditMode ? 'Modifique los datos del cliente.' : 'Ingrese los datos legales y de contacto.') }}</p>
                     </div>
                 </div>
                 <button type="button" class="btn-close-modal" aria-label="Close" (click)="cancel()">
@@ -31,7 +31,7 @@
 
                 <form [formGroup]="clientForm">
                     <!-- Tipo de Cliente -->
-                    <div class="mb-4" *ngIf="!isEditMode">
+                    <div class="mb-4" *ngIf="!isEditMode && !modoAutoservicio">
                         <label class="form-label fw-semibold">Tipo de Cliente</label>
                         <div class="d-flex gap-4">
                             <div class="form-check">
@@ -129,8 +129,8 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Rol (solo en edición y si tiene usuario asociado) -->
-                        <div class="col-md-6 mb-3" *ngIf="isEditMode && cliente?.usuarioId">
+                        <!-- Rol (solo en edición y si tiene usuario asociado, NO en autoservicio) -->
+                        <div class="col-md-6 mb-3" *ngIf="!modoAutoservicio && isEditMode && cliente?.usuarioId">
                             <label for="rol" class="form-label">Rol de Usuario</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-shield-lock"></i></span>
@@ -177,7 +177,7 @@
                 </button>
                 <button type="button" class="btn btn-save-client" (click)="saveClient()" [disabled]="clientForm.invalid">
                     <i class="bi me-1" [ngClass]="isEditMode ? 'bi-check-circle' : 'bi-floppy'"></i>
-                    {{ isEditMode ? 'Actualizar Cliente' : 'Guardar Cliente' }}
+                    {{ modoAutoservicio ? 'Guardar' : (isEditMode ? 'Actualizar Cliente' : 'Guardar Cliente') }}
                 </button>
             </div>
         </div>

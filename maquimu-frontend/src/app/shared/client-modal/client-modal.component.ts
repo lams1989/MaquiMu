@@ -15,6 +15,7 @@ import { UsuarioService } from '@core/services/usuario.service';
 })
 export class ClientModalComponent implements OnInit {
   @Input() cliente: Cliente | null = null;
+  @Input() modoAutoservicio: boolean = false;
   @Output() close = new EventEmitter<void>();
 
   clientForm!: FormGroup;
@@ -32,7 +33,7 @@ export class ClientModalComponent implements OnInit {
   ngOnInit(): void {
     this.isEditMode = !!this.cliente;
     this.initializeForm();
-    if (this.isEditMode && this.cliente?.usuarioId) {
+    if (this.isEditMode && this.cliente?.usuarioId && !this.modoAutoservicio) {
       this.cargarRolUsuario(this.cliente.usuarioId);
     }
   }
@@ -91,7 +92,7 @@ export class ClientModalComponent implements OnInit {
       };
 
       const nuevoRol = this.clientForm.get('rol')?.value;
-      const cambioRol = this.cliente.usuarioId && nuevoRol && nuevoRol !== this.rolActual;
+      const cambioRol = !this.modoAutoservicio && this.cliente.usuarioId && nuevoRol && nuevoRol !== this.rolActual;
 
       const updateCliente$ = this.clienteService.updateCliente(this.cliente.clienteId, updateRequest);
 

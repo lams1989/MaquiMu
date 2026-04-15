@@ -79,13 +79,13 @@ class ManejadorRegistrarUsuarioTest {
 		@Test
 		@DisplayName("Debe lanzar excepción si el email ya está registrado")
 		void ejecutar_emailExistente_deberiaLanzarExcepcion() {
-			ComandoRegistrarUsuario comando = crearComandoOperario();
+			ComandoRegistrarUsuario comando = crearComandoCliente();
 			when(usuarioDao.existePorEmail(comando.getEmail())).thenReturn(true);
 
 			IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
 					() -> manejadorRegistrarUsuario.ejecutar(comando));
 
-			assertEquals("El email ya está registrado: juan@maquimu.com", exception.getMessage());
+			assertEquals("El email ya está registrado: maria@correo.com", exception.getMessage());
 			verify(usuarioDao).existePorEmail(comando.getEmail());
 			verify(servicioHashing, never()).hashear(any());
 			verify(fabricaUsuario, never()).crear(any(), any());
@@ -93,50 +93,24 @@ class ManejadorRegistrarUsuarioTest {
 		}
 	}
 
-	// --- Tests: Registro de Operario ---
+	// --- Tests: Registro de CLIENTE (auto-registro fuerza rol CLIENTE) ---
 
 	@Nested
-	@DisplayName("Registro de usuario OPERARIO")
-	class RegistroOperario {
+	@DisplayName("Validación de nombre y apellido")
+	class ValidacionNombreApellido {
 
 		@Test
-		@DisplayName("Debe registrar un operario correctamente")
-		void ejecutar_operarioValido_deberiaRegistrarCorrectamente() {
-			ComandoRegistrarUsuario comando = crearComandoOperario();
-			Usuario usuarioCreado = crearUsuarioGuardado(null, "Juan Pérez", "juan@maquimu.com", RolUsuario.OPERARIO);
-			Usuario usuarioGuardado = crearUsuarioGuardado(1L, "Juan Pérez", "juan@maquimu.com", RolUsuario.OPERARIO);
+		@DisplayName("Debe lanzar excepción si nombre y apellido están vacíos")
+		void ejecutar_sinNombreApellido_deberiaLanzarExcepcion() {
+			ComandoRegistrarUsuario comando = ComandoRegistrarUsuario.builder()
+					.nombre("").apellido("").email("test@correo.com")
+					.password("clave456").rol(RolUsuario.CLIENTE).identificacion("1234567890").build();
 
-			when(usuarioDao.existePorEmail(comando.getEmail())).thenReturn(false);
-			when(servicioHashing.hashear(comando.getPassword())).thenReturn("hashedPassword");
-			when(fabricaUsuario.crear(comando, "hashedPassword")).thenReturn(usuarioCreado);
-			when(usuarioRepositorio.guardar(usuarioCreado)).thenReturn(usuarioGuardado);
+			IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+					() -> manejadorRegistrarUsuario.ejecutar(comando));
 
-			assertDoesNotThrow(() -> manejadorRegistrarUsuario.ejecutar(comando));
-
-			verify(usuarioDao).existePorEmail(comando.getEmail());
-			verify(servicioHashing).hashear("password123");
-			verify(fabricaUsuario).crear(comando, "hashedPassword");
-			verify(usuarioRepositorio).guardar(usuarioCreado);
-			// No debe crear cliente para un operario
-			verify(clienteRepositorio, never()).guardar(any(Cliente.class));
-		}
-
-		@Test
-		@DisplayName("No debe crear registro de cliente para un operario")
-		void ejecutar_operario_noDeberiaCrearCliente() {
-			ComandoRegistrarUsuario comando = crearComandoOperario();
-			Usuario usuarioCreado = crearUsuarioGuardado(null, "Juan Pérez", "juan@maquimu.com", RolUsuario.OPERARIO);
-			Usuario usuarioGuardado = crearUsuarioGuardado(1L, "Juan Pérez", "juan@maquimu.com", RolUsuario.OPERARIO);
-
-			when(usuarioDao.existePorEmail(comando.getEmail())).thenReturn(false);
-			when(servicioHashing.hashear(any())).thenReturn("hashedPassword");
-			when(fabricaUsuario.crear(any(), any())).thenReturn(usuarioCreado);
-			when(usuarioRepositorio.guardar(any())).thenReturn(usuarioGuardado);
-
-			manejadorRegistrarUsuario.ejecutar(comando);
-
-			verify(fabricaCliente, never()).crearDesdeUsuario(any(), any(), any(), any());
-			verify(clienteRepositorio, never()).guardar(any());
+			assertEquals("El nombre y apellido son requeridos", exception.getMessage());
+			verify(usuarioRepositorio, never()).guardar(any());
 		}
 	}
 
@@ -222,19 +196,23 @@ class ManejadorRegistrarUsuarioTest {
 		@Test
 		@DisplayName("Debe hashear la contraseña antes de persistir")
 		void ejecutar_deberiaHashearPasswordAntesDeGuardar() {
-			ComandoRegistrarUsuario comando = crearComandoOperario();
+			ComandoRegistrarUsuario comando = crearComandoCliente();
 			String passwordHashEsperado = "$2a$10$abcdef123456";
+			Usuario usuarioCreado = crearUsuarioGuardado(null, "María López", "maria@correo.com", RolUsuario.CLIENTE);
+			Usuario usuarioGuardado = crearUsuarioGuardado(2L, "María López", "maria@correo.com", RolUsuario.CLIENTE);
+			Cliente clienteCreado = Cliente.builder().usuarioId(2L).nombreCliente("María").apellido("López")
+					.identificacion("1234567890").email("maria@correo.com").fechaRegistro(LocalDateTime.now()).build();
 
 			when(usuarioDao.existePorEmail(any())).thenReturn(false);
-			when(servicioHashing.hashear("password123")).thenReturn(passwordHashEsperado);
-			when(fabricaUsuario.crear(eq(comando), eq(passwordHashEsperado)))
-					.thenReturn(crearUsuarioGuardado(null, "Juan Pérez", "juan@maquimu.com", RolUsuario.OPERARIO));
-			when(usuarioRepositorio.guardar(any()))
-					.thenReturn(crearUsuarioGuardado(1L, "Juan Pérez", "juan@maquimu.com", RolUsuario.OPERARIO));
+			when(servicioHashing.hashear("clave456")).thenReturn(passwordHashEsperado);
+			when(fabricaUsuario.crear(eq(comando), eq(passwordHashEsperado))).thenReturn(usuarioCreado);
+			when(usuarioRepositorio.guardar(any())).thenReturn(usuarioGuardado);
+			when(fabricaCliente.crearDesdeUsuario(usuarioGuardado, "1234567890", "María", "López"))
+					.thenReturn(clienteCreado);
 
 			manejadorRegistrarUsuario.ejecutar(comando);
 
-			verify(servicioHashing).hashear("password123");
+			verify(servicioHashing).hashear("clave456");
 			verify(fabricaUsuario).crear(comando, passwordHashEsperado);
 		}
 	}

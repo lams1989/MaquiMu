@@ -84,7 +84,8 @@ class AuthControllerTest {
 		// Act & Assert
 		mockMvc.perform(post("/api/maquimu/v1/auth/register").contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(comando))).andExpect(status().isOk())
-				.andExpect(jsonPath("$.mensaje").value("Usuario registrado exitosamente"));
+				.andExpect(jsonPath("$.mensaje").value(
+						"Tu cuenta ha sido creada exitosamente. Un operario la revisará en un plazo de 1 a 3 días hábiles."));
 
 		verify(manejadorRegistrarUsuario, times(1)).ejecutar(any(ComandoRegistrarUsuario.class));
 	}
