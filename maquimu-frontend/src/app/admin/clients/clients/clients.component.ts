@@ -23,6 +23,7 @@ export class ClientsComponent implements OnInit {
   showDeleteConfirmModal = false;
   clienteAEliminarId: number | null = null;
   errorMessage = '';
+  clientesLoading = false;
 
   // Tab y aprobación
   activeTab: 'clientes' | 'pendientes' | 'restablecer' = 'clientes';
@@ -68,12 +69,15 @@ export class ClientsComponent implements OnInit {
   // ========== Clientes CRUD ==========
 
   loadClientes(): void {
+    this.clientesLoading = true;
     this.clienteService.getClientes().subscribe({
       next: (data: Cliente[]) => {
         this.clientes = data;
+        this.clientesLoading = false;
       },
       error: (error: any) => {
         console.error('Error al cargar clientes', error);
+        this.clientesLoading = false;
       }
     });
   }
