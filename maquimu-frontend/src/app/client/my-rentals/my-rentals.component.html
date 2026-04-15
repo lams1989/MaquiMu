@@ -100,9 +100,9 @@
               </span>
             </td>
             <td class="text-center">
-              <button class="btn btn-sm btn-outline-primary me-1"
+              <button class="btn btn-sm btn-outline-info me-1" title="Ver detalle"
                       (click)="verDetalle(alquiler.alquilerId!)">
-                <i class="bi bi-eye me-1"></i>Detalle
+                <i class="bi bi-info-circle"></i>
               </button>
               <button *ngIf="alquiler.estado === 'ACTIVO'" class="btn btn-sm btn-outline-success"
                       (click)="abrirExtensionModal(alquiler)">
@@ -121,12 +121,12 @@
 <div *ngIf="showDetalle" class="modal fade show d-block" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header bg-primary text-white">
+      <div class="modal-header modal-header-detail">
         <h5 class="modal-title">
-          <i class="bi bi-file-earmark-text me-2"></i>
+          <i class="bi bi-info-circle me-2"></i>
           Detalle del Alquiler
         </h5>
-        <button type="button" class="btn-close btn-close-white" aria-label="Cerrar" (click)="cerrarDetalle()"></button>
+        <button type="button" class="btn-close" aria-label="Cerrar" (click)="cerrarDetalle()"></button>
       </div>
       <div class="modal-body">
         <!-- Loading -->

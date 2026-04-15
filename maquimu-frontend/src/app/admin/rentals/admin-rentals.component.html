@@ -75,7 +75,7 @@
                                     <td class="text-center">
                                         <div class="btn-group btn-group-sm">
                                             <button class="btn btn-outline-info" title="Ver detalle" (click)="verDetalle(alquiler)">
-                                                <i class="bi bi-eye"></i>
+                                                <i class="bi bi-info-circle"></i>
                                             </button>
                                             <button *ngIf="alquiler.estado === 'PENDIENTE'" class="btn btn-outline-success" title="Aprobar" (click)="solicitarAprobar(alquiler)">
                                                 <i class="bi bi-check-lg"></i>
@@ -160,38 +160,59 @@
 <div *ngIf="showDetail && alquilerDetalle" class="modal fade show d-block" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Detalle del Alquiler #{{ alquilerDetalle.alquilerId }}</h5>
+            <div class="modal-header modal-header-detail">
+                <h5 class="modal-title"><i class="bi bi-info-circle me-2"></i>Detalle del Alquiler #{{ alquilerDetalle.alquilerId }}</h5>
                 <button type="button" class="btn-close" (click)="cerrarDetalle()"></button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <p><strong>ID Alquiler:</strong> {{ alquilerDetalle.alquilerId }}</p>
-                        <p><strong>ID Cliente:</strong> {{ alquilerDetalle.clienteId }}</p>
-                        <p><strong>Cliente:</strong> {{ getClienteNombre(alquilerDetalle.clienteId) }}</p>
-                        <p><strong>ID Maquinaria:</strong> {{ alquilerDetalle.maquinariaId }}</p>
-                        <p><strong>ID Operario:</strong> {{ alquilerDetalle.usuarioId || 'Sin asignar' }}</p>
+                <div class="row g-3">
+                    <div class="col-6">
+                        <label class="form-label text-muted small mb-0">ID Alquiler</label>
+                        <p class="fw-bold mb-0">{{ alquilerDetalle.alquilerId }}</p>
                     </div>
-                    <div class="col-md-6">
-                        <p><strong>Fecha Inicio:</strong> {{ alquilerDetalle.fechaInicio | date:'medium' }}</p>
-                        <p><strong>Fecha Fin:</strong> {{ alquilerDetalle.fechaFin | date:'medium' }}</p>
-                        <p><strong>Costo Total:</strong> {{ sensitiveData.visible ? (alquilerDetalle.costoTotal | currency:'COP':'symbol':'1.0-0') : '••••••' }}</p>
-                        <p><strong>Estado:</strong>
-                            <span class="badge" [ngClass]="getBadgeClass(alquilerDetalle.estado)">
+                    <div class="col-6">
+                        <label class="form-label text-muted small mb-0">Estado</label>
+                        <p class="mb-0">
+                            <span class="badge rounded-pill" [ngClass]="getBadgeClass(alquilerDetalle.estado)">
                                 {{ getEstadoLabel(alquilerDetalle.estado) }}
                             </span>
                         </p>
                     </div>
-                </div>
-                <div *ngIf="alquilerDetalle.motivoRechazo" class="mt-3">
-                    <p><strong>Motivo de Rechazo:</strong></p>
-                    <p class="text-muted">{{ alquilerDetalle.motivoRechazo }}</p>
+                    <div class="col-6">
+                        <label class="form-label text-muted small mb-0">Cliente</label>
+                        <p class="fw-bold mb-0">{{ getClienteNombre(alquilerDetalle.clienteId) }}</p>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label text-muted small mb-0">ID Maquinaria</label>
+                        <p class="fw-bold mb-0">{{ alquilerDetalle.maquinariaId }}</p>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label text-muted small mb-0">Fecha Inicio</label>
+                        <p class="fw-bold mb-0">{{ alquilerDetalle.fechaInicio | date:'dd/MM/yyyy' }}</p>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label text-muted small mb-0">Fecha Fin</label>
+                        <p class="fw-bold mb-0">{{ alquilerDetalle.fechaFin | date:'dd/MM/yyyy' }}</p>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label text-muted small mb-0">Costo Total</label>
+                        <p class="fw-bold text-success mb-0">{{ sensitiveData.visible ? (alquilerDetalle.costoTotal | currency:'COP':'symbol':'1.0-0') : '••••••' }}</p>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label text-muted small mb-0">Operario</label>
+                        <p class="fw-bold mb-0">{{ alquilerDetalle.usuarioId || 'Sin asignar' }}</p>
+                    </div>
+                    <div class="col-12" *ngIf="alquilerDetalle.motivoRechazo">
+                        <label class="form-label text-muted small mb-0">Motivo de Rechazo</label>
+                        <div class="alert alert-danger py-2 mb-0">
+                            <i class="bi bi-exclamation-circle me-1"></i>{{ alquilerDetalle.motivoRechazo }}
+                        </div>
+                    </div>
                 </div>
                 <div *ngIf="alquilerDetalle.fechaFinSolicitada" class="mt-3 card bg-light border-primary">
                     <div class="card-body py-2">
                         <h6 class="fw-bold text-primary mb-2"><i class="bi bi-calendar-plus me-1"></i>Solicitud de Extensión</h6>
-                        <p class="mb-1"><strong>Fecha Fin Solicitada:</strong> {{ alquilerDetalle.fechaFinSolicitada | date:'medium' }}</p>
+                        <p class="mb-1"><strong>Fecha Fin Solicitada:</strong> {{ alquilerDetalle.fechaFinSolicitada | date:'dd/MM/yyyy' }}</p>
                         <p class="mb-0"><strong>Costo Adicional:</strong> {{ sensitiveData.visible ? (alquilerDetalle.costoAdicional | currency:'COP':'symbol':'1.0-0') : '••••••' }}</p>
                     </div>
                 </div>

@@ -80,7 +80,7 @@
               </td>
               <td class="text-center">
                 <button class="btn btn-sm btn-outline-info me-1" (click)="verDetalle(factura)" title="Ver detalle">
-                  <i class="bi bi-eye"></i>
+                  <i class="bi bi-info-circle"></i>
                 </button>
                 <button class="btn btn-sm btn-outline-danger" (click)="descargarPdf(factura.facturaId!)" title="Descargar PDF">
                   <i class="bi bi-file-earmark-pdf"></i>
@@ -99,11 +99,11 @@
 <div *ngIf="showDetalle" class="modal fade show d-block" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
-      <div class="modal-header bg-info text-white">
+      <div class="modal-header modal-header-detail">
         <h5 class="modal-title">
-          <i class="bi bi-receipt me-2"></i>Detalle Factura #{{ facturaDetalle?.facturaId }}
+          <i class="bi bi-info-circle me-2"></i>Detalle Factura #{{ facturaDetalle?.facturaId }}
         </h5>
-        <button type="button" class="btn-close btn-close-white" (click)="cerrarDetalle()"></button>
+        <button type="button" class="btn-close" (click)="cerrarDetalle()"></button>
       </div>
       <div class="modal-body" *ngIf="facturaDetalle">
         <div class="row g-3">
