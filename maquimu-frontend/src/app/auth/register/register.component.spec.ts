@@ -39,9 +39,9 @@ describe('RegisterComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize register form with default CLIENTE role', () => {
+  it('should initialize register form without rol field (hardcoded as CLIENTE)', () => {
     expect(component.registerForm).toBeDefined();
-    expect(component.registerForm.get('rol')?.value).toBe('CLIENTE');
+    expect(component.registerForm.get('rol')).toBeNull();
   });
 
   it('should validate nombre as required with minimum length', () => {
@@ -154,7 +154,7 @@ describe('RegisterComponent', () => {
     expect(component.registerForm.get('apellido')?.hasError('required')).toBe(true);
   });
 
-  it('should preserve OPERARIO role when submitting with nombre and apellido', () => {
+  it('should always submit with CLIENTE role regardless of any attempt to change it', () => {
     authService.register.and.returnValue(of({ mensaje: 'Éxito' }));
 
     component.registerForm.patchValue({
@@ -163,14 +163,13 @@ describe('RegisterComponent', () => {
       email: 'operario@example.com',
       password: 'password123',
       confirmPassword: 'password123',
-      identificacion: '987654321',
-      rol: 'OPERARIO'
+      identificacion: '987654321'
     });
 
     component.onSubmit();
 
     expect(authService.register).toHaveBeenCalledWith(
-      jasmine.objectContaining({ rol: 'OPERARIO', nombreCompleto: 'Carlos Operario' })
+      jasmine.objectContaining({ rol: 'CLIENTE', nombreCompleto: 'Carlos Operario' })
     );
   });
 
@@ -313,8 +312,8 @@ describe('RegisterComponent', () => {
     });
   });
 
-  it('should redirect to login with registered query param on successful registration', () => {
-    authService.register.and.returnValue(of({ mensaje: 'Éxito' }));
+  it('should set registroExitoso and success message on successful registration', () => {
+    authService.register.and.returnValue(of({ mensaje: 'Tu cuenta ha sido creada exitosamente.' }));
 
     component.registerForm.patchValue({
       nombre: 'Test',
@@ -322,16 +321,13 @@ describe('RegisterComponent', () => {
       email: 'test@example.com',
       password: 'password123',
       confirmPassword: 'password123',
-      identificacion: '123456789',
-      rol: 'CLIENTE'
+      identificacion: '123456789'
     });
 
     component.onSubmit();
 
-    expect(router.navigate).toHaveBeenCalledWith(
-      ['/auth/login'],
-      { queryParams: { registered: 'true' } }
-    );
+    expect(component.registroExitoso).toBe(true);
+    expect(component.successMessage).toBe('Tu cuenta ha sido creada exitosamente.');
     expect(component.isLoading).toBe(false);
   });
 
@@ -416,23 +412,9 @@ describe('RegisterComponent', () => {
     expect(component.errorMessage).toBe('');
   });
 
-  it('should accept OPERARIO role', () => {
-    authService.register.and.returnValue(of({ mensaje: 'Éxito' }));
+  it('should call volverAlLogin and navigate to login', () => {
+    component.volverAlLogin();
 
-    component.registerForm.patchValue({
-      nombre: 'Operario',
-      apellido: 'Test',
-      email: 'operario@example.com',
-      password: 'password123',
-      confirmPassword: 'password123',
-      identificacion: '987654321',
-      rol: 'OPERARIO'
-    });
-
-    component.onSubmit();
-
-    expect(authService.register).toHaveBeenCalledWith(
-      jasmine.objectContaining({ rol: 'OPERARIO' })
-    );
+    expect(router.navigate).toHaveBeenCalledWith(['/auth/login']);
   });
 });

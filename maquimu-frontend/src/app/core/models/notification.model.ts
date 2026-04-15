@@ -23,4 +23,5 @@ export type NotificationType =
   | 'extension_approved'
   | 'extension_rejected'
   | 'password_reset_request'
+  | 'profile_incomplete'
   | 'system';

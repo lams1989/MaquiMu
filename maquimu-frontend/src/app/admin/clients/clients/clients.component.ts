@@ -1,6 +1,6 @@
 import { Cliente } from '@core/models/cliente.model';
 import { ClienteService } from '@core/services/cliente.service';
-import { ClientModalComponent } from '../client-modal/client-modal.component';
+import { ClientModalComponent } from '@shared/client-modal/client-modal.component';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';

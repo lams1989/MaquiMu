@@ -27,6 +27,16 @@
             <i class="bi bi-chevron-down ms-1" style="font-size: 0.7rem;"></i>
             <!-- User dropdown -->
             <div *ngIf="showUserMenu" class="user-dropdown-menu">
+                <!-- Tarjeta de presentación -->
+                <div class="user-card">
+                    <strong class="user-card-name">{{ currentUser?.nombreCompleto || 'Usuario' }}</strong>
+                    <small class="user-card-email">{{ currentUser?.email }}</small>
+                    <span class="user-card-role">{{ currentUser?.rol === 'OPERARIO' ? 'Operario' : 'Cliente' }}</span>
+                </div>
+                <div class="user-dropdown-divider"></div>
+                <a *ngIf="currentUser?.rol === 'CLIENTE'" class="user-dropdown-item" (click)="openEditProfileModal($event)">
+                    <i class="bi bi-person-gear me-2"></i>Editar información de usuario
+                </a>
                 <a class="user-dropdown-item" (click)="openChangePasswordModal($event)">
                     <i class="bi bi-key me-2"></i>Cambiar Contraseña
                 </a>
@@ -162,3 +172,11 @@
     </div>
   </div>
 </div>
+
+<!-- Modal: Editar Perfil -->
+<app-client-modal
+  *ngIf="showEditProfileModal"
+  [cliente]="clienteParaEditar"
+  [modoAutoservicio]="true"
+  (close)="onProfileModalClose()">
+</app-client-modal>

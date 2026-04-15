@@ -1,11 +1,13 @@
 import { AuthService } from '../../core/services/auth/auth.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { ClienteService } from '../../core/services/cliente.service';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NavbarComponent } from './navbar.component';
 import { NotificationDropdownComponent } from '../notification-dropdown/notification-dropdown.component';
 import { NotificationService } from '../../core/services/notification.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Usuario } from '../../core/models/auth/login-register.models';
+import { UsuarioService } from '../../core/services/usuario.service';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
@@ -23,7 +25,7 @@ describe('NavbarComponent', () => {
   beforeEach(async () => {
     currentUserSubject = new BehaviorSubject<Usuario | null>(null);
 
-    authServiceSpy = jasmine.createSpyObj('AuthService', ['logout'], {
+    authServiceSpy = jasmine.createSpyObj('AuthService', ['logout', 'updateCurrentUser'], {
       currentUser: currentUserSubject.asObservable(),
       currentUserValue: null
     });
@@ -31,14 +33,20 @@ describe('NavbarComponent', () => {
     const notifServiceSpy = jasmine.createSpyObj('NotificationService', [
       'markAsRead', 'markAllAsRead', 'dismissNotification', 'clearAll'
     ], {
-      notifications$: new BehaviorSubject([]).asObservable()
+      notifications$: new BehaviorSubject([]).asObservable(),
+      profileEditRequested$: new Subject<void>()
     });
+
+    const clienteServiceSpy = jasmine.createSpyObj('ClienteService', ['getClienteById']);
+    const usuarioServiceSpy = jasmine.createSpyObj('UsuarioService', ['cambiarPassword']);
 
     await TestBed.configureTestingModule({
       imports: [NavbarComponent, RouterTestingModule],
       providers: [
         { provide: AuthService, useValue: authServiceSpy },
-        { provide: NotificationService, useValue: notifServiceSpy }
+        { provide: NotificationService, useValue: notifServiceSpy },
+        { provide: ClienteService, useValue: clienteServiceSpy },
+        { provide: UsuarioService, useValue: usuarioServiceSpy }
       ]
     })
     .compileComponents();
@@ -73,9 +81,9 @@ describe('NavbarComponent', () => {
       expect(dropdown).toBeTruthy();
     });
 
-    it('should display logout button', () => {
-      const logoutBtn = fixture.nativeElement.querySelector('.nav-logout');
-      expect(logoutBtn).toBeTruthy();
+    it('should display user pill', () => {
+      const userPill = fixture.nativeElement.querySelector('.user-pill');
+      expect(userPill).toBeTruthy();
     });
   });
 
@@ -103,9 +111,8 @@ describe('NavbarComponent', () => {
   });
 
   describe('logout', () => {
-    it('should call authService.logout() when logout button is clicked', () => {
-      const logoutBtn = fixture.nativeElement.querySelector('.nav-logout');
-      logoutBtn.click();
+    it('should call authService.logout() when logout is invoked', () => {
+      component.logout();
       expect(authServiceSpy.logout).toHaveBeenCalled();
     });
   });

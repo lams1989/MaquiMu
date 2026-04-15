@@ -20,6 +20,9 @@ import org.mockito.MockitoAnnotations;
 
 import com.maquimu.aplicacion.cliente.comando.ComandoActualizarCliente;
 import com.maquimu.aplicacion.cliente.comando.fabrica.FabricaCliente;
+import com.maquimu.dominio.autenticacion.modelo.Usuario;
+import com.maquimu.dominio.autenticacion.puerto.dao.UsuarioDao;
+import com.maquimu.dominio.autenticacion.puerto.repositorio.UsuarioRepositorio;
 import com.maquimu.dominio.cliente.modelo.Cliente;
 import com.maquimu.dominio.cliente.puerto.dao.ClienteDao;
 import com.maquimu.dominio.cliente.puerto.repositorio.ClienteRepositorio;
@@ -32,6 +35,10 @@ class ManejadorActualizarClienteTest {
 	private ClienteRepositorio clienteRepositorio;
 	@Mock
 	private ClienteDao clienteDao;
+	@Mock
+	private UsuarioDao usuarioDao;
+	@Mock
+	private UsuarioRepositorio usuarioRepositorio;
 
 	@InjectMocks
 	private ManejadorActualizarCliente manejadorActualizarCliente;
@@ -180,5 +187,89 @@ class ManejadorActualizarClienteTest {
 		verify(clienteDao, times(1)).buscarPorEmail("juan@example.com");
 		verify(fabricaCliente, times(1)).actualizar(clienteExistente, comando);
 		verify(clienteRepositorio, times(1)).guardar(clienteActualizado);
+	}
+
+	@Test
+	void ejecutar_emailCambiado_deberiaSincronizarEmailUsuario() {
+		Long clienteId = 1L;
+		Long usuarioId = 5L;
+		LocalDateTime fechaOriginal = LocalDateTime.of(2025, 6, 1, 10, 0);
+
+		Cliente clienteExistente = Cliente.builder().clienteId(clienteId).nombreCliente("Juan Pérez")
+				.identificacion("1234567890").email("juan@example.com").fechaRegistro(fechaOriginal).build();
+
+		ComandoActualizarCliente comando = ComandoActualizarCliente.builder().clienteId(clienteId).usuarioId(usuarioId)
+				.nombreCliente("Juan Pérez").identificacion("1234567890").email("juan.nuevo@example.com").build();
+
+		Cliente clienteActualizado = Cliente.builder().clienteId(clienteId).nombreCliente("Juan Pérez")
+				.identificacion("1234567890").email("juan.nuevo@example.com").fechaRegistro(fechaOriginal).build();
+
+		Usuario usuario = Usuario.builder().id(usuarioId).email("juan@example.com").build();
+
+		when(clienteDao.buscarPorId(clienteId)).thenReturn(Optional.of(clienteExistente));
+		when(clienteDao.buscarPorIdentificacion("1234567890")).thenReturn(Optional.of(clienteExistente));
+		when(clienteDao.buscarPorEmail("juan.nuevo@example.com")).thenReturn(Optional.empty());
+		when(fabricaCliente.actualizar(clienteExistente, comando)).thenReturn(clienteActualizado);
+		when(clienteRepositorio.guardar(clienteActualizado)).thenReturn(clienteActualizado);
+		when(usuarioDao.buscarPorId(usuarioId)).thenReturn(Optional.of(usuario));
+
+		manejadorActualizarCliente.ejecutar(comando);
+
+		verify(usuarioDao, times(1)).buscarPorId(usuarioId);
+		verify(usuarioRepositorio, times(1)).guardar(usuario);
+		assertEquals("juan.nuevo@example.com", usuario.getEmail());
+	}
+
+	@Test
+	void ejecutar_emailNoCambiado_noDeberiaSincronizarEmailUsuario() {
+		Long clienteId = 1L;
+		Long usuarioId = 5L;
+		LocalDateTime fechaOriginal = LocalDateTime.of(2025, 6, 1, 10, 0);
+
+		Cliente clienteExistente = Cliente.builder().clienteId(clienteId).nombreCliente("Juan Pérez")
+				.identificacion("1234567890").email("juan@example.com").fechaRegistro(fechaOriginal).build();
+
+		ComandoActualizarCliente comando = ComandoActualizarCliente.builder().clienteId(clienteId).usuarioId(usuarioId)
+				.nombreCliente("Juan Pérez Modificado").identificacion("1234567890").email("juan@example.com").build();
+
+		Cliente clienteActualizado = Cliente.builder().clienteId(clienteId).nombreCliente("Juan Pérez Modificado")
+				.identificacion("1234567890").email("juan@example.com").fechaRegistro(fechaOriginal).build();
+
+		when(clienteDao.buscarPorId(clienteId)).thenReturn(Optional.of(clienteExistente));
+		when(clienteDao.buscarPorIdentificacion("1234567890")).thenReturn(Optional.of(clienteExistente));
+		when(clienteDao.buscarPorEmail("juan@example.com")).thenReturn(Optional.of(clienteExistente));
+		when(fabricaCliente.actualizar(clienteExistente, comando)).thenReturn(clienteActualizado);
+		when(clienteRepositorio.guardar(clienteActualizado)).thenReturn(clienteActualizado);
+
+		manejadorActualizarCliente.ejecutar(comando);
+
+		verify(usuarioDao, never()).buscarPorId(any());
+		verify(usuarioRepositorio, never()).guardar(any(Usuario.class));
+	}
+
+	@Test
+	void ejecutar_sinUsuarioId_noDeberiaSincronizarEmailUsuario() {
+		Long clienteId = 1L;
+		LocalDateTime fechaOriginal = LocalDateTime.of(2025, 6, 1, 10, 0);
+
+		Cliente clienteExistente = Cliente.builder().clienteId(clienteId).nombreCliente("Juan Pérez")
+				.identificacion("1234567890").email("juan@example.com").fechaRegistro(fechaOriginal).build();
+
+		ComandoActualizarCliente comando = ComandoActualizarCliente.builder().clienteId(clienteId)
+				.nombreCliente("Juan Pérez").identificacion("1234567890").email("juan.nuevo@example.com").build();
+
+		Cliente clienteActualizado = Cliente.builder().clienteId(clienteId).nombreCliente("Juan Pérez")
+				.identificacion("1234567890").email("juan.nuevo@example.com").fechaRegistro(fechaOriginal).build();
+
+		when(clienteDao.buscarPorId(clienteId)).thenReturn(Optional.of(clienteExistente));
+		when(clienteDao.buscarPorIdentificacion("1234567890")).thenReturn(Optional.of(clienteExistente));
+		when(clienteDao.buscarPorEmail("juan.nuevo@example.com")).thenReturn(Optional.empty());
+		when(fabricaCliente.actualizar(clienteExistente, comando)).thenReturn(clienteActualizado);
+		when(clienteRepositorio.guardar(clienteActualizado)).thenReturn(clienteActualizado);
+
+		manejadorActualizarCliente.ejecutar(comando);
+
+		verify(usuarioDao, never()).buscarPorId(any());
+		verify(usuarioRepositorio, never()).guardar(any(Usuario.class));
 	}
 }
