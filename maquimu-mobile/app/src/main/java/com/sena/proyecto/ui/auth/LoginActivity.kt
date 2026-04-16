@@ -4,9 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
-import android.widget.Toast
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -30,6 +32,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         super.onCreate(savedInstanceState)
 
         // Si ya está autenticado, ir directo al dashboard
@@ -90,7 +93,7 @@ class LoginActivity : AppCompatActivity() {
                 is LoginViewModel.LoginState.Error -> {
                     progressBar.visibility = View.GONE
                     loginButton.isEnabled = true
-                    Toast.makeText(this, state.message, Toast.LENGTH_LONG).show()
+                    showSnackbar(state.message)
                 }
                 is LoginViewModel.LoginState.Idle -> {
                     progressBar.visibility = View.GONE
@@ -142,10 +145,17 @@ class LoginActivity : AppCompatActivity() {
                 if (email.isNotEmpty()) {
                     viewModel.requestPasswordReset(email)
                 } else {
-                    Toast.makeText(this, "Ingresa tu correo electrónico", Toast.LENGTH_SHORT).show()
+                    showSnackbar("Ingresa tu correo electrónico")
                 }
             }
             .setNegativeButton("Cancelar", null)
             .show()
+    }
+
+    private fun showSnackbar(message: String) {
+        val snackbar = Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG)
+        val textView = snackbar.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+        textView.maxLines = 5
+        snackbar.show()
     }
 }

@@ -8,8 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.google.android.material.snackbar.Snackbar
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -104,10 +104,10 @@ class InvoicesFragment : Fragment() {
         viewModel.downloadState.observe(viewLifecycleOwner) { dState ->
             when (dState) {
                 is InvoicesViewModel.DownloadState.Loading -> {
-                    Toast.makeText(requireContext(), "Descargando PDF...", Toast.LENGTH_SHORT).show()
+                    showSnackbar("Descargando PDF...")
                 }
                 is InvoicesViewModel.DownloadState.Success -> {
-                    Toast.makeText(requireContext(), "PDF descargado", Toast.LENGTH_SHORT).show()
+                    showSnackbar("PDF descargado")
                     try {
                         val intent = Intent(Intent.ACTION_VIEW).apply {
                             setDataAndType(Uri.parse(dState.filePath), "application/pdf")
@@ -120,11 +120,20 @@ class InvoicesFragment : Fragment() {
                     viewModel.clearDownloadState()
                 }
                 is InvoicesViewModel.DownloadState.Error -> {
-                    Toast.makeText(requireContext(), dState.message, Toast.LENGTH_LONG).show()
+                    showSnackbar(dState.message)
                     viewModel.clearDownloadState()
                 }
                 is InvoicesViewModel.DownloadState.Idle -> { /* noop */ }
             }
+        }
+    }
+
+    private fun showSnackbar(message: String) {
+        view?.let {
+            val snackbar = Snackbar.make(it, message, Snackbar.LENGTH_LONG)
+            val textView = snackbar.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+            textView.maxLines = 5
+            snackbar.show()
         }
     }
 }

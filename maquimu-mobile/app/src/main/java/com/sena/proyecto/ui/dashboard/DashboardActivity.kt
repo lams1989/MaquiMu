@@ -2,9 +2,11 @@ package com.sena.proyecto.ui.dashboard
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sena.proyecto.R
 import com.sena.proyecto.data.repository.AuthRepository
 import com.sena.proyecto.ui.auth.LoginActivity
@@ -19,6 +21,7 @@ class DashboardActivity : AppCompatActivity() {
 
         initializeViews()
         setupBottomNavigation()
+        setupBackNavigation()
 
         // Mostrar el dashboard por defecto
         if (savedInstanceState == null) {
@@ -27,6 +30,27 @@ class DashboardActivity : AppCompatActivity() {
                 .commit()
             bottomNavigation.selectedItemId = R.id.nav_dashboard
         }
+    }
+
+    private fun setupBackNavigation() {
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Si no está en el tab de Dashboard, volver al tab Dashboard
+                if (bottomNavigation.selectedItemId != R.id.nav_dashboard) {
+                    bottomNavigation.selectedItemId = R.id.nav_dashboard
+                } else {
+                    // Si ya está en Dashboard, preguntar si quiere salir
+                    MaterialAlertDialogBuilder(this@DashboardActivity)
+                        .setTitle("Salir de MaquiMu")
+                        .setMessage("¿Estás seguro de que deseas salir de la aplicación?")
+                        .setPositiveButton("Salir") { _, _ ->
+                            finishAffinity()
+                        }
+                        .setNegativeButton("Cancelar", null)
+                        .show()
+                }
+            }
+        })
     }
 
     private fun initializeViews() {

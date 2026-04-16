@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -18,6 +17,7 @@ import com.sena.proyecto.data.model.Cliente
 import com.sena.proyecto.data.repository.AuthRepository
 import com.sena.proyecto.data.repository.ClienteRepository
 import com.sena.proyecto.utils.FormatUtils
+import com.google.android.material.snackbar.Snackbar
 
 class ProfileFragment : Fragment() {
 
@@ -102,11 +102,11 @@ class ProfileFragment : Fragment() {
         viewModel.updateState.observe(viewLifecycleOwner) { uState ->
             when (uState) {
                 is ProfileViewModel.UpdateState.Success -> {
-                    Toast.makeText(requireContext(), uState.message, Toast.LENGTH_SHORT).show()
+                    showSnackbar(uState.message)
                     viewModel.clearUpdateState()
                 }
                 is ProfileViewModel.UpdateState.Error -> {
-                    Toast.makeText(requireContext(), uState.message, Toast.LENGTH_LONG).show()
+                    showSnackbar(uState.message)
                     viewModel.clearUpdateState()
                 }
                 else -> { /* Idle / Loading */ }
@@ -168,5 +168,14 @@ class ProfileFragment : Fragment() {
             }
             .setNegativeButton("Cancelar", null)
             .show()
+    }
+
+    private fun showSnackbar(message: String) {
+        view?.let {
+            val snackbar = Snackbar.make(it, message, Snackbar.LENGTH_LONG)
+            val textView = snackbar.view.findViewById<android.widget.TextView>(com.google.android.material.R.id.snackbar_text)
+            textView.maxLines = 5
+            snackbar.show()
+        }
     }
 }
