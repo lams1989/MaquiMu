@@ -1,10 +1,9 @@
 package com.sena.proyecto.utils
 
 object Constants {
-    // Emulador Android usa 10.0.2.2 para acceder a localhost del host
-    // Para producción, cambiar a la URL del backend desplegado:
-    // const val BASE_URL = "https://maquimu.onrender.com/api/"
-    const val BASE_URL = "http://10.0.2.2:8080/api/"
+    // Para desarrollo local con emulador, usar:
+    // const val BASE_URL = "http://10.0.2.2:8080/api/"
+    const val BASE_URL = "https://maquimu.onrender.com/api/"
 
     // SharedPreferences
     const val PREFS_NAME = "maquimu_prefs"

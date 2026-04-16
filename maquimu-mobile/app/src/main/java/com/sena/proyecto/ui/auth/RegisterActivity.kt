@@ -4,9 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
-import android.widget.Toast
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -93,14 +94,18 @@ class RegisterActivity : AppCompatActivity() {
                 is RegisterViewModel.RegisterState.Success -> {
                     progressBar.visibility = View.GONE
                     registerButton.isEnabled = true
-                    Toast.makeText(this, state.message, Toast.LENGTH_LONG).show()
-                    // Volver al login después de registrar
-                    finish()
+                    Snackbar.make(findViewById(android.R.id.content), state.message, Snackbar.LENGTH_LONG)
+                        .addCallback(object : Snackbar.Callback() {
+                            override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                                finish()
+                            }
+                        })
+                        .show()
                 }
                 is RegisterViewModel.RegisterState.Error -> {
                     progressBar.visibility = View.GONE
                     registerButton.isEnabled = true
-                    Toast.makeText(this, state.message, Toast.LENGTH_LONG).show()
+                    showSnackbar(state.message)
                 }
                 is RegisterViewModel.RegisterState.Idle -> {
                     progressBar.visibility = View.GONE
@@ -161,5 +166,12 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         return isValid
+    }
+
+    private fun showSnackbar(message: String) {
+        val snackbar = Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG)
+        val textView = snackbar.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+        textView.maxLines = 5
+        snackbar.show()
     }
 }
