@@ -1,4 +1,4 @@
-package com.sena.proyecto.ui.dashboard
+package com.sena.proyecto.ui.rental
 
 import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater

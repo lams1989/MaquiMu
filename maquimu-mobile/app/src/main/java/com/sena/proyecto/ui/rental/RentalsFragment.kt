@@ -1,4 +1,4 @@
-package com.sena.proyecto.ui.dashboard
+package com.sena.proyecto.ui.rental
 
 import android.os.Bundle
 import android.view.LayoutInflater
