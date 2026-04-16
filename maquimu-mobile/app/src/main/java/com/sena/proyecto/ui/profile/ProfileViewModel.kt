@@ -1,4 +1,4 @@
-package com.sena.proyecto.ui.dashboard
+package com.sena.proyecto.ui.profile
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

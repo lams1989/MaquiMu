@@ -1,4 +1,4 @@
-package com.sena.proyecto.ui.dashboard
+package com.sena.proyecto.ui.profile
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,6 +16,7 @@ import com.sena.proyecto.data.model.ActualizarClienteRequest
 import com.sena.proyecto.data.model.Cliente
 import com.sena.proyecto.data.repository.AuthRepository
 import com.sena.proyecto.data.repository.ClienteRepository
+import com.sena.proyecto.ui.dashboard.DashboardActivity
 import com.sena.proyecto.utils.FormatUtils
 import com.google.android.material.snackbar.Snackbar
 

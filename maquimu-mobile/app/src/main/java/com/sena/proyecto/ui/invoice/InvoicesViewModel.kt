@@ -1,4 +1,4 @@
-package com.sena.proyecto.ui.dashboard
+package com.sena.proyecto.ui.invoice
 
 import android.app.Application
 import android.content.ContentValues

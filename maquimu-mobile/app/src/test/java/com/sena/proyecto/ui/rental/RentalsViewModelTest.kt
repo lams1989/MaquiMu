@@ -1,4 +1,4 @@
-package com.sena.proyecto.ui.dashboard
+package com.sena.proyecto.ui.rental
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.sena.proyecto.data.model.Alquiler

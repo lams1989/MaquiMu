@@ -10,6 +10,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sena.proyecto.R
 import com.sena.proyecto.data.repository.AuthRepository
 import com.sena.proyecto.ui.auth.LoginActivity
+import com.sena.proyecto.ui.invoice.InvoicesFragment
+import com.sena.proyecto.ui.profile.ProfileFragment
+import com.sena.proyecto.ui.rental.RentalsFragment
 
 class DashboardActivity : AppCompatActivity() {
 
